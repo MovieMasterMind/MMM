@@ -13,28 +13,20 @@ import androidx.drawerlayout.widget.DrawerLayout
 import androidx.appcompat.app.AppCompatActivity
 import com.android.volley.RequestQueue
 import com.example.mmm.databinding.ActivityMainBinding
-import com.github.kittinunf.fuel.Fuel
-import com.github.kittinunf.fuel.gson.responseObject
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.GlobalScope
-import kotlinx.coroutines.launch
 
 import com.android.volley.Request
-import com.android.volley.Response
-import com.android.volley.VolleyError
 import com.android.volley.toolbox.StringRequest
 import com.android.volley.toolbox.Volley
 import com.google.gson.Gson
-import android.util.Log;
-import android.widget.Toast;
+import android.util.Log
 
 class MainActivity : AppCompatActivity() {
 
     //Adding variables API
     private var mRequestQueue: RequestQueue? = null
-    private var mStringRequest: StringRequest? = null
-    private val movieUrl = ""//https://www.omdbapi.com/?t=batman&apikey=8081b028
-    private val searchUrl = "https://www.omdbapi.com/?t=batman&apikey=8081b028"
+//    private var mStringRequest: StringRequest? = null
+//    private val movieUrl = "//https://www.omdbapi.com/?t=batman&apikey=8081b028"
+//    private val searchUrl = "https://www.omdbapi.com/?t=batman&apikey=8081b028"
 
 
 
@@ -66,7 +58,7 @@ class MainActivity : AppCompatActivity() {
         setupActionBarWithNavController(navController, appBarConfiguration)
         navView.setupWithNavController(navController) // Injecting the code for network request
 
-        var apiRequestQueue: RequestQueue? = null
+//        var apiRequestQueue: RequestQueue? = null
 
         //Calling getData will get the API data from OMDB using the API, to get the JSON file
         getData()
@@ -96,7 +88,7 @@ class MainActivity : AppCompatActivity() {
                 displayMovieDetails(movie, null)
             },
             { error ->
-                Log.i("TAG", "Error fetching movie details: ${error.toString()}")
+                Log.i("TAG", "Error fetching movie details: $error")
             }
         )
 
@@ -108,7 +100,7 @@ class MainActivity : AppCompatActivity() {
                 displayMovieDetails(null, searchResult)
             },
             { error ->
-                Log.i("TAG", "Error fetching search results: ${error.toString()}")
+                Log.i("TAG", "Error fetching search results: $error")
             }
         )
 
@@ -124,42 +116,42 @@ class MainActivity : AppCompatActivity() {
         // Append details for the single movie
         if (movie != null) {
             details.append("Single Movie Details:\n")
-            details.append("Title: ${movie.Title}\n")
-            details.append("Year: ${movie.Year}\n")
-            details.append("Rated: ${movie.Rated}\n")
-            details.append("Released: ${movie.Released}\n")
-            details.append("Runtime: ${movie.Runtime}\n")
-            details.append("Genre: ${movie.Genre}\n")
-            details.append("Director: ${movie.Director}\n")
-            details.append("Writer: ${movie.Writer}\n")
-            details.append("Actors: ${movie.Actors}\n")
-            details.append("Plot: ${movie.Plot}\n")
-            details.append("Language: ${movie.Language}\n")
-            details.append("Country: ${movie.Country}\n")
-            details.append("Awards: ${movie.Awards}\n")
-            details.append("Poster: ${movie.Poster}\n")
-            details.append("Metascore: ${movie.Metascore}\n")
+            details.append("Title: ${movie.title}\n")
+            details.append("Year: ${movie.year}\n")
+            details.append("Rated: ${movie.rated}\n")
+            details.append("Released: ${movie.released}\n")
+            details.append("Runtime: ${movie.runtime}\n")
+            details.append("Genre: ${movie.genre}\n")
+            details.append("Director: ${movie.director}\n")
+            details.append("Writer: ${movie.writer}\n")
+            details.append("Actors: ${movie.actors}\n")
+            details.append("Plot: ${movie.plot}\n")
+            details.append("Language: ${movie.language}\n")
+            details.append("Country: ${movie.country}\n")
+            details.append("Awards: ${movie.awards}\n")
+            details.append("Poster: ${movie.poster}\n")
+            details.append("Metascore: ${movie.metascore}\n")
             details.append("imdbRating: ${movie.imdbRating}\n")
             details.append("imdbVotes: ${movie.imdbVotes}\n")
             details.append("imdbID: ${movie.imdbID}\n")
-            details.append("Type: ${movie.Type}\n")
-            details.append("DVD: ${movie.DVD}\n")
-            details.append("BoxOffice: ${movie.BoxOffice}\n")
-            details.append("Production: ${movie.Production}\n")
-            details.append("Website: ${movie.Website}\n")
-            details.append("Response: ${movie.Response}\n")
+            details.append("Type: ${movie.type}\n")
+            details.append("DVD: ${movie.dvd}\n")
+            details.append("BoxOffice: ${movie.boxOffice}\n")
+            details.append("Production: ${movie.production}\n")
+            details.append("Website: ${movie.website}\n")
+            details.append("Response: ${movie.response}\n")
             details.append("\n")
         }
 
         // Append details for the search results
-        if (searchResult != null && searchResult.Search != null) {
+        if (searchResult?.search != null) {
             details.append("Search Results:\n")
-            for (item in searchResult.Search) {
-                details.append("Title: ${item.Title}\n")
-                details.append("Year: ${item.Year}\n")
+            for (item in searchResult.search) {
+                details.append("Title: ${item.title}\n")
+                details.append("Year: ${item.year}\n")
                 details.append("imdbID: ${item.imdbID}\n")
-                details.append("Type: ${item.Type}\n")
-                details.append("Poster: ${item.Poster}\n")
+                details.append("Type: ${item.type}\n")
+                details.append("Poster: ${item.poster}\n")
                 details.append("\n")
             }
         }
@@ -196,47 +188,47 @@ class MainActivity : AppCompatActivity() {
 
 
     data class Movie(
-        val Title: String,
-        val Year: String,
-        val Rated: String,
-        val Released: String,
-        val Runtime: String,
-        val Genre: String,
-        val Director: String,
-        val Writer: String,
-        val Actors: String,
-        val Plot: String,
-        val Language: String,
-        val Country: String,
-        val Awards: String,
-        val Poster: String,
-        val Ratings: List<Rating>,
-        val Metascore: String,
+        val title: String,
+        val year: String,
+        val rated: String,
+        val released: String,
+        val runtime: String,
+        val genre: String,
+        val director: String,
+        val writer: String,
+        val actors: String,
+        val plot: String,
+        val language: String,
+        val country: String,
+        val awards: String,
+        val poster: String,
+        val ratings: List<Rating>,
+        val metascore: String,
         val imdbRating: String,
         val imdbVotes: String,
         val imdbID: String,
-        val Type: String,
-        val DVD: String,
-        val BoxOffice: String,
-        val Production: String,
-        val Website: String,
-        val Response: String
+        val type: String,
+        val dvd: String,
+        val boxOffice: String,
+        val production: String,
+        val website: String,
+        val response: String
     )
 
     data class Rating(
-        val Source: String,
-        val Value: String
+        val source: String,
+        val value: String
     )
 
     data class SearchResult(
-        val Search: List<MovieItem>
+        val search: List<MovieItem>
     )
 
     data class MovieItem(
-        val Title: String,
-        val Year: String,
+        val title: String,
+        val year: String,
         val imdbID: String,
-        val Type: String,
-        val Poster: String
+        val type: String,
+        val poster: String
     )
 }
