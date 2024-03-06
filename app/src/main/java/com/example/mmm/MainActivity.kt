@@ -48,7 +48,7 @@ class MainActivity : AppCompatActivity() {
                 }
             }
 
-            // If the URL doesnot point to
+            // If the URL doesn't point to
             // image or any other kind of failure
             catch (e: Exception) {
                 e.printStackTrace()
