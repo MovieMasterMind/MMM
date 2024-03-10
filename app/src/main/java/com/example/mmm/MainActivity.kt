@@ -20,13 +20,39 @@ import com.android.volley.toolbox.Volley
 import com.google.gson.Gson
 import android.util.Log
 
+import android.graphics.Bitmap
+import android.graphics.BitmapFactory
+import android.os.Handler
+import android.os.Looper
+import android.widget.ImageView
+import android.widget.Toast
+import java.util.concurrent.Executors
+
+import androidx.activity.ComponentActivity
+import androidx.activity.compose.setContent
+import androidx.compose.foundation.ExperimentalFoundationApi
+import androidx.compose.foundation.Image
+import androidx.compose.foundation.layout.*
+import androidx.compose.material.*
+import androidx.compose.runtime.*
+import androidx.compose.ui.Alignment
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.ComposeView
+import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.unit.*
+import coil.compose.rememberAsyncImagePainter
+import java.util.*
+
 class MainActivity : AppCompatActivity() {
 
     //Adding variables API
     private var mRequestQueue: RequestQueue? = null
-//    private var mStringRequest: StringRequest? = null
-//    private val movieUrl = "//https://www.omdbapi.com/?t=batman&apikey=8081b028"
-//    private val searchUrl = "https://www.omdbapi.com/?t=batman&apikey=8081b028"
+    private var mStringRequest: StringRequest? = null
+    private val movieUrl = "//https://www.omdbapi.com/?t=batman&apikey=8081b028"
+    private val searchUrl = "https://www.omdbapi.com/?t=batman&apikey=8081b028"
 
 
 
@@ -62,13 +88,63 @@ class MainActivity : AppCompatActivity() {
 
         //Calling getData will get the API data from OMDB using the API, to get the JSON file
         getData()
-
-
-
+        val composeView = binding.composeView
+        composeView.setContent {
+            MaterialTheme {
+                // Example list of image URLs
+                val imageUrls = listOf(
+                    "https://m.media-amazon.com/images/M/MV5BOGZmYzVkMmItM2NiOS00MDI3LWI4ZWQtMTg0YWZkODRkMmViXkEyXkFqcGdeQXVyODY0NzcxNw@@._V1_SX300.jpg",
+                    "https://m.media-amazon.com/images/M/MV5BZWQ0OTQ3ODctMmE0MS00ODc2LTg0ZTEtZWIwNTUxOGExZTQ4XkEyXkFqcGdeQXVyNzAwMjU2MTY@._V1_SX300.jpg",
+                    "https://m.media-amazon.com/images/M/MV5BNDdjYmFiYWEtYzBhZS00YTZkLWFlODgtY2I5MDE0NzZmMDljXkEyXkFqcGdeQXVyMTMxODk2OTU@._V1_SX300.jpg"
+                    // Add more URLs as needed
+                )
+                ImagesFromUrls(imageUrls = imageUrls)
+            }
+        }
 
 
     }
 
+    @Composable
+    fun ImagesFromUrls(imageUrls: List<String>) {
+        Column(
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(10.dp),
+            verticalArrangement = Arrangement.Center,
+            horizontalAlignment = Alignment.CenterHorizontally
+        ) {
+            imageUrls.forEach { imageUrl ->
+                Image(
+                    painter = rememberAsyncImagePainter(imageUrl),
+                    contentDescription = "Loaded image",
+                    modifier = Modifier
+                        .wrapContentSize()
+                        .padding(4.dp) // Add some space between images
+                )
+            }
+        }
+    }
+    //    private fun loadImageIntoView(imageURL: String) {
+//        // Executor for background tasks
+//        val executor = Executors.newSingleThreadExecutor()
+//        // Handler for posting results to the main thread
+//        val handler = Handler(Looper.getMainLooper())
+//
+//        executor.execute {
+//            try {
+//                val `in` = java.net.URL(imageURL).openStream()
+//                val image = BitmapFactory.decodeStream(`in`)
+//                handler.post {
+//                    // Assuming you have an ImageView for the movie poster
+//                    binding.imageView.setImageBitmap(image)
+//                }
+//            } catch (e: Exception) {
+//                e.printStackTrace()
+//                // Optionally show a toast or log the error
+//            }
+//        }
+//    }
     //This works
     private fun getData() {
         // RequestQueue initialized
