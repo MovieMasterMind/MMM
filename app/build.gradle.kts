@@ -61,11 +61,11 @@ dependencies {
 
     implementation ("com.github.kittinunf.fuel:fuel-android:2.3.1")
     implementation ("com.github.kittinunf.fuel:fuel-gson:2.3.1")
-    implementation ("org.jetbrains.kotlinx:kotlinx-coroutines-android:1.5.2")
+    implementation ("org.jetbrains.kotlinx:kotlinx-coroutines-android:1.7.1")
 
     implementation("com.android.volley:volley:1.2.1")
 
-    implementation("com.google.code.gson:gson:2.8.9")
+    implementation("com.google.code.gson:gson:2.10.1")
 
     // START OF JETPACK COMPOSE
     val composeBom = platform("androidx.compose:compose-bom:2024.02.02")
@@ -103,12 +103,12 @@ dependencies {
     // Optional - Integration with activities
     implementation("androidx.activity:activity-compose:1.8.2")
     // Optional - Integration with ViewModels
-    implementation("androidx.lifecycle:lifecycle-viewmodel-compose:2.6.1")
+    implementation("androidx.lifecycle:lifecycle-viewmodel-compose:2.7.0")
     // Optional - Integration with LiveData
     implementation("androidx.compose.runtime:runtime-livedata")
     // Optional - Integration with RxJava
     implementation("androidx.compose.runtime:runtime-rxjava2")
-    implementation("io.coil-kt:coil-compose:2.0.0-rc01")
+    implementation("io.coil-kt:coil-compose:2.4.0")
     // END OF JETPACK COMPOSE
 
 }
