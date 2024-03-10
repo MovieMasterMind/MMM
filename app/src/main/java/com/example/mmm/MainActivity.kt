@@ -232,34 +232,12 @@ class MainActivity : AppCompatActivity() {
             }
         }
 
-        // Set the text of the TextView to the combined details
-        binding.movieDetailsTextView.text = details.toString()
-
-        // Scroll to the top of the ScrollView
-        binding.movieDetailsTextView.post { binding.movieDetailsTextView.scrollTo(0, 0) }
-    }
-
-
-
-
-
-
-
-
-
-
-
-
-
-    override fun onCreateOptionsMenu(menu: Menu): Boolean {
-        // Inflate the menu; this adds items to the action bar if it is present.
-        menuInflater.inflate(R.menu.main, menu)
-        return true
-    }
-
-    override fun onSupportNavigateUp(): Boolean {
-        val navController = findNavController(R.id.nav_host_fragment_content_main)
-        return navController.navigateUp(appBarConfiguration) || super.onSupportNavigateUp()
+            // If the URL doesnot point to
+            // image or any other kind of failure
+            catch (e: Exception) {
+                e.printStackTrace()
+            }
+        }
     }
 
 
