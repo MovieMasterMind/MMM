@@ -27,8 +27,71 @@
 
             <!-- Your other views -->
 
+            <!-- Title TextView -->
             <TextView
-                android:id="@+id/movieDetailsTextView"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Top Horror Movies from 2023"
+                android:textSize="20sp"
+                android:textStyle="bold"
+                android:layout_marginBottom="8dp"
+                android:paddingTop="64dp"
+                android:paddingBottom="8dp"
+                android:paddingStart="8dp"
+                android:paddingEnd="8dp"/>
+
+            <TextView
+                android:id="@+id/movieDetailsTextViewHorror"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Movie Details"
+                android:textSize="16sp"
+                android:gravity="center"
+
+                android:paddingTop="64dp"
+                android:paddingBottom="8dp"
+                android:paddingStart="8dp"
+                android:paddingEnd="8dp"/>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Top Drama Movies from 2023"
+                android:textSize="20sp"
+                android:textStyle="bold"
+                android:layout_marginBottom="8dp"
+                android:paddingTop="64dp"
+                android:paddingBottom="8dp"
+                android:paddingStart="8dp"
+                android:paddingEnd="8dp"/>
+
+            <TextView
+                android:id="@+id/movieDetailsTextViewDrama"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Movie Details"
+                android:textSize="16sp"
+                android:gravity="center"
+
+                android:paddingTop="64dp"
+                android:paddingBottom="8dp"
+                android:paddingStart="8dp"
+                android:paddingEnd="8dp"/>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Recent Award Winning Movies"
+                android:textSize="20sp"
+                android:textStyle="bold"
+                android:layout_marginBottom="8dp"
+                android:paddingTop="64dp"
+                android:paddingBottom="8dp"
+                android:paddingStart="8dp"
+                android:paddingEnd="8dp"/>
+
+            <TextView
+                android:id="@+id/movieDetailsTextViewAwards"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Movie Details"
