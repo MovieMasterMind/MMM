@@ -22,11 +22,11 @@ import android.util.Log
 
 class MainActivity : AppCompatActivity() {
 
-    //Adding variables API
+    // Adding variables API
     private var mRequestQueue: RequestQueue? = null
-//    private var mStringRequest: StringRequest? = null
-//    private val movieUrl = "//https://www.omdbapi.com/?t=batman&apikey=8081b028"
-//    private val searchUrl = "https://www.omdbapi.com/?t=batman&apikey=8081b028"
+    private var mStringRequest: StringRequest? = null
+    private val movieUrl = "//https://www.omdbapi.com/?t=batman&apikey=8081b028"
+    private val searchUrl = "https://www.omdbapi.com/?t=batman&apikey=8081b028"
 
 
 
@@ -58,9 +58,9 @@ class MainActivity : AppCompatActivity() {
         setupActionBarWithNavController(navController, appBarConfiguration)
         navView.setupWithNavController(navController) // Injecting the code for network request
 
-//        var apiRequestQueue: RequestQueue? = null
+        var apiRequestQueue: RequestQueue? = null
 
-        //Calling getData will get the API data from OMDB using the API, to get the JSON file
+        // Calling getData will get the API data from OMDB using the API, to get the JSON file
         getData()
 
 
@@ -69,7 +69,7 @@ class MainActivity : AppCompatActivity() {
 
     }
 
-    //This works
+    // This works
     private fun getData() {
         // RequestQueue initialized
         mRequestQueue = Volley.newRequestQueue(this)
