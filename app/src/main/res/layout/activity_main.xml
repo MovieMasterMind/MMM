@@ -56,7 +56,8 @@
         android:id="@+id/compose_view"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_margin="16dp" />
+        android:layout_margin="16dp"
+        tools:ignore="MissingClass" />
 
 
     <com.google.android.material.navigation.NavigationView

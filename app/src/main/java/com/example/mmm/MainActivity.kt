@@ -19,40 +19,16 @@ import com.android.volley.toolbox.StringRequest
 import com.android.volley.toolbox.Volley
 import com.google.gson.Gson
 import android.util.Log
-
-import android.graphics.Bitmap
-import android.graphics.BitmapFactory
-import android.os.Handler
-import android.os.Looper
-import android.widget.ImageView
-import android.widget.Toast
-import java.util.concurrent.Executors
-
-import androidx.activity.ComponentActivity
-import androidx.activity.compose.setContent
-import androidx.compose.foundation.ExperimentalFoundationApi
-import androidx.compose.foundation.Image
-import androidx.compose.foundation.layout.*
-import androidx.compose.material.*
-import androidx.compose.runtime.*
-import androidx.compose.ui.Alignment
-import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.platform.ComposeView
-import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.unit.*
-import coil.compose.rememberAsyncImagePainter
-import java.util.*
+import org.json.JSONException
+import org.json.JSONObject
 
 class MainActivity : AppCompatActivity() {
 
     //Adding variables API
     private var mRequestQueue: RequestQueue? = null
-    private var mStringRequest: StringRequest? = null
-    private val movieUrl = "//https://www.omdbapi.com/?t=batman&apikey=8081b028"
-    private val searchUrl = "https://www.omdbapi.com/?t=batman&apikey=8081b028"
+//    private var mStringRequest: StringRequest? = null
+//    private val movieUrl = "//https://www.omdbapi.com/?t=batman&apikey=8081b028"
+//    private val searchUrl = "https://www.omdbapi.com/?t=batman&apikey=8081b028"
 
 
 
@@ -88,63 +64,13 @@ class MainActivity : AppCompatActivity() {
 
         //Calling getData will get the API data from OMDB using the API, to get the JSON file
         getData()
-        val composeView = binding.composeView
-        composeView.setContent {
-            MaterialTheme {
-                // Example list of image URLs
-                val imageUrls = listOf(
-                    "https://m.media-amazon.com/images/M/MV5BOGZmYzVkMmItM2NiOS00MDI3LWI4ZWQtMTg0YWZkODRkMmViXkEyXkFqcGdeQXVyODY0NzcxNw@@._V1_SX300.jpg",
-                    "https://m.media-amazon.com/images/M/MV5BZWQ0OTQ3ODctMmE0MS00ODc2LTg0ZTEtZWIwNTUxOGExZTQ4XkEyXkFqcGdeQXVyNzAwMjU2MTY@._V1_SX300.jpg",
-                    "https://m.media-amazon.com/images/M/MV5BNDdjYmFiYWEtYzBhZS00YTZkLWFlODgtY2I5MDE0NzZmMDljXkEyXkFqcGdeQXVyMTMxODk2OTU@._V1_SX300.jpg"
-                    // Add more URLs as needed
-                )
-                ImagesFromUrls(imageUrls = imageUrls)
-            }
-        }
+
+
+
 
 
     }
 
-    @Composable
-    fun ImagesFromUrls(imageUrls: List<String>) {
-        Column(
-            modifier = Modifier
-                .fillMaxSize()
-                .padding(10.dp),
-            verticalArrangement = Arrangement.Center,
-            horizontalAlignment = Alignment.CenterHorizontally
-        ) {
-            imageUrls.forEach { imageUrl ->
-                Image(
-                    painter = rememberAsyncImagePainter(imageUrl),
-                    contentDescription = "Loaded image",
-                    modifier = Modifier
-                        .wrapContentSize()
-                        .padding(4.dp) // Add some space between images
-                )
-            }
-        }
-    }
-    //    private fun loadImageIntoView(imageURL: String) {
-//        // Executor for background tasks
-//        val executor = Executors.newSingleThreadExecutor()
-//        // Handler for posting results to the main thread
-//        val handler = Handler(Looper.getMainLooper())
-//
-//        executor.execute {
-//            try {
-//                val `in` = java.net.URL(imageURL).openStream()
-//                val image = BitmapFactory.decodeStream(`in`)
-//                handler.post {
-//                    // Assuming you have an ImageView for the movie poster
-//                    binding.imageView.setImageBitmap(image)
-//                }
-//            } catch (e: Exception) {
-//                e.printStackTrace()
-//                // Optionally show a toast or log the error
-//            }
-//        }
-//    }
     //This works
     private fun getData() {
         // RequestQueue initialized
@@ -160,25 +86,90 @@ class MainActivity : AppCompatActivity() {
         val movieRequest = StringRequest(Request.Method.GET, movieUrl,
             { response ->
                 Log.d("MovieResponse", response)
-                val movie = Gson().fromJson(response, Movie::class.java)
-                displayMovieDetails(movie, null)
+                try {
+                    val jsonObject = JSONObject(response)
+                    val ratingsArray = jsonObject.optJSONArray("Ratings")
+                    val ratingsList = mutableListOf<Rating>()
+                    if (ratingsArray != null) {
+                        for (i in 0 until ratingsArray.length()) {
+                            val ratingObject = ratingsArray.getJSONObject(i)
+                            val source = ratingObject.optString("Source")
+                            val value = ratingObject.optString("Value")
+                            val rating = Rating(source, value)
+                            ratingsList.add(rating)
+                        }
+                    }
+                    val movie = Movie(
+                        title = jsonObject.optString("Title"),
+                        year = jsonObject.optString("Year"),
+                        rated = jsonObject.optString("Rated"),
+                        released = jsonObject.optString("Released"),
+                        runtime = jsonObject.optString("Runtime"),
+                        genre = jsonObject.optString("Genre"),
+                        director = jsonObject.optString("Director"),
+                        writer = jsonObject.optString("Writer"),
+                        actors = jsonObject.optString("Actors"),
+                        plot = jsonObject.optString("Plot"),
+                        language = jsonObject.optString("Language"),
+                        country = jsonObject.optString("Country"),
+                        awards = jsonObject.optString("Awards"),
+                        poster = jsonObject.optString("Poster"),
+                        ratings = ratingsList,
+                        metascore = jsonObject.optString("Metascore"),
+                        imdbRating = jsonObject.optString("imdbRating"),
+                        imdbVotes = jsonObject.optString("imdbVotes"),
+                        imdbID = jsonObject.optString("imdbID"),
+                        type = jsonObject.optString("Type"),
+                        dvd = jsonObject.optString("DVD"),
+                        boxOffice = jsonObject.optString("BoxOffice"),
+                        production = jsonObject.optString("Production"),
+                        website = jsonObject.optString("Website"),
+                        response = jsonObject.optString("Response")
+                    )
+                    Log.d("movie", movie.toString())
+                    displayMovieDetails(movie, null)
+                } catch (e: JSONException) {
+                    Log.e("TAG", "Error parsing movie details JSON: $e")
+                }
             },
             { error ->
                 Log.i("TAG", "Error fetching movie details: $error")
             }
         )
 
+
         // String Request for search results
         val searchRequest = StringRequest(Request.Method.GET, searchUrl,
             { response ->
                 Log.d("SearchResponse", response)
-                val searchResult = Gson().fromJson(response, SearchResult::class.java)
-                displayMovieDetails(null, searchResult)
+                try {
+                    val jsonObject = JSONObject(response)
+                    val searchArray = jsonObject.optJSONArray("Search")
+                    val searchItemList = mutableListOf<MovieItem>()
+                    if (searchArray != null) {
+                        for (i in 0 until searchArray.length()) {
+                            val itemObject = searchArray.getJSONObject(i)
+                            val title = itemObject.optString("Title")
+                            val year = itemObject.optString("Year")
+                            val imdbID = itemObject.optString("imdbID")
+                            val type = itemObject.optString("Type")
+                            val poster = itemObject.optString("Poster")
+                            val movieItem = MovieItem(title, year, imdbID, type, poster)
+                            searchItemList.add(movieItem)
+                        }
+                    }
+                    val searchResult = SearchResult(searchItemList)
+                    Log.i("searchResult", searchResult.toString())
+                    displayMovieDetails(null, searchResult)
+                } catch (e: JSONException) {
+                    Log.e("TAG", "Error parsing search results JSON: $e")
+                }
             },
             { error ->
                 Log.i("TAG", "Error fetching search results: $error")
             }
         )
+
 
         // Add both requests to the request queue
         mRequestQueue!!.add(movieRequest)
@@ -188,10 +179,11 @@ class MainActivity : AppCompatActivity() {
 
     private fun displayMovieDetails(movie: Movie?, searchResult: SearchResult?) {
         val details = StringBuilder()
-
+        Log.i("Entered search", movie.toString())
+        Log.i("Entered search", searchResult.toString())
         // Append details for the single movie
         if (movie != null) {
-            details.append("Single Movie Details:\n")
+            //details.append("Single Movie Details:\n")
             details.append("Title: ${movie.title}\n")
             details.append("Year: ${movie.year}\n")
             details.append("Rated: ${movie.rated}\n")
@@ -234,6 +226,8 @@ class MainActivity : AppCompatActivity() {
 
         // Set the text of the TextView to the combined details
         binding.movieDetailsTextView.text = details.toString()
+
+        //binding.movieDetailsTextView.text = "Test Text"
 
         // Scroll to the top of the ScrollView
         binding.movieDetailsTextView.post { binding.movieDetailsTextView.scrollTo(0, 0) }
