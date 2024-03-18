@@ -20,6 +20,8 @@ import com.android.volley.toolbox.Volley
 //import com.google.gson.Gson
 import android.util.Log
 import android.widget.TextView
+import android.widget.ImageView
+
 import org.json.JSONException
 import org.json.JSONObject
 
@@ -29,13 +31,7 @@ import okhttp3.OkHttpClient
 import okhttp3.Request as OkHttpRequest
 import okhttp3.Response
 import java.io.IOException
-
-
-private val client = OkHttpClient()
-
-
-
-
+import com.bumptech.glide.Glide
 
 class MainActivity : AppCompatActivity() {
 
@@ -125,15 +121,23 @@ class MainActivity : AppCompatActivity() {
         val apiUrlsAwards = listOf("https://api.themoviedb.org/3/discover/movie?api_key=1f443a53a6aabe4de284f9c46a17f64c&primary_release_date.gte=2022-01-01&vote_count.gte=1000&sort_by=vote_average.desc")
 
         val textViewHorror = findViewById<TextView>(R.id.movieDetailsTextViewHorror)
-        val textViewDrama = findViewById<TextView>(R.id.movieDetailsTextViewDrama)
-        val textViewAward = findViewById<TextView>(R.id.movieDetailsTextViewAwards)
+//        val textViewDrama = findViewById<TextView>(R.id.movieDetailsTextViewDrama)
+//        val textViewAward = findViewById<TextView>(R.id.movieDetailsTextViewAwards)
 
-        getData(apiUrlsHorror, textViewHorror)
-        getData(apiUrlsDrama, textViewDrama)
-        getData(apiUrlsAwards, textViewAward)
+        val imageViewHorror = findViewById<ImageView>(R.id.imageViewPosterHorror)
+//        val imageViewDrama = findViewById<ImageView>(R.id.movieDetailsTextViewDrama)
+//        val imageViewAward = findViewById<ImageView>(R.id.movieDetailsTextViewAwards)
+
+        getData(apiUrlsHorror, textViewHorror, imageViewHorror)
+//        getData(apiUrlsDrama, textViewDrama)
+//        getData(apiUrlsAwards, textViewAward)
     }
 
-    private fun getData(apiUrlList: List<String>, textView: TextView) {
+
+    //This is used for the client.NewCall
+    private val client = OkHttpClient()
+
+    private fun getData(apiUrlList: List<String>, textView: TextView, imageView: ImageView) {
         val movieDetailsList = mutableListOf<String>()
 
         for (url in apiUrlList) {
@@ -148,7 +152,7 @@ class MainActivity : AppCompatActivity() {
                     response.body?.let {
                         val responseData = it.string()
                         Log.d("API Response", responseData)
-                        parseAndAddToDetails(responseData, movieDetailsList)
+                        parseAndAddToDetails(responseData, movieDetailsList, imageView)
                         updateTextView(movieDetailsList, textView)
                     }
                 }
@@ -156,7 +160,7 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
-    private fun parseAndAddToDetails(response: String, movieDetailsList: MutableList<String>) {
+    private fun parseAndAddToDetails(response: String, movieDetailsList: MutableList<String>, imageView: ImageView) {
         try {
             val jsonObject = JSONObject(response)
             val resultsArray = jsonObject.getJSONArray("results")
@@ -170,6 +174,12 @@ class MainActivity : AppCompatActivity() {
 
                 val details = "Title: $title\nRelease Date: $releaseDate\nOverview: $overview\nPoster: $posterPath\n\n"
                 movieDetailsList.add(details)
+
+                // Load poster image using Glide
+                val posterUrl = "https://image.tmdb.org/t/p/w500$posterPath" // Construct poster URL
+
+                //TODO get working with RecyclerView as right now this just Crashes on start up
+                //Glide.with(imageView.context).load(posterUrl).into(imageView)
             }
         } catch (e: JSONException) {
             Log.e("JSON Error", "Error parsing JSON: $e")

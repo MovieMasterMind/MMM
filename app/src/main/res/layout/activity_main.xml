@@ -52,6 +52,12 @@
                 android:paddingBottom="8dp"
                 android:paddingStart="8dp"
                 android:paddingEnd="8dp"/>
+            <ImageView
+                android:id="@+id/imageViewPosterHorror"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:scaleType="fitCenter"
+                android:layout_margin="8dp" />
 
             <TextView
                 android:layout_width="wrap_content"
