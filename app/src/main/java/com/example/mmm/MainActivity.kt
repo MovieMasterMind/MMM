@@ -23,6 +23,20 @@ import android.widget.TextView
 import org.json.JSONException
 import org.json.JSONObject
 
+//For the TMDB update
+import okhttp3.*
+import okhttp3.OkHttpClient
+import okhttp3.Request as OkHttpRequest
+import okhttp3.Response
+import java.io.IOException
+
+
+private val client = OkHttpClient()
+
+
+
+
+
 class MainActivity : AppCompatActivity() {
 
     //Adding variables API
@@ -67,37 +81,48 @@ class MainActivity : AppCompatActivity() {
         //val movieUrl = "https://www.omdbapi.com/?t=batman&apikey=8081b028"
         // Second URL for the search results
         //val searchUrl = "https://www.omdbapi.com/?s=batman&apikey=8081b028"
-
-        val apiUrlsHorror = listOf(
-            "https://www.omdbapi.com/?t=five%20nights%20at%20freddy's&apikey=8081b028",
-            "https://www.omdbapi.com/?t=the%20boogey&apikey=8081b028",
-            "https://www.omdbapi.com/?t=when%20evil%20lurks&apikey=8081b028",
-            "https://www.omdbapi.com/?t=nun&apikey=8081b028",
-            "https://www.omdbapi.com/?t=no%20one%20will%20save%20you&apikey=8081b028",
-            "https://www.omdbapi.com/?t=the%20exorcist%20believer&apikey=8081b028",
-            "https://www.omdbapi.com/?t=evil%20dead%20rise&apikey=8081b028",
-            )
-
-
-        val apiUrlsDrama = listOf(
-            "https://www.omdbapi.com/?t=the%20creator&apikey=8081b028",
-            "https://www.omdbapi.com/?t=Poor%20Things&apikey=8081b028",
-            "https://www.omdbapi.com/?t=The%20iron%20claw&apikey=8081b028",
-            "https://www.omdbapi.com/?t=oppenheimer&apikey=8081b028",
-            "https://www.omdbapi.com/?t=napoleon&apikey=8081b028",
-            "https://www.omdbapi.com/?t=The%20boys%20in%20the%20boat&apikey=8081b028",
-            "https://www.omdbapi.com/?t=killers%20of%20the%20flower%20moon&apikey=8081b028",
-        )
-        val apiUrlsAwards = listOf(
-            "https://www.omdbapi.com/?t=Everything%20Everywhere%20All%20at%20Once&apikey=8081b028",
-            "https://www.omdbapi.com/?t=Avatar:%20The%20Way%20of%20Water&apikey=8081b028",
-            "https://www.omdbapi.com/?t=The%20Banshees%20of%20Inisherin&apikey=8081b028",
-            "https://www.omdbapi.com/?t=Top%20Gun:%20Maverick&apikey=8081b028",
-            "https://www.omdbapi.com/?t=T%C3%A1r&apikey=8081b028",
-            "https://www.omdbapi.com/?t=All%20Quiet%20on%20the%20Western%20Front&apikey=8081b028",
-            "https://www.omdbapi.com/?t=Elvis&apikey=8081b028",
-        )
-        mRequestQueue = Volley.newRequestQueue(this)
+//
+//        val apiUrlsHorror = listOf(
+//            "https://www.omdbapi.com/?t=five%20nights%20at%20freddy's&apikey=8081b028",
+//            "https://www.omdbapi.com/?t=the%20boogey&apikey=8081b028",
+//            "https://www.omdbapi.com/?t=when%20evil%20lurks&apikey=8081b028",
+//            "https://www.omdbapi.com/?t=nun&apikey=8081b028",
+//            "https://www.omdbapi.com/?t=no%20one%20will%20save%20you&apikey=8081b028",
+//            "https://www.omdbapi.com/?t=the%20exorcist%20believer&apikey=8081b028",
+//            "https://www.omdbapi.com/?t=evil%20dead%20rise&apikey=8081b028",
+//            )
+//
+//
+//        val apiUrlsDrama = listOf(
+//            "https://www.omdbapi.com/?t=the%20creator&apikey=8081b028",
+//            "https://www.omdbapi.com/?t=Poor%20Things&apikey=8081b028",
+//            "https://www.omdbapi.com/?t=The%20iron%20claw&apikey=8081b028",
+//            "https://www.omdbapi.com/?t=oppenheimer&apikey=8081b028",
+//            "https://www.omdbapi.com/?t=napoleon&apikey=8081b028",
+//            "https://www.omdbapi.com/?t=The%20boys%20in%20the%20boat&apikey=8081b028",
+//            "https://www.omdbapi.com/?t=killers%20of%20the%20flower%20moon&apikey=8081b028",
+//        )
+//        val apiUrlsAwards = listOf(
+//            "https://www.omdbapi.com/?t=Everything%20Everywhere%20All%20at%20Once&apikey=8081b028",
+//            "https://www.omdbapi.com/?t=Avatar:%20The%20Way%20of%20Water&apikey=8081b028",
+//            "https://www.omdbapi.com/?t=The%20Banshees%20of%20Inisherin&apikey=8081b028",
+//            "https://www.omdbapi.com/?t=Top%20Gun:%20Maverick&apikey=8081b028",
+//            "https://www.omdbapi.com/?t=T%C3%A1r&apikey=8081b028",
+//            "https://www.omdbapi.com/?t=All%20Quiet%20on%20the%20Western%20Front&apikey=8081b028",
+//            "https://www.omdbapi.com/?t=Elvis&apikey=8081b028",
+//        )
+//        mRequestQueue = Volley.newRequestQueue(this)
+//
+//        val textViewHorror = findViewById<TextView>(R.id.movieDetailsTextViewHorror)
+//        val textViewDrama = findViewById<TextView>(R.id.movieDetailsTextViewDrama)
+//        val textViewAward = findViewById<TextView>(R.id.movieDetailsTextViewAwards)
+//
+//        getData(apiUrlsHorror, textViewHorror)
+//        getData(apiUrlsDrama, textViewDrama)
+//        getData(apiUrlsAwards, textViewAward)
+        val apiUrlsHorror = listOf("https://api.themoviedb.org/3/trending/movie/week?api_key=1f443a53a6aabe4de284f9c46a17f64c&with_genres=27")
+        val apiUrlsDrama = listOf("https://api.themoviedb.org/3/trending/movie/week?api_key=1f443a53a6aabe4de284f9c46a17f64c&with_genres=18")
+        val apiUrlsAwards = listOf("https://api.themoviedb.org/3/discover/movie?api_key=1f443a53a6aabe4de284f9c46a17f64c&primary_release_date.gte=2022-01-01&vote_count.gte=1000&sort_by=vote_average.desc")
 
         val textViewHorror = findViewById<TextView>(R.id.movieDetailsTextViewHorror)
         val textViewDrama = findViewById<TextView>(R.id.movieDetailsTextViewDrama)
@@ -106,38 +131,46 @@ class MainActivity : AppCompatActivity() {
         getData(apiUrlsHorror, textViewHorror)
         getData(apiUrlsDrama, textViewDrama)
         getData(apiUrlsAwards, textViewAward)
-
     }
 
     private fun getData(apiUrlList: List<String>, textView: TextView) {
         val movieDetailsList = mutableListOf<String>()
 
         for (url in apiUrlList) {
-            val stringRequest = StringRequest(Request.Method.GET, url,
-                { response ->
-                    Log.d("API Response", response)
-                    parseAndAddToDetails(response, movieDetailsList)
-                    updateTextView(movieDetailsList, textView)
-                },
-                { error ->
-                    Log.e("API Error", "Error fetching data: $error")
-                }
-            )
+            val request = OkHttpRequest.Builder().url(url).get().build()
 
-            mRequestQueue?.add(stringRequest)
+            client.newCall(request).enqueue(object : Callback {
+                override fun onFailure(call: Call, e: IOException) {
+                    Log.e("API Error", "Error fetching data: $e")
+                }
+
+                override fun onResponse(call: Call, response: Response) {
+                    response.body?.let {
+                        val responseData = it.string()
+                        Log.d("API Response", responseData)
+                        parseAndAddToDetails(responseData, movieDetailsList)
+                        updateTextView(movieDetailsList, textView)
+                    }
+                }
+            })
         }
     }
+
     private fun parseAndAddToDetails(response: String, movieDetailsList: MutableList<String>) {
         try {
             val jsonObject = JSONObject(response)
-            val title = jsonObject.optString("Title")
-            val year = jsonObject.optString("Year")
-            val imdbID = jsonObject.optString("imdbID")
-            val type = jsonObject.optString("Type")
-            val poster = jsonObject.optString("Poster")
+            val resultsArray = jsonObject.getJSONArray("results")
 
-            val details = "Title: $title\nYear: $year\nIMDb ID: $imdbID\nType: $type\nPoster: $poster\n\n"
-            movieDetailsList.add(details)
+            for (i in 0 until resultsArray.length()) {
+                val movieObject = resultsArray.getJSONObject(i)
+                val title = movieObject.optString("title")
+                val releaseDate = movieObject.optString("release_date")
+                val overview = movieObject.optString("overview")
+                val posterPath = movieObject.optString("poster_path")
+
+                val details = "Title: $title\nRelease Date: $releaseDate\nOverview: $overview\nPoster: $posterPath\n\n"
+                movieDetailsList.add(details)
+            }
         } catch (e: JSONException) {
             Log.e("JSON Error", "Error parsing JSON: $e")
         }
