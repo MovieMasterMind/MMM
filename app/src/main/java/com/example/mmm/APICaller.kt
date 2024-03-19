@@ -1,49 +1,42 @@
-package com.example.mmm
-
 import android.util.Log
-import android.widget.ImageView
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
-import com.bumptech.glide.Glide
 import okhttp3.*
+import org.json.JSONArray
 import org.json.JSONException
 import org.json.JSONObject
 import java.io.IOException
 
 class APICaller {
-    //This is used for the client.NewCall
+
     private val client = OkHttpClient()
 
-    fun getData(apiUrlList: List<String>, textView: TextView, imageView: ImageView) {
+    fun getData(apiUrl: String, textView: TextView, recyclerView: RecyclerView) {
 
+        val request = Request.Builder().url(apiUrl).get().build()
 
-        val movieDetailsList = mutableListOf<String>()
+        client.newCall(request).enqueue(object : Callback {
+            override fun onFailure(call: Call, e: IOException) {
+                Log.e("API Error", "Error fetching data: $e")
+            }
 
-        for (url in apiUrlList) {
-            val request = Request.Builder().url(url).get().build()
-
-            client.newCall(request).enqueue(object : Callback {
-                override fun onFailure(call: Call, e: IOException) {
-                    Log.e("API Error", "Error fetching data: $e")
+            override fun onResponse(call: Call, response: Response) {
+                response.body?.let {
+                    val responseData = it.string()
+                    Log.d("API Response", responseData)
+                    parseAndDisplayData(responseData, textView, recyclerView)
                 }
-
-                override fun onResponse(call: Call, response: Response) {
-                    response.body?.let {
-                        val responseData = it.string()
-                        Log.d("API Response", responseData)
-                        parseAndAddToDetails(responseData, movieDetailsList, imageView)
-                        updateTextView(movieDetailsList, textView)
-                    }
-                }
-            })
-        }
+            }
+        })
     }
 
-    private fun parseAndAddToDetails(response: String, movieDetailsList: MutableList<String>, imageView: ImageView) {
+    private fun parseAndDisplayData(response: String, textView: TextView, recyclerView: RecyclerView) {
         try {
             val jsonObject = JSONObject(response)
             val resultsArray = jsonObject.getJSONArray("results")
 
+            // Display details about the movie in the TextView
+            val movieDetails = StringBuilder()
             for (i in 0 until resultsArray.length()) {
                 val movieObject = resultsArray.getJSONObject(i)
                 val title = movieObject.optString("title")
@@ -52,22 +45,29 @@ class APICaller {
                 val posterPath = movieObject.optString("poster_path")
 
                 val details = "Title: $title\nRelease Date: $releaseDate\nOverview: $overview\nPoster: $posterPath\n\n"
-                movieDetailsList.add(details)
-
-                // Load poster image using Glide
-                val posterUrl = "https://image.tmdb.org/t/p/w500$posterPath" // Construct poster URL
-
-                //TODO get working with RecyclerView as right now this just Crashes on start up
-                //Glide.with(imageView.context).load(posterUrl).into(imageView)
+                movieDetails.append(details)
             }
+            textView.post { textView.text = movieDetails.toString() }
+
+            // Load poster images into the RecyclerView
+            val adapter = MoviePosterAdapter(getPosterUrls(resultsArray))
+            recyclerView.post { recyclerView.adapter = adapter }
+
+
         } catch (e: JSONException) {
             Log.e("JSON Error", "Error parsing JSON: $e")
         }
     }
 
-    private fun updateTextView(movieDetailsList: MutableList<String>, textView: TextView) {
-        val allMovieDetails = movieDetailsList.joinToString(separator = "")
-        textView.text = allMovieDetails
-    }
 
+    private fun getPosterUrls(resultsArray: JSONArray): List<String> {
+        val posterUrls = mutableListOf<String>()
+        for (i in 0 until resultsArray.length()) {
+            val movieObject = resultsArray.getJSONObject(i)
+            val posterPath = movieObject.optString("poster_path")
+            val posterUrl = "https://image.tmdb.org/t/p/w500$posterPath"
+            posterUrls.add(posterUrl)
+        }
+        return posterUrls
+    }
 }

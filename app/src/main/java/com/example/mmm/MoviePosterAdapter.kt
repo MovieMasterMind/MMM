@@ -5,6 +5,7 @@ import android.widget.ImageView
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.example.mmm.R
+import com.bumptech.glide.request.target.Target
 
 class MoviePosterAdapter(private val posterUrls: List<String>) :
     //This is a subclass of RecyclerView.Adapter, called PosterViewHolder
@@ -20,6 +21,7 @@ class MoviePosterAdapter(private val posterUrls: List<String>) :
     override fun onBindViewHolder(holder: PosterViewHolder, position: Int) {
         Glide.with(holder.itemView.context)
             .load(posterUrls[position])
+            //.override(0,0) // Specify the desired size for loading the original image
             .into(holder.imageView)
     }
 

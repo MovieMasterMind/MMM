@@ -27,11 +27,12 @@
 
             <!-- Your other views -->
 
-            <!-- Title TextView -->
+
+            <!-- Title For Horror Movies -->
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Top Horror Movies from 2023"
+                android:text="Trending Horror Movies"
                 android:textSize="20sp"
                 android:textStyle="bold"
                 android:layout_marginBottom="8dp"
@@ -39,7 +40,7 @@
                 android:paddingBottom="8dp"
                 android:paddingStart="8dp"
                 android:paddingEnd="8dp"/>
-
+            <!-- Detail text For Horror Movies -->
             <TextView
                 android:id="@+id/movieDetailsTextViewHorror"
                 android:layout_width="wrap_content"
@@ -51,24 +52,23 @@
                 android:paddingTop="64dp"
                 android:paddingBottom="8dp"
                 android:paddingStart="8dp"
-                android:paddingEnd="8dp"/>
-
+                android:paddingEnd="8dp"
+                android:visibility="gone"/>
+            <!-- Horizontal ScrollView For Images -->
             <androidx.recyclerview.widget.RecyclerView
-                android:id="@+id/recyclerView"
+                android:id="@+id/recyclerViewHorror"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent" />
 
-            <ImageView
-                android:id="@+id/imageViewPosterHorror"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:scaleType="fitCenter"
-                android:layout_margin="8dp" />
 
+
+
+
+            <!-- Title For Drama Movies -->
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Top Drama Movies from 2023"
+                android:text="Trending Drama Movies"
                 android:textSize="20sp"
                 android:textStyle="bold"
                 android:layout_marginBottom="8dp"
@@ -76,7 +76,7 @@
                 android:paddingBottom="8dp"
                 android:paddingStart="8dp"
                 android:paddingEnd="8dp"/>
-
+            <!-- Detail text For Drama Movies -->
             <TextView
                 android:id="@+id/movieDetailsTextViewDrama"
                 android:layout_width="wrap_content"
@@ -84,16 +84,23 @@
                 android:text="Movie Details"
                 android:textSize="16sp"
                 android:gravity="center"
-
                 android:paddingTop="64dp"
                 android:paddingBottom="8dp"
                 android:paddingStart="8dp"
-                android:paddingEnd="8dp"/>
+                android:paddingEnd="8dp"
+                android:visibility="gone"/>
+            <!-- Horizontal ScrollView For Images -->
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/recyclerViewDrama"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent" />
 
+
+            <!-- Title For Action Movies -->
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Recent Award Winning Movies"
+                android:text="Trending Action Movies"
                 android:textSize="20sp"
                 android:textStyle="bold"
                 android:layout_marginBottom="8dp"
@@ -101,7 +108,77 @@
                 android:paddingBottom="8dp"
                 android:paddingStart="8dp"
                 android:paddingEnd="8dp"/>
+            <!-- Detail text For Action Movies -->
+            <TextView
+                android:id="@+id/movieDetailsTextViewAction"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Movie Details"
+                android:textSize="16sp"
+                android:gravity="center"
+                android:paddingTop="64dp"
+                android:paddingBottom="8dp"
+                android:paddingStart="8dp"
+                android:paddingEnd="8dp"
+                android:visibility="gone"/>
+            <!-- Horizontal ScrollView For Images -->
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/recyclerViewAction"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent" />
 
+
+
+
+
+            <!-- Title For Comedy Movies -->
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Trending Comedy Movies"
+                android:textSize="20sp"
+                android:textStyle="bold"
+                android:layout_marginBottom="8dp"
+                android:paddingTop="64dp"
+                android:paddingBottom="8dp"
+                android:paddingStart="8dp"
+                android:paddingEnd="8dp"/>
+            <!-- Detail text For Action Movies -->
+            <TextView
+                android:id="@+id/movieDetailsTextViewComedy"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Movie Details"
+                android:textSize="16sp"
+                android:gravity="center"
+                android:paddingTop="64dp"
+                android:paddingBottom="8dp"
+                android:paddingStart="8dp"
+                android:paddingEnd="8dp"
+                android:visibility="gone"/>
+            <!-- Horizontal ScrollView For Images -->
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/recyclerViewComedy"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent" />
+
+
+
+
+            <!-- Title For Award Winning Movies -->
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Trending Award Winning Movies"
+                android:textSize="20sp"
+                android:textStyle="bold"
+                android:layout_marginBottom="8dp"
+                android:paddingTop="64dp"
+                android:paddingBottom="8dp"
+                android:paddingStart="8dp"
+                android:paddingEnd="8dp"/>
+            <!-- Detail text For Award Winning Movies -->
             <TextView
                 android:id="@+id/movieDetailsTextViewAwards"
                 android:layout_width="wrap_content"
@@ -113,7 +190,13 @@
                 android:paddingTop="64dp"
                 android:paddingBottom="8dp"
                 android:paddingStart="8dp"
-                android:paddingEnd="8dp"/>
+                android:paddingEnd="8dp"
+                android:visibility="gone"/>
+            <!-- Horizontal ScrollView For Images -->
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/recyclerViewAward"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent" />
 
             <!-- add other views -->
 
