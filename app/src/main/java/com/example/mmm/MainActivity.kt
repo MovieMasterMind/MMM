@@ -1,8 +1,11 @@
 package com.example.mmm
 
+import android.annotation.SuppressLint
+import android.app.SearchManager
+import android.content.ComponentName
+import android.content.Context
 import android.os.Bundle
 import android.view.Menu
-import com.google.android.material.snackbar.Snackbar
 import com.google.android.material.navigation.NavigationView
 import androidx.navigation.findNavController
 import androidx.navigation.ui.AppBarConfiguration
@@ -19,6 +22,8 @@ import com.android.volley.toolbox.StringRequest
 import com.android.volley.toolbox.Volley
 import com.google.gson.Gson
 import android.util.Log
+import android.widget.TextView
+import androidx.appcompat.widget.SearchView
 
 class MainActivity : AppCompatActivity() {
 
@@ -41,10 +46,6 @@ class MainActivity : AppCompatActivity() {
 
         setSupportActionBar(binding.appBarMain.toolbar)
 
-        binding.appBarMain.fab.setOnClickListener { view ->
-            Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                .setAction("Action", null).show()
-        }
         val drawerLayout: DrawerLayout = binding.drawerLayout
         val navView: NavigationView = binding.navView
         val navController = findNavController(R.id.nav_host_fragment_content_main)
@@ -175,11 +176,39 @@ class MainActivity : AppCompatActivity() {
 
 
 
+    @SuppressLint("ServiceCast")
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
         // Inflate the menu; this adds items to the action bar if it is present.
         menuInflater.inflate(R.menu.main, menu)
+        menuInflater.inflate(R.menu.options_menu, menu)
+
+        val searchItem = menu.findItem(R.id.search)
+        val searchView = searchItem.actionView as SearchView
+
+        searchView.queryHint = "Enter movie title"
+
+        val results = findViewById<TextView>(R.id.search_results)
+        searchView.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
+            override fun onQueryTextSubmit(query: String?): Boolean {
+                // Perform search action here
+                    results.text = "sucess"
+                return true
+            }
+
+            override fun onQueryTextChange(newText: String?): Boolean {
+                // Filter data based on newText
+                return true
+            }
+        })
+//        val searchManager = getSystemService(Context.SEARCH_SERVICE) as SearchManager
+//        val searchView = menu.findItem(R.id.search).actionView as SearchView
+//        val component = ComponentName(this, MainActivity::class.java)
+//        val searchableInfo = searchManager.getSearchableInfo(component)
+//        searchView.setSearchableInfo(searchableInfo)
+
         return true
     }
+
 
     override fun onSupportNavigateUp(): Boolean {
         val navController = findNavController(R.id.nav_host_fragment_content_main)
