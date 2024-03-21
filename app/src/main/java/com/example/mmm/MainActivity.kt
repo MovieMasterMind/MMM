@@ -1,9 +1,6 @@
 package com.example.mmm
 
 import android.annotation.SuppressLint
-import android.app.SearchManager
-import android.content.ComponentName
-import android.content.Context
 import android.os.Bundle
 import android.view.Menu
 import com.google.android.material.navigation.NavigationView
@@ -191,7 +188,7 @@ class MainActivity : AppCompatActivity() {
         searchView.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
             override fun onQueryTextSubmit(query: String?): Boolean {
                 // Perform search action here
-                    results.text = "sucess"
+                    results.text = "test"
                 return true
             }
 
@@ -200,6 +197,7 @@ class MainActivity : AppCompatActivity() {
                 return true
             }
         })
+
 //        val searchManager = getSystemService(Context.SEARCH_SERVICE) as SearchManager
 //        val searchView = menu.findItem(R.id.search).actionView as SearchView
 //        val component = ComponentName(this, MainActivity::class.java)
