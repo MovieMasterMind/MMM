@@ -26,6 +26,18 @@
             android:gravity="center">
 
             <!-- Your other views -->
+            <TextView
+                android:id="@+id/search_results"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Search Results"
+                android:textSize="16sp"
+                android:gravity="center"
+
+                android:paddingTop="64dp"
+                android:paddingBottom="8dp"
+                android:paddingStart="8dp"
+                android:paddingEnd="8dp"/>
 
             <TextView
                 android:id="@+id/movieDetailsTextView"
