@@ -5,13 +5,6 @@ import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import android.util.Log
 import android.view.Menu
-import androidx.drawerlayout.widget.DrawerLayout
-import androidx.navigation.findNavController
-import androidx.navigation.ui.AppBarConfiguration
-import androidx.navigation.ui.setupActionBarWithNavController
-import androidx.navigation.ui.setupWithNavController
-import com.example.mmm.databinding.ActivityMainBinding
-import com.google.android.material.navigation.NavigationView
 
 class SearchableActivity : AppCompatActivity() {
 
