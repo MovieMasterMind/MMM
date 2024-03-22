@@ -16,51 +16,47 @@
             <!-- Your other views -->
 
             <TextView
-                android:id="@+id/queryTextView"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text=""
-                android:textSize="16sp"
-                android:gravity="center"
-
-                android:paddingTop="64dp"
-                android:paddingBottom="8dp"
-                android:paddingStart="8dp"
-                android:paddingEnd="8dp"/>
-
-            <TextView
-                android:id="@+id/search_results"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@string/search_results"
                 android:textSize="16sp"
                 android:gravity="center"
 
-                android:paddingTop="64dp"
-                android:paddingBottom="8dp"
-                android:paddingStart="8dp"
-                android:paddingEnd="8dp"/>
+                android:paddingTop="8dp"
+                android:paddingBottom="0dp"
+                android:paddingStart="0dp"
+                android:paddingEnd="0dp"/>
 
             <TextView
-                android:id="@+id/movieDetailsTextView"
+                android:id="@+id/queryTextView"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/search_query"
+                android:textSize="16sp"
+                android:gravity="center"
+
+                android:paddingTop="0dp"
+                android:paddingBottom="0dp"
+                android:paddingStart="0dp"
+                android:paddingEnd="0dp"/>
+
+            <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@string/movie_details"
                 android:textSize="16sp"
-                android:gravity="center"
 
-                android:paddingTop="64dp"
+                android:paddingTop="8dp"
                 android:paddingBottom="8dp"
                 android:paddingStart="8dp"
                 android:paddingEnd="8dp"/>
 
             <TextView
-                android:id="@+id/movieTitleTextView"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="@string/movie_title_text"
+                android:text="@string/movie_title"
                 android:textSize="16sp"
-                android:gravity="center"
+                android:layout_gravity="left"
 
                 android:paddingTop="64dp"
                 android:paddingBottom="8dp"
@@ -71,22 +67,21 @@
                 android:id="@+id/movieTitle"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="@string/movie_title"
+                android:text="@string/todo"
                 android:textSize="16sp"
-                android:gravity="center"
+                android:layout_gravity="left"
 
-                android:paddingTop="64dp"
+                android:paddingTop="8dp"
                 android:paddingBottom="8dp"
                 android:paddingStart="8dp"
                 android:paddingEnd="8dp"/>
 
             <TextView
-                android:id="@+id/movieDescriptionTextView"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="@string/movie_description_text"
+                android:text="@string/movie_description"
                 android:textSize="16sp"
-                android:gravity="center"
+                android:layout_gravity="left"
 
                 android:paddingTop="64dp"
                 android:paddingBottom="8dp"
@@ -97,11 +92,11 @@
                 android:id="@+id/movieDescription"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="@string/movie_description"
+                android:text="@string/todo"
                 android:textSize="16sp"
-                android:gravity="center"
+                android:layout_gravity="left"
 
-                android:paddingTop="64dp"
+                android:paddingTop="8dp"
                 android:paddingBottom="8dp"
                 android:paddingStart="8dp"
                 android:paddingEnd="8dp"/>

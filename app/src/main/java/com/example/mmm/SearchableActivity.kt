@@ -17,7 +17,7 @@ import org.json.JSONObject
 class SearchableActivity : AppCompatActivity() {
 
     private lateinit var queryTextView: TextView
-    private val apiKey = ""
+    private val apiKey = "1f443a53a6aabe4de284f9c46a17f64c"
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
