@@ -1,5 +1,6 @@
 package com.example.mmm
 
+import MoviePosterAdapter
 import android.os.Bundle
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
@@ -12,10 +13,15 @@ import kotlinx.coroutines.withContext
 import okhttp3.OkHttpClient
 import okhttp3.Request
 import org.json.JSONObject
+import androidx.recyclerview.widget.RecyclerView
+
 
 class SearchableActivity : AppCompatActivity() {
 
     private lateinit var queryTextView: TextView
+    private lateinit var recyclerView: RecyclerView
+    private lateinit var adapter: MoviePosterAdapter
+
     private val apiKey = "1f443a53a6aabe4de284f9c46a17f64c"
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -23,46 +29,11 @@ class SearchableActivity : AppCompatActivity() {
         setContentView(R.layout.search_results)
 
         queryTextView = findViewById(R.id.queryTextView)
-
-        val previousQuery = intent.getStringExtra("QUERY") ?: ""
-        queryTextView.text = previousQuery
-
-        // Fetch movie information based on the search query
-        fetchMovieInfo(previousQuery)
+        recyclerView = findViewById(R.id.recyclerView)
     }
 
     private fun fetchMovieInfo(query: String) {
-        lifecycleScope.launch {
-            try {
-                val client = OkHttpClient()
-                val request = Request.Builder()
-                    .url("https://api.themoviedb.org/3/search/movie?api_key=$apiKey&query=$query")
-                    .build()
 
-                val response = withContext(Dispatchers.IO) {
-                    client.newCall(request).execute()
-                }
-
-                val jsonData = response.body?.string()
-
-                if (jsonData != null) {
-                    val jsonObject = JSONObject(jsonData)
-                    val results = jsonObject.getJSONArray("results")
-
-                    if (results.length() > 0) {
-                        val movie = results.getJSONObject(0)
-                        val title = movie.getString("title")
-                        val overview = movie.getString("overview")
-
-                        // Update UI with movie information
-                        findViewById<TextView>(R.id.movieTitle).text = title
-                        findViewById<TextView>(R.id.movieDescription).text = overview
-                    }
-                }
-            } catch (e: Exception) {
-                Log.e("SearchableActivity", "Error fetching movie information: ${e.message}")
-            }
-        }
     }
 
     // Function to retrieve the previous search query

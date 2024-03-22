@@ -31,7 +31,7 @@
                 android:id="@+id/movieDetailsTextView"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Movie Details"
+                android:text="@string/movie_details"
                 android:textSize="16sp"
                 android:gravity="center"
 
