@@ -180,7 +180,9 @@ class MainActivity : AppCompatActivity() {
     @SuppressLint("ServiceCast")
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
         // Inflate the menu; this adds items to the action bar if it is present.
-        menuInflater.inflate(R.menu.main, menu)
+        // Removed settings button temporarily since it may cause the search
+        // function to disappear if clicked while in search bar
+        //menuInflater.inflate(R.menu.main, menu)
         menuInflater.inflate(R.menu.options_menu, menu)
 
         val searchItem = menu.findItem(R.id.search)
