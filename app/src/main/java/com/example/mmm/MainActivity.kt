@@ -1,6 +1,7 @@
 package com.example.mmm
 
 import android.annotation.SuppressLint
+import android.content.Intent
 import android.os.Bundle
 import android.view.Menu
 import com.google.android.material.navigation.NavigationView
@@ -23,14 +24,11 @@ import android.widget.TextView
 import androidx.appcompat.widget.SearchView
 
 class MainActivity : AppCompatActivity() {
-
     //Adding variables API
     private var mRequestQueue: RequestQueue? = null
 //    private var mStringRequest: StringRequest? = null
 //    private val movieUrl = "//https://www.omdbapi.com/?t=batman&apikey=8081b028"
 //    private val searchUrl = "https://www.omdbapi.com/?t=batman&apikey=8081b028"
-
-
 
     private lateinit var appBarConfiguration: AppBarConfiguration
     private lateinit var binding: ActivityMainBinding
@@ -56,14 +54,30 @@ class MainActivity : AppCompatActivity() {
         setupActionBarWithNavController(navController, appBarConfiguration)
         navView.setupWithNavController(navController) // Injecting the code for network request
 
-//        var apiRequestQueue: RequestQueue? = null
+        // Set up SearchView
+//        val searchView = findViewById<SearchView>(R.id.searchView)
+//        searchView?.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
+            // Implement listener methods
+//        })
+
+//        val searchView = findViewById<SearchView>(R.id.searchView)
+//        searchView.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
+//            override fun onQueryTextSubmit(query: String): Boolean {
+//                // Handle search query submission
+//                return true
+//            }
+//
+//            override fun onQueryTextChange(newText: String): Boolean {
+//                // Handle text changes in the search view
+//                // You can use this to perform search operation dynamically
+//                return true
+//            }
+//        })
+
+        //var apiRequestQueue: RequestQueue? = null
 
         //Calling getData will get the API data from OMDB using the API, to get the JSON file
-        getData()
-
-
-
-
+        //getData()
 
     }
 
@@ -155,21 +169,11 @@ class MainActivity : AppCompatActivity() {
         }
 
         // Set the text of the TextView to the combined details
-        binding.movieDetailsTextView.text = details.toString()
+        //binding.movieDetailsTextView.text = details.toString()
 
         // Scroll to the top of the ScrollView
-        binding.movieDetailsTextView.post { binding.movieDetailsTextView.scrollTo(0, 0) }
+        //binding.movieDetailsTextView.post { binding.movieDetailsTextView.scrollTo(0, 0) }
     }
-
-
-
-
-
-
-
-
-
-
 
 
 
@@ -182,29 +186,24 @@ class MainActivity : AppCompatActivity() {
         val searchItem = menu.findItem(R.id.search)
         val searchView = searchItem.actionView as SearchView
 
-        searchView.queryHint = "Enter movie title"
+        searchView.queryHint = "Search for movies"
 
-        val results = findViewById<TextView>(R.id.search_results)
         searchView.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
+            // Called when the user submits final query
             override fun onQueryTextSubmit(query: String?): Boolean {
-                // Perform search action here
-                    results.text = "test"
+                // Navigate to the search_results activity
+                val intent = Intent(this@MainActivity, SearchableActivity::class.java)
+                startActivity(intent)
                 return true
             }
 
+            // Called everytime a character is changed in the query
             override fun onQueryTextChange(newText: String?): Boolean {
-                // Filter data based on newText
-                return true
+                // Not needed for this case
+                return false
             }
         })
-
-//        val searchManager = getSystemService(Context.SEARCH_SERVICE) as SearchManager
-//        val searchView = menu.findItem(R.id.search).actionView as SearchView
-//        val component = ComponentName(this, MainActivity::class.java)
-//        val searchableInfo = searchManager.getSearchableInfo(component)
-//        searchView.setSearchableInfo(searchableInfo)
-
-        return true
+        return super.onCreateOptionsMenu(menu)
     }
 
 
