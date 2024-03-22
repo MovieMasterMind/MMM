@@ -3,25 +3,24 @@ package com.example.mmm
 import android.annotation.SuppressLint
 import android.content.Intent
 import android.os.Bundle
+import android.util.Log
 import android.view.Menu
-import com.google.android.material.navigation.NavigationView
+import androidx.appcompat.app.AppCompatActivity
+import androidx.appcompat.widget.SearchView
+import androidx.drawerlayout.widget.DrawerLayout
 import androidx.navigation.findNavController
 import androidx.navigation.ui.AppBarConfiguration
 import androidx.navigation.ui.navigateUp
 import androidx.navigation.ui.setupActionBarWithNavController
 import androidx.navigation.ui.setupWithNavController
-import androidx.drawerlayout.widget.DrawerLayout
-import androidx.appcompat.app.AppCompatActivity
-import com.android.volley.RequestQueue
-import com.example.mmm.databinding.ActivityMainBinding
-
 import com.android.volley.Request
+import com.android.volley.RequestQueue
 import com.android.volley.toolbox.StringRequest
 import com.android.volley.toolbox.Volley
+import com.example.mmm.databinding.ActivityMainBinding
+import com.google.android.material.navigation.NavigationView
 import com.google.gson.Gson
-import android.util.Log
-import android.widget.TextView
-import androidx.appcompat.widget.SearchView
+
 
 class MainActivity : AppCompatActivity() {
     //Adding variables API
@@ -53,26 +52,6 @@ class MainActivity : AppCompatActivity() {
         )
         setupActionBarWithNavController(navController, appBarConfiguration)
         navView.setupWithNavController(navController) // Injecting the code for network request
-
-        // Set up SearchView
-//        val searchView = findViewById<SearchView>(R.id.searchView)
-//        searchView?.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
-            // Implement listener methods
-//        })
-
-//        val searchView = findViewById<SearchView>(R.id.searchView)
-//        searchView.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
-//            override fun onQueryTextSubmit(query: String): Boolean {
-//                // Handle search query submission
-//                return true
-//            }
-//
-//            override fun onQueryTextChange(newText: String): Boolean {
-//                // Handle text changes in the search view
-//                // You can use this to perform search operation dynamically
-//                return true
-//            }
-//        })
 
         //var apiRequestQueue: RequestQueue? = null
 
@@ -194,9 +173,10 @@ class MainActivity : AppCompatActivity() {
             // Called when the user submits final query
             override fun onQueryTextSubmit(query: String?): Boolean {
                 // Navigate to the search_results activity
-                val intent = Intent(this@MainActivity, SearchableActivity::class.java)
+                val intent = Intent(applicationContext, SearchableActivity::class.java)
                 startActivity(intent)
-                return true
+
+                return false
             }
 
             // Called everytime a character is changed in the query
