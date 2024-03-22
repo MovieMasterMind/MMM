@@ -16,4 +16,8 @@
     <string name="movie_details">Movie Details</string>
 
     <string name="previous_search_query">Previous Search Query: %s</string>
+    <string name="movie_title">Movie title</string>
+    <string name="movie_title_text">Movie title text</string>
+    <string name="movie_description">Movie description</string>
+    <string name="movie_description_text">Movie description text</string>
 </resources>

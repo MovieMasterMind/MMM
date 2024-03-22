@@ -5,40 +5,65 @@ import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import android.util.Log
 import android.view.Menu
+import androidx.lifecycle.lifecycleScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
+import okhttp3.OkHttpClient
+import okhttp3.Request
+import org.json.JSONObject
 
 class SearchableActivity : AppCompatActivity() {
 
-//    private lateinit var appBarConfiguration: AppBarConfiguration
-//    private lateinit var binding: ActivityMainBinding
     private lateinit var queryTextView: TextView
+    private val apiKey = ""
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.search_results)
 
-//        binding = ActivityMainBinding.inflate(layoutInflater)
-//        setContentView(binding.root)
-//
-//        setSupportActionBar(binding.appBarMain.toolbar)
-//
-//        val drawerLayout: DrawerLayout = binding.drawerLayout
-//        val navView: NavigationView = binding.navView
-//        val navController = findNavController(R.id.nav_host_fragment_content_main)
-//        // Passing each menu ID as a set of Ids because each
-//        // menu should be considered as top level destinations.
-//        appBarConfiguration = AppBarConfiguration(
-//            setOf(
-//                R.id.nav_home, R.id.nav_gallery, R.id.nav_slideshow
-//            ), drawerLayout
-//        )
-//        setupActionBarWithNavController(navController, appBarConfiguration)
-//        navView.setupWithNavController(navController) // Injecting the code for network request
-
-
         queryTextView = findViewById(R.id.queryTextView)
 
-        val previousQuery = getPreviousSearchQuery()
-        displaySearchQuery(previousQuery)
+        val previousQuery = intent.getStringExtra("QUERY") ?: ""
+        queryTextView.text = previousQuery
+
+        // Fetch movie information based on the search query
+        fetchMovieInfo(previousQuery)
+    }
+
+    private fun fetchMovieInfo(query: String) {
+        lifecycleScope.launch {
+            try {
+                val client = OkHttpClient()
+                val request = Request.Builder()
+                    .url("https://api.themoviedb.org/3/search/movie?api_key=$apiKey&query=$query")
+                    .build()
+
+                val response = withContext(Dispatchers.IO) {
+                    client.newCall(request).execute()
+                }
+
+                val jsonData = response.body?.string()
+
+                if (jsonData != null) {
+                    val jsonObject = JSONObject(jsonData)
+                    val results = jsonObject.getJSONArray("results")
+
+                    if (results.length() > 0) {
+                        val movie = results.getJSONObject(0)
+                        val title = movie.getString("title")
+                        val overview = movie.getString("overview")
+
+                        // Update UI with movie information
+                        findViewById<TextView>(R.id.movieTitle).text = title
+                        findViewById<TextView>(R.id.movieDescription).text = overview
+                    }
+                }
+            } catch (e: Exception) {
+                Log.e("SearchableActivity", "Error fetching movie information: ${e.message}")
+            }
+        }
     }
 
     // Function to retrieve the previous search query

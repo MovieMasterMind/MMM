@@ -61,11 +61,14 @@ dependencies {
 
     implementation ("com.github.kittinunf.fuel:fuel-android:2.3.1")
     implementation ("com.github.kittinunf.fuel:fuel-gson:2.3.1")
-    implementation ("org.jetbrains.kotlinx:kotlinx-coroutines-android:1.7.1")
+    implementation ("org.jetbrains.kotlinx:kotlinx-coroutines-android:1.8.0")
 
     implementation("com.android.volley:volley:1.2.1")
 
     implementation("com.google.code.gson:gson:2.10.1")
+
+    implementation("androidx.lifecycle:lifecycle-runtime-ktx:VERSION")
+
 
     // START OF JETPACK COMPOSE
     val composeBom = platform("androidx.compose:compose-bom:2024.02.02")
