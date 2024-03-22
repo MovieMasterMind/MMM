@@ -56,7 +56,7 @@
                 android:layout_height="wrap_content"
                 android:text="@string/movie_title"
                 android:textSize="16sp"
-                android:layout_gravity="left"
+                android:layout_gravity="start"
 
                 android:paddingTop="64dp"
                 android:paddingBottom="8dp"
@@ -69,7 +69,7 @@
                 android:layout_height="wrap_content"
                 android:text="@string/todo"
                 android:textSize="16sp"
-                android:layout_gravity="left"
+                android:layout_gravity="start"
 
                 android:paddingTop="8dp"
                 android:paddingBottom="8dp"
@@ -81,7 +81,7 @@
                 android:layout_height="wrap_content"
                 android:text="@string/movie_description"
                 android:textSize="16sp"
-                android:layout_gravity="left"
+                android:layout_gravity="start"
 
                 android:paddingTop="64dp"
                 android:paddingBottom="8dp"
@@ -94,7 +94,7 @@
                 android:layout_height="wrap_content"
                 android:text="@string/todo"
                 android:textSize="16sp"
-                android:layout_gravity="left"
+                android:layout_gravity="start"
 
                 android:paddingTop="8dp"
                 android:paddingBottom="8dp"
