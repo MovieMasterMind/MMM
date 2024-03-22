@@ -1,11 +1,13 @@
 package com.example.mmm
 
+
+//imported classes
+import APICaller
+import MoviePosterAdapter
 import android.annotation.SuppressLint
-import android.app.SearchManager
-import android.content.ComponentName
-import android.content.Context
 import android.os.Bundle
 import android.view.Menu
+import com.google.android.material.snackbar.Snackbar
 import com.google.android.material.navigation.NavigationView
 import androidx.navigation.findNavController
 import androidx.navigation.ui.AppBarConfiguration
@@ -14,30 +16,23 @@ import androidx.navigation.ui.setupActionBarWithNavController
 import androidx.navigation.ui.setupWithNavController
 import androidx.drawerlayout.widget.DrawerLayout
 import androidx.appcompat.app.AppCompatActivity
-import com.android.volley.RequestQueue
 import com.example.mmm.databinding.ActivityMainBinding
 
-import com.android.volley.Request
-import com.android.volley.toolbox.StringRequest
-import com.android.volley.toolbox.Volley
-import com.google.gson.Gson
-import android.util.Log
+//import com.google.gson.Gson
 import android.widget.TextView
-import androidx.appcompat.widget.SearchView
+import androidx.recyclerview.widget.LinearLayoutManager
+
+//For the TMDB update
+import androidx.recyclerview.widget.RecyclerView
 
 class MainActivity : AppCompatActivity() {
 
-    // Adding variables API
-    private var mRequestQueue: RequestQueue? = null
-    private var mStringRequest: StringRequest? = null
-    private val movieUrl = "//https://www.omdbapi.com/?t=batman&apikey=8081b028"
-    private val searchUrl = "https://www.omdbapi.com/?t=batman&apikey=8081b028"
-
-
-
     private lateinit var appBarConfiguration: AppBarConfiguration
     private lateinit var binding: ActivityMainBinding
+    private lateinit var recyclerView: RecyclerView
+    private lateinit var adapter: MoviePosterAdapter
 
+    @SuppressLint("CutPasteId")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
@@ -46,6 +41,10 @@ class MainActivity : AppCompatActivity() {
 
         setSupportActionBar(binding.appBarMain.toolbar)
 
+        binding.appBarMain.fab.setOnClickListener { view ->
+            Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
+                .setAction("Action", null).show()
+        }
         val drawerLayout: DrawerLayout = binding.drawerLayout
         val navView: NavigationView = binding.navView
         val navController = findNavController(R.id.nav_host_fragment_content_main)
@@ -59,205 +58,70 @@ class MainActivity : AppCompatActivity() {
         setupActionBarWithNavController(navController, appBarConfiguration)
         navView.setupWithNavController(navController) // Injecting the code for network request
 
-        var apiRequestQueue: RequestQueue? = null
 
-        // Calling getData will get the API data from OMDB using the API, to get the JSON file
-        getData()
+        //template API calls
+        val apiUrlsHorror =
+            "https://api.themoviedb.org/3/discover/movie?api_key=1f443a53a6aabe4de284f9c46a17f64c&with_genres=27&sort_by=popularity.desc"
+        val apiUrlsDrama =
+            "https://api.themoviedb.org/3/discover/movie?api_key=1f443a53a6aabe4de284f9c46a17f64c&with_genres=28&sort_by=popularity.desc"
+        val apiUrlsAction =
+            "https://api.themoviedb.org/3/discover/movie?api_key=1f443a53a6aabe4de284f9c46a17f64c&with_genres=18&sort_by=popularity.desc"
+        val apiUrlsComedy =
+            "https://api.themoviedb.org/3/discover/movie?api_key=1f443a53a6aabe4de284f9c46a17f64c&with_genres=35&sort_by=popularity.desc"
+        val apiUrlsAward =
+            "https://api.themoviedb.org/3/discover/movie?api_key=1f443a53a6aabe4de284f9c46a17f64c&sort_by=vote_average.desc&vote_count.gte=1000"
+
+        //template textViews
+        val textViewHorror = findViewById<TextView>(R.id.movieDetailsTextViewHorror)
+        val textViewDrama = findViewById<TextView>(R.id.movieDetailsTextViewDrama)
+        val textViewAction = findViewById<TextView>(R.id.movieDetailsTextViewAction)
+        val textViewComedy = findViewById<TextView>(R.id.movieDetailsTextViewComedy)
+        val textViewAward = findViewById<TextView>(R.id.movieDetailsTextViewAwards)
 
 
+        //template recycleViews
+        val recyclerViewHorror: RecyclerView = findViewById(R.id.recyclerViewHorror)
+        val recyclerViewDrama: RecyclerView = findViewById(R.id.recyclerViewDrama)
+        val recyclerViewAction: RecyclerView = findViewById(R.id.recyclerViewAction)
+        val recyclerViewComedy: RecyclerView = findViewById(R.id.recyclerViewComedy)
+        val recyclerViewAward: RecyclerView = findViewById(R.id.recyclerViewAward)
 
+        //Call setUpRecyclerView for each url textview and recyclerview
+        setUpRecyclerView(apiUrlsHorror, textViewHorror, recyclerViewHorror)
+        setUpRecyclerView(apiUrlsDrama, textViewDrama, recyclerViewDrama)
+        setUpRecyclerView(apiUrlsAction, textViewAction, recyclerViewAction)
+        setUpRecyclerView(apiUrlsComedy, textViewComedy, recyclerViewComedy)
+        setUpRecyclerView(apiUrlsAward, textViewAward, recyclerViewAward)
 
 
     }
 
-    // This works
-    private fun getData() {
-        // RequestQueue initialized
-        mRequestQueue = Volley.newRequestQueue(this)
+    private fun setUpRecyclerView(apiUrl: String, textView: TextView, recyclerView: RecyclerView) {
+        // Set up layout manager
+        val layoutManager = LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false)
+        recyclerView.layoutManager = layoutManager
+        // Create an instance of the adapter
+        adapter = MoviePosterAdapter(emptyList())
+        // Set the adapter to the RecyclerView
+        recyclerView.adapter = adapter
 
-        // First URL for the movie details
-        val movieUrl = "https://www.omdbapi.com/?t=batman&apikey=8081b028"
+        val apiCaller = APICaller() // Create an instance of APICaller
 
-        // Second URL for the search results
-        val searchUrl = "https://www.omdbapi.com/?s=batman&apikey=8081b028"
 
-        // String Request for movie details
-        val movieRequest = StringRequest(Request.Method.GET, movieUrl,
-            { response ->
-                Log.d("MovieResponse", response)
-                val movie = Gson().fromJson(response, Movie::class.java)
-                displayMovieDetails(movie, null)
-            },
-            { error ->
-                Log.i("TAG", "Error fetching movie details: $error")
-            }
-        )
+        apiCaller.getData(apiUrl, textView, recyclerView)
 
-        // String Request for search results
-        val searchRequest = StringRequest(Request.Method.GET, searchUrl,
-            { response ->
-                Log.d("SearchResponse", response)
-                val searchResult = Gson().fromJson(response, SearchResult::class.java)
-                displayMovieDetails(null, searchResult)
-            },
-            { error ->
-                Log.i("TAG", "Error fetching search results: $error")
-            }
-        )
-
-        // Add both requests to the request queue
-        mRequestQueue!!.add(movieRequest)
-        mRequestQueue!!.add(searchRequest)
     }
 
 
-    private fun displayMovieDetails(movie: Movie?, searchResult: SearchResult?) {
-        val details = StringBuilder()
-
-        // Append details for the single movie
-        if (movie != null) {
-            details.append("Single Movie Details:\n")
-            details.append("Title: ${movie.title}\n")
-            details.append("Year: ${movie.year}\n")
-            details.append("Rated: ${movie.rated}\n")
-            details.append("Released: ${movie.released}\n")
-            details.append("Runtime: ${movie.runtime}\n")
-            details.append("Genre: ${movie.genre}\n")
-            details.append("Director: ${movie.director}\n")
-            details.append("Writer: ${movie.writer}\n")
-            details.append("Actors: ${movie.actors}\n")
-            details.append("Plot: ${movie.plot}\n")
-            details.append("Language: ${movie.language}\n")
-            details.append("Country: ${movie.country}\n")
-            details.append("Awards: ${movie.awards}\n")
-            details.append("Poster: ${movie.poster}\n")
-            details.append("Metascore: ${movie.metascore}\n")
-            details.append("imdbRating: ${movie.imdbRating}\n")
-            details.append("imdbVotes: ${movie.imdbVotes}\n")
-            details.append("imdbID: ${movie.imdbID}\n")
-            details.append("Type: ${movie.type}\n")
-            details.append("DVD: ${movie.dvd}\n")
-            details.append("BoxOffice: ${movie.boxOffice}\n")
-            details.append("Production: ${movie.production}\n")
-            details.append("Website: ${movie.website}\n")
-            details.append("Response: ${movie.response}\n")
-            details.append("\n")
-        }
-
-        // Append details for the search results
-        if (searchResult?.search != null) {
-            details.append("Search Results:\n")
-            for (item in searchResult.search) {
-                details.append("Title: ${item.title}\n")
-                details.append("Year: ${item.year}\n")
-                details.append("imdbID: ${item.imdbID}\n")
-                details.append("Type: ${item.type}\n")
-                details.append("Poster: ${item.poster}\n")
-                details.append("\n")
-            }
-        }
-
-        // Set the text of the TextView to the combined details
-        binding.movieDetailsTextView.text = details.toString()
-
-        // Scroll to the top of the ScrollView
-        binding.movieDetailsTextView.post { binding.movieDetailsTextView.scrollTo(0, 0) }
-    }
-
-
-
-
-
-
-
-
-
-
-
-
-
-    @SuppressLint("ServiceCast")
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
         // Inflate the menu; this adds items to the action bar if it is present.
         menuInflater.inflate(R.menu.main, menu)
-        menuInflater.inflate(R.menu.options_menu, menu)
-
-        val searchItem = menu.findItem(R.id.search)
-        val searchView = searchItem.actionView as SearchView
-
-        searchView.queryHint = "Enter movie title"
-
-        val results = findViewById<TextView>(R.id.search_results)
-        searchView.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
-            override fun onQueryTextSubmit(query: String?): Boolean {
-                // Perform search action here
-                    results.text = "sucess"
-                return true
-            }
-
-            override fun onQueryTextChange(newText: String?): Boolean {
-                // Filter data based on newText
-                return true
-            }
-        })
-//        val searchManager = getSystemService(Context.SEARCH_SERVICE) as SearchManager
-//        val searchView = menu.findItem(R.id.search).actionView as SearchView
-//        val component = ComponentName(this, MainActivity::class.java)
-//        val searchableInfo = searchManager.getSearchableInfo(component)
-//        searchView.setSearchableInfo(searchableInfo)
-
         return true
     }
-
 
     override fun onSupportNavigateUp(): Boolean {
         val navController = findNavController(R.id.nav_host_fragment_content_main)
         return navController.navigateUp(appBarConfiguration) || super.onSupportNavigateUp()
     }
-
-
-    data class Movie(
-        val title: String,
-        val year: String,
-        val rated: String,
-        val released: String,
-        val runtime: String,
-        val genre: String,
-        val director: String,
-        val writer: String,
-        val actors: String,
-        val plot: String,
-        val language: String,
-        val country: String,
-        val awards: String,
-        val poster: String,
-        val ratings: List<Rating>,
-        val metascore: String,
-        val imdbRating: String,
-        val imdbVotes: String,
-        val imdbID: String,
-        val type: String,
-        val dvd: String,
-        val boxOffice: String,
-        val production: String,
-        val website: String,
-        val response: String
-    )
-
-    data class Rating(
-        val source: String,
-        val value: String
-    )
-
-    data class SearchResult(
-        val search: List<MovieItem>
-    )
-
-    data class MovieItem(
-        val title: String,
-        val year: String,
-        val imdbID: String,
-        val type: String,
-        val poster: String
-    )
 }
+
