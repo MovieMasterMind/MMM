@@ -1,18 +1,10 @@
 package com.example.mmm
 
-import MoviePosterAdapter
 import android.os.Bundle
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import android.util.Log
 import android.view.Menu
-import androidx.lifecycle.lifecycleScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
-import okhttp3.OkHttpClient
-import okhttp3.Request
-import org.json.JSONObject
 import androidx.recyclerview.widget.RecyclerView
 
 
@@ -20,7 +12,6 @@ class SearchableActivity : AppCompatActivity() {
 
     private lateinit var queryTextView: TextView
     private lateinit var recyclerView: RecyclerView
-    private lateinit var adapter: MoviePosterAdapter
 
     private val apiKey = "1f443a53a6aabe4de284f9c46a17f64c"
 
@@ -28,11 +19,13 @@ class SearchableActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.search_results)
 
-        queryTextView = findViewById(R.id.queryTextView)
-        recyclerView = findViewById(R.id.recyclerView)
+        fetchMovieInfo(getPreviousSearchQuery())
     }
 
     private fun fetchMovieInfo(query: String) {
+//        val apiUrl = "https://api.themoviedb.org/3/movie/popular?api_key=$apiKey"
+//        queryTextView = findViewById(R.id.queryTextView)
+//        recyclerView = findViewById(R.id.recyclerView)
 
     }
 

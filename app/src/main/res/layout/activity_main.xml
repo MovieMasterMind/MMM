@@ -14,7 +14,6 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent" />
 
-
     <ScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent">
@@ -23,7 +22,8 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical"
-            android:gravity="center">
+            android:gravity="center"
+            app:layout_constraintTop_toBottomOf="@id/toolbar">
 
             <!-- Your other views -->
 
@@ -40,17 +40,179 @@
                 android:paddingStart="8dp"
                 android:paddingEnd="8dp"/>
 
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/trending_horror_movies"
+                android:textSize="20sp"
+                android:textStyle="bold"
+                android:layout_marginBottom="8dp"
+                android:paddingTop="64dp"
+                android:paddingBottom="8dp"
+                android:paddingStart="8dp"
+                android:paddingEnd="8dp"/>
+            <!-- Detail text For Horror Movies -->
+            <TextView
+                android:id="@+id/movieDetailsTextViewHorror"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/movie_details"
+                android:textSize="16sp"
+                android:gravity="center"
+
+                android:paddingTop="64dp"
+                android:paddingBottom="8dp"
+                android:paddingStart="8dp"
+                android:paddingEnd="8dp"
+                android:visibility="gone"/>
+            <!-- Horizontal ScrollView For Images -->
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/recyclerViewHorror"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent" />
+
+
+
+
+
+            <!-- Title For Drama Movies -->
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/trending_drama_movies"
+                android:textSize="20sp"
+                android:textStyle="bold"
+                android:layout_marginBottom="8dp"
+                android:paddingTop="64dp"
+                android:paddingBottom="8dp"
+                android:paddingStart="8dp"
+                android:paddingEnd="8dp"/>
+            <!-- Detail text For Drama Movies -->
+            <TextView
+                android:id="@+id/movieDetailsTextViewDrama"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/movie_details"
+                android:textSize="16sp"
+                android:gravity="center"
+                android:paddingTop="64dp"
+                android:paddingBottom="8dp"
+                android:paddingStart="8dp"
+                android:paddingEnd="8dp"
+                android:visibility="gone"/>
+            <!-- Horizontal ScrollView For Images -->
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/recyclerViewDrama"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent" />
+
+
+            <!-- Title For Action Movies -->
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/trending_action_movies"
+                android:textSize="20sp"
+                android:textStyle="bold"
+                android:layout_marginBottom="8dp"
+                android:paddingTop="64dp"
+                android:paddingBottom="8dp"
+                android:paddingStart="8dp"
+                android:paddingEnd="8dp"/>
+            <!-- Detail text For Action Movies -->
+            <TextView
+                android:id="@+id/movieDetailsTextViewAction"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/movie_details"
+                android:textSize="16sp"
+                android:gravity="center"
+                android:paddingTop="64dp"
+                android:paddingBottom="8dp"
+                android:paddingStart="8dp"
+                android:paddingEnd="8dp"
+                android:visibility="gone"/>
+            <!-- Horizontal ScrollView For Images -->
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/recyclerViewAction"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent" />
+
+
+
+
+
+            <!-- Title For Comedy Movies -->
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/trending_comedy_movies"
+                android:textSize="20sp"
+                android:textStyle="bold"
+                android:layout_marginBottom="8dp"
+                android:paddingTop="64dp"
+                android:paddingBottom="8dp"
+                android:paddingStart="8dp"
+                android:paddingEnd="8dp"/>
+            <!-- Detail text For Action Movies -->
+            <TextView
+                android:id="@+id/movieDetailsTextViewComedy"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/movie_details"
+                android:textSize="16sp"
+                android:gravity="center"
+                android:paddingTop="64dp"
+                android:paddingBottom="8dp"
+                android:paddingStart="8dp"
+                android:paddingEnd="8dp"
+                android:visibility="gone"/>
+            <!-- Horizontal ScrollView For Images -->
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/recyclerViewComedy"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent" />
+
+
+
+
+            <!-- Title For Award Winning Movies -->
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/trending_award_winning_movies"
+                android:textSize="20sp"
+                android:textStyle="bold"
+                android:layout_marginBottom="8dp"
+                android:paddingTop="64dp"
+                android:paddingBottom="8dp"
+                android:paddingStart="8dp"
+                android:paddingEnd="8dp"/>
+            <!-- Detail text For Award Winning Movies -->
+            <TextView
+                android:id="@+id/movieDetailsTextViewAwards"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/movie_details"
+                android:textSize="16sp"
+                android:gravity="center"
+
+                android:paddingTop="64dp"
+                android:paddingBottom="8dp"
+                android:paddingStart="8dp"
+                android:paddingEnd="8dp"
+                android:visibility="gone"/>
+            <!-- Horizontal ScrollView For Images -->
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/recyclerViewAward"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent" />
+
             <!-- add other views -->
 
         </LinearLayout>
     </ScrollView>
-
-    <!--    <ImageView-->
-    <!--        android:id="@+id/imageView"-->
-    <!--        android:layout_width="wrap_content"-->
-    <!--        android:layout_height="wrap_content"-->
-    <!--        android:layout_centerInParent="true"-->
-    <!--        android:src="@drawable/placeholder_image" />-->
 
     <androidx.compose.ui.platform.ComposeView
         android:id="@+id/compose_view"

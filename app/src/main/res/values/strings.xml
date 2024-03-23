@@ -20,4 +20,9 @@
     <string name="movie_description">Movie Description</string>
     <string name="search_query">Search Query</string>
     <string name="todo">...</string>
+    <string name="trending_horror_movies">Trending Horror Movies</string>
+    <string name="trending_drama_movies">Trending Drama Movies</string>
+    <string name="trending_action_movies">Trending Action Movies</string>
+    <string name="trending_comedy_movies">Trending Comedy Movies</string>
+    <string name="trending_award_winning_movies">Trending Award Winning Movies</string>
 </resources>
