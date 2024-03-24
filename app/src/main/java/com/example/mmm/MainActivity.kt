@@ -128,7 +128,7 @@ class MainActivity : AppCompatActivity() {
 
             // Called everytime a character is changed in the query
             override fun onQueryTextChange(newText: String?): Boolean {
-                // Not needed for this case
+                // Not needed yet
                 return false
             }
         })
