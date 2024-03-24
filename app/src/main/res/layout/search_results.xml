@@ -28,19 +28,6 @@
                 android:paddingEnd="0dp"/>
 
             <TextView
-                android:id="@+id/queryTextView"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/search_query"
-                android:textSize="16sp"
-                android:gravity="center"
-
-                android:paddingTop="0dp"
-                android:paddingBottom="0dp"
-                android:paddingStart="0dp"
-                android:paddingEnd="0dp"/>
-
-            <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@string/movie_details"
@@ -100,6 +87,25 @@
                 android:paddingBottom="8dp"
                 android:paddingStart="8dp"
                 android:paddingEnd="8dp"/>
+
+            <TextView
+                android:id="@+id/queryTextView"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/search_query"
+                android:textSize="16sp"
+                android:gravity="center"
+
+                android:paddingTop="0dp"
+                android:paddingBottom="0dp"
+                android:paddingStart="0dp"
+                android:paddingEnd="0dp"/>
+
+            <!-- Horizontal ScrollView For Images -->
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/recyclerViewResults"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent" />
 
             <!-- add other views -->
 

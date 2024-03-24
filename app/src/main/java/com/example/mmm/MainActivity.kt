@@ -2,35 +2,33 @@ package com.example.mmm
 
 
 //imported classes
+
+//For the TMDB update
+
 import APICaller
 import MoviePosterAdapter
 import android.annotation.SuppressLint
+import android.content.Intent
 import android.os.Bundle
 import android.view.Menu
-import com.google.android.material.navigation.NavigationView
+import android.widget.TextView
+import androidx.appcompat.app.AppCompatActivity
+import androidx.appcompat.widget.SearchView
+import androidx.drawerlayout.widget.DrawerLayout
 import androidx.navigation.findNavController
 import androidx.navigation.ui.AppBarConfiguration
 import androidx.navigation.ui.navigateUp
 import androidx.navigation.ui.setupActionBarWithNavController
 import androidx.navigation.ui.setupWithNavController
-import androidx.drawerlayout.widget.DrawerLayout
-import androidx.appcompat.app.AppCompatActivity
-import com.example.mmm.databinding.ActivityMainBinding
-
-import android.widget.TextView
 import androidx.recyclerview.widget.LinearLayoutManager
-
-//For the TMDB update
 import androidx.recyclerview.widget.RecyclerView
-
-import android.content.Intent
-import androidx.appcompat.widget.SearchView
+import com.example.mmm.databinding.ActivityMainBinding
+import com.google.android.material.navigation.NavigationView
 
 class MainActivity : AppCompatActivity() {
 
     private lateinit var appBarConfiguration: AppBarConfiguration
     private lateinit var binding: ActivityMainBinding
-    private lateinit var recyclerView: RecyclerView
     private lateinit var adapter: MoviePosterAdapter
 
     @SuppressLint("CutPasteId")
@@ -89,8 +87,6 @@ class MainActivity : AppCompatActivity() {
         setUpRecyclerView(apiUrlsAction, textViewAction, recyclerViewAction)
         setUpRecyclerView(apiUrlsComedy, textViewComedy, recyclerViewComedy)
         setUpRecyclerView(apiUrlsAward, textViewAward, recyclerViewAward)
-
-
     }
 
     private fun setUpRecyclerView(apiUrl: String, textView: TextView, recyclerView: RecyclerView) {
@@ -112,12 +108,9 @@ class MainActivity : AppCompatActivity() {
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
         // Inflate the menu; this adds items to the action bar if it is present.
-        //menuInflater.inflate(R.menu.main, menu)
-
-        // Inflate the menu; this adds items to the action bar if it is present.
         // Removed settings button temporarily since it may cause the search
         // function to disappear if clicked while in search bar
-        //menuInflater.inflate(R.menu.main, menu)
+        menuInflater.inflate(R.menu.main, menu)
         menuInflater.inflate(R.menu.options_menu, menu)
 
         val searchItem = menu.findItem(R.id.search)
@@ -131,6 +124,12 @@ class MainActivity : AppCompatActivity() {
                 // Navigate to the search_results activity
                 val intent = Intent(applicationContext, SearchableActivity::class.java)
                 startActivity(intent)
+
+//                val apiUrl = "https://api.themoviedb.org/3/search/movie?api_key=1f443a53a6aabe4de284f9c46a17f64c&query=$query"
+//                val queryTextView = findViewById<TextView>(R.id.queryTextView)
+//                val recyclerViewResults: RecyclerView = findViewById(R.id.recyclerViewResults)
+//
+//                setUpRecyclerView(apiUrl, queryTextView, recyclerViewResults)
 
                 return false
             }
