@@ -125,5 +125,4 @@ dependencies {
     implementation("androidx.appcompat:appcompat:1.6.1")
     implementation("com.android.volley:volley:1.2.1")
 
-
 }
