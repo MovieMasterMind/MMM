@@ -102,19 +102,23 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun setUpRecyclerView(apiUrl: String, textView: TextView, recyclerView: RecyclerView) {
-        // Set up layout manager
         val layoutManager = LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false)
         recyclerView.layoutManager = layoutManager
-        // Create an instance of the adapter
-        adapter = MoviePosterAdapter(emptyList())
+
+        // Initialize your adapter with empty lists for URLs and IDs
+        adapter = MoviePosterAdapter(emptyList(), emptyList())
+
         // Set the adapter to the RecyclerView
         recyclerView.adapter = adapter
 
-        val apiCaller = APICaller() // Create an instance of APICaller
+        val apiCaller = APICaller()
 
-
-        apiCaller.getData(apiUrl, textView, recyclerView)
-
+        // Perform the API call and handle the results
+        apiCaller.getData(apiUrl, textView, recyclerView) { posterUrls, movieIds ->
+            // Update the adapter with the fetched data
+            adapter = MoviePosterAdapter(posterUrls, movieIds)
+            recyclerView.adapter = adapter
+        }
     }
 
 
