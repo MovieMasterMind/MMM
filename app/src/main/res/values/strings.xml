@@ -27,4 +27,5 @@
     <string name="trending_award_winning_movies">Trending Award Winning Movies</string>
     <string name="movie_title_descriptor">%s</string>
     <string name="movie_poster">Movie poster</string>
+    <string name="cast_format">Cast: %s</string>
 </resources>
