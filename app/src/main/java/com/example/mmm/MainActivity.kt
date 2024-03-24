@@ -5,8 +5,6 @@ package com.example.mmm
 
 //For the TMDB update
 
-import APICaller
-import MoviePosterAdapter
 import android.annotation.SuppressLint
 import android.content.Intent
 import android.os.Bundle
@@ -100,7 +98,6 @@ class MainActivity : AppCompatActivity() {
 
         val apiCaller = APICaller() // Create an instance of APICaller
 
-
         apiCaller.getData(apiUrl, textView, recyclerView)
 
     }
@@ -123,15 +120,10 @@ class MainActivity : AppCompatActivity() {
             override fun onQueryTextSubmit(query: String?): Boolean {
                 // Navigate to the search_results activity
                 val intent = Intent(applicationContext, SearchableActivity::class.java)
+                intent.putExtra("QUERY", query)
                 startActivity(intent)
 
-//                val apiUrl = "https://api.themoviedb.org/3/search/movie?api_key=1f443a53a6aabe4de284f9c46a17f64c&query=$query"
-//                val queryTextView = findViewById<TextView>(R.id.queryTextView)
-//                val recyclerViewResults: RecyclerView = findViewById(R.id.recyclerViewResults)
-//
-//                setUpRecyclerView(apiUrl, queryTextView, recyclerViewResults)
-
-                return false
+                return true
             }
 
             // Called everytime a character is changed in the query

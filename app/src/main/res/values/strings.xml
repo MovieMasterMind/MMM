@@ -12,7 +12,7 @@
     <string name="menu_slideshow">Slideshow</string>
     <string name="search">Search</string>
     <string name="search_hint">Search for Movies</string>
-    <string name="search_results">Search Results</string>
+    <string name="search_results">Search Results: %s</string>
     <string name="movie_details">Movie Details</string>
 
     <string name="previous_search_query">Previous Search Query: %s</string>
@@ -25,4 +25,5 @@
     <string name="trending_action_movies">Trending Action Movies</string>
     <string name="trending_comedy_movies">Trending Comedy Movies</string>
     <string name="trending_award_winning_movies">Trending Award Winning Movies</string>
+    <string name="movie_title_descriptor">%s</string>
 </resources>

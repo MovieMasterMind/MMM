@@ -5,52 +5,55 @@
     android:id="@+id/drawer_layout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:fitsSystemWindows="true"
     tools:openDrawer="start">
+
+    <include
+        android:id="@+id/app_bar_main"
+        layout="@layout/app_bar_main"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" />
 
     <ScrollView
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        android:layout_marginTop="?attr/actionBarSize"
+        android:fitsSystemWindows="true">
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:gravity="center"
-            android:orientation="vertical">
+            android:orientation="vertical"
+            android:gravity="center">
 
             <!-- Your other views -->
 
-            <include
-                android:id="@+id/app_bar_main"
-                layout="@layout/app_bar_main"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"/>
 
+            <!-- Title For Horror Movies -->
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginBottom="8dp"
-                android:paddingStart="8dp"
-                android:paddingTop="64dp"
-                android:paddingEnd="8dp"
-                android:paddingBottom="8dp"
                 android:text="@string/trending_horror_movies"
                 android:textSize="20sp"
-                android:textStyle="bold" />
+                android:textStyle="bold"
+                android:layout_marginBottom="8dp"
+                android:paddingTop="16dp"
+                android:paddingBottom="8dp"
+                android:paddingStart="8dp"
+                android:paddingEnd="8dp"/>
             <!-- Detail text For Horror Movies -->
             <TextView
                 android:id="@+id/movieDetailsTextViewHorror"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:gravity="center"
-                android:paddingStart="8dp"
-                android:paddingTop="64dp"
-
-                android:paddingEnd="8dp"
-                android:paddingBottom="8dp"
                 android:text="@string/movie_details"
                 android:textSize="16sp"
-                android:visibility="gone" />
+                android:gravity="center"
+
+                android:paddingTop="16dp"
+                android:paddingBottom="8dp"
+                android:paddingStart="8dp"
+                android:paddingEnd="8dp"
+                android:visibility="gone"/>
             <!-- Horizontal ScrollView For Images -->
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/recyclerViewHorror"
@@ -62,27 +65,27 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginBottom="8dp"
-                android:paddingStart="8dp"
-                android:paddingTop="64dp"
-                android:paddingEnd="8dp"
-                android:paddingBottom="8dp"
                 android:text="@string/trending_drama_movies"
                 android:textSize="20sp"
-                android:textStyle="bold" />
+                android:textStyle="bold"
+                android:layout_marginBottom="8dp"
+                android:paddingTop="16dp"
+                android:paddingBottom="8dp"
+                android:paddingStart="8dp"
+                android:paddingEnd="8dp"/>
             <!-- Detail text For Drama Movies -->
             <TextView
                 android:id="@+id/movieDetailsTextViewDrama"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:gravity="center"
-                android:paddingStart="8dp"
-                android:paddingTop="64dp"
-                android:paddingEnd="8dp"
-                android:paddingBottom="8dp"
                 android:text="@string/movie_details"
                 android:textSize="16sp"
-                android:visibility="gone" />
+                android:gravity="center"
+                android:paddingTop="16dp"
+                android:paddingBottom="8dp"
+                android:paddingStart="8dp"
+                android:paddingEnd="8dp"
+                android:visibility="gone"/>
             <!-- Horizontal ScrollView For Images -->
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/recyclerViewDrama"
@@ -94,27 +97,27 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginBottom="8dp"
-                android:paddingStart="8dp"
-                android:paddingTop="64dp"
-                android:paddingEnd="8dp"
-                android:paddingBottom="8dp"
                 android:text="@string/trending_action_movies"
                 android:textSize="20sp"
-                android:textStyle="bold" />
+                android:textStyle="bold"
+                android:layout_marginBottom="8dp"
+                android:paddingTop="16dp"
+                android:paddingBottom="8dp"
+                android:paddingStart="8dp"
+                android:paddingEnd="8dp"/>
             <!-- Detail text For Action Movies -->
             <TextView
                 android:id="@+id/movieDetailsTextViewAction"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:gravity="center"
-                android:paddingStart="8dp"
-                android:paddingTop="64dp"
-                android:paddingEnd="8dp"
-                android:paddingBottom="8dp"
                 android:text="@string/movie_details"
                 android:textSize="16sp"
-                android:visibility="gone" />
+                android:gravity="center"
+                android:paddingTop="16dp"
+                android:paddingBottom="8dp"
+                android:paddingStart="8dp"
+                android:paddingEnd="8dp"
+                android:visibility="gone"/>
             <!-- Horizontal ScrollView For Images -->
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/recyclerViewAction"
@@ -122,31 +125,32 @@
                 android:layout_height="match_parent" />
 
 
+
             <!-- Title For Comedy Movies -->
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginBottom="8dp"
-                android:paddingStart="8dp"
-                android:paddingTop="64dp"
-                android:paddingEnd="8dp"
-                android:paddingBottom="8dp"
                 android:text="@string/trending_comedy_movies"
                 android:textSize="20sp"
-                android:textStyle="bold" />
+                android:textStyle="bold"
+                android:layout_marginBottom="8dp"
+                android:paddingTop="16dp"
+                android:paddingBottom="8dp"
+                android:paddingStart="8dp"
+                android:paddingEnd="8dp"/>
             <!-- Detail text For Action Movies -->
             <TextView
                 android:id="@+id/movieDetailsTextViewComedy"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:gravity="center"
-                android:paddingStart="8dp"
-                android:paddingTop="64dp"
-                android:paddingEnd="8dp"
-                android:paddingBottom="8dp"
                 android:text="@string/movie_details"
                 android:textSize="16sp"
-                android:visibility="gone" />
+                android:gravity="center"
+                android:paddingTop="16dp"
+                android:paddingBottom="8dp"
+                android:paddingStart="8dp"
+                android:paddingEnd="8dp"
+                android:visibility="gone"/>
             <!-- Horizontal ScrollView For Images -->
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/recyclerViewComedy"
@@ -155,32 +159,31 @@
 
 
             <!-- Title For Award Winning Movies -->
-
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginBottom="8dp"
-                android:paddingStart="8dp"
-                android:paddingTop="64dp"
-                android:paddingEnd="8dp"
-                android:paddingBottom="8dp"
                 android:text="@string/trending_award_winning_movies"
                 android:textSize="20sp"
-                android:textStyle="bold" />
+                android:textStyle="bold"
+                android:layout_marginBottom="8dp"
+                android:paddingTop="14dp"
+                android:paddingBottom="8dp"
+                android:paddingStart="8dp"
+                android:paddingEnd="8dp"/>
             <!-- Detail text For Award Winning Movies -->
             <TextView
                 android:id="@+id/movieDetailsTextViewAwards"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:gravity="center"
-                android:paddingStart="8dp"
-                android:paddingTop="64dp"
-
-                android:paddingEnd="8dp"
-                android:paddingBottom="8dp"
                 android:text="@string/movie_details"
                 android:textSize="16sp"
-                android:visibility="gone" />
+                android:gravity="center"
+
+                android:paddingTop="16dp"
+                android:paddingBottom="8dp"
+                android:paddingStart="8dp"
+                android:paddingEnd="8dp"
+                android:visibility="gone"/>
             <!-- Horizontal ScrollView For Images -->
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/recyclerViewAward"
@@ -196,7 +199,8 @@
         android:id="@+id/compose_view"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_margin="16dp" />
+        android:layout_margin="16dp"
+        tools:ignore="MissingClass" />
 
 
     <com.google.android.material.navigation.NavigationView
@@ -207,7 +211,5 @@
         android:fitsSystemWindows="true"
         app:headerLayout="@layout/nav_header_main"
         app:menu="@menu/activity_main_drawer" />
-
-
 
 </androidx.drawerlayout.widget.DrawerLayout>
