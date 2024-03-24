@@ -26,4 +26,5 @@
     <string name="trending_comedy_movies">Trending Comedy Movies</string>
     <string name="trending_award_winning_movies">Trending Award Winning Movies</string>
     <string name="movie_title_descriptor">%s</string>
+    <string name="movie_poster">Movie poster</string>
 </resources>

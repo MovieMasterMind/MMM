@@ -21,12 +21,29 @@ import androidx.navigation.ui.setupWithNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.mmm.databinding.ActivityMainBinding
+
+//import com.google.gson.Gson
+import android.widget.TextView
+import android.widget.ImageView
+import androidx.recyclerview.widget.LinearLayoutManager
+
+//For the TMDB update
+import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.navigation.NavigationView
 
 class MainActivity : AppCompatActivity() {
 
+    //Adding variables API
+    private var mRequestQueue: RequestQueue? = null
+    private var mStringRequest: StringRequest? = null
+    private val movieUrl = "//https://www.omdbapi.com/?t=batman&apikey=8081b028"
+    private val searchUrl = "https://www.omdbapi.com/?t=batman&apikey=8081b028"
+
+
+
     private lateinit var appBarConfiguration: AppBarConfiguration
     private lateinit var binding: ActivityMainBinding
+    private lateinit var recyclerView: RecyclerView
     private lateinit var adapter: MoviePosterAdapter
 
     @SuppressLint("CutPasteId")
@@ -38,6 +55,10 @@ class MainActivity : AppCompatActivity() {
 
         setSupportActionBar(binding.appBarMain.toolbar)
 
+        binding.appBarMain.fab.setOnClickListener { view ->
+            Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
+                .setAction("Action", null).show()
+        }
         val drawerLayout: DrawerLayout = binding.drawerLayout
         val navView: NavigationView = binding.navView
         val navController = findNavController(R.id.nav_host_fragment_content_main)
@@ -85,21 +106,29 @@ class MainActivity : AppCompatActivity() {
         setUpRecyclerView(apiUrlsAction, textViewAction, recyclerViewAction)
         setUpRecyclerView(apiUrlsComedy, textViewComedy, recyclerViewComedy)
         setUpRecyclerView(apiUrlsAward, textViewAward, recyclerViewAward)
+
+
     }
 
     private fun setUpRecyclerView(apiUrl: String, textView: TextView, recyclerView: RecyclerView) {
-        // Set up layout manager
         val layoutManager = LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false)
         recyclerView.layoutManager = layoutManager
-        // Create an instance of the adapter
-        adapter = MoviePosterAdapter(emptyList())
-        // Set the adapter to the RecyclerView
+
+        // Placeholder adapter initialization
+        adapter = MoviePosterAdapter(emptyList(), emptyList())
         recyclerView.adapter = adapter
 
-        val apiCaller = APICaller() // Create an instance of APICaller
+        val apiCaller = APICaller()
 
-        apiCaller.getData(apiUrl, textView, recyclerView)
-
+        // Get data from API and update the adapter
+        apiCaller.getData(apiUrl, textView, recyclerView) { posterUrls, movieIds ->
+            // Run on UI thread since response callback is on a background thread
+            runOnUiThread {
+                // Create a new adapter with the data
+                adapter = MoviePosterAdapter(posterUrls, movieIds)
+                recyclerView.adapter = adapter
+            }
+        }
     }
 
 
@@ -141,3 +170,21 @@ class MainActivity : AppCompatActivity() {
     }
 }
 
+
+    data class Rating(
+        val source: String,
+        val value: String
+    )
+
+    data class SearchResult(
+        val search: List<MovieItem>
+    )
+
+    data class MovieItem(
+        val title: String,
+        val year: String,
+        val imdbID: String,
+        val type: String,
+        val poster: String
+    )
+}

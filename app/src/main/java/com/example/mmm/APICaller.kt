@@ -1,8 +1,8 @@
-package com.example.mmm
 
 import android.util.Log
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
+import com.example.mmm.MainActivity
 import okhttp3.Call
 import okhttp3.Callback
 import okhttp3.OkHttpClient
@@ -17,8 +17,7 @@ class APICaller {
 
     private val client = OkHttpClient()
 
-    fun getData(apiUrl: String, textView: TextView, recyclerView: RecyclerView) {
-
+    fun getData(apiUrl: String, textView: TextView, recyclerView: RecyclerView, callback: (List<String>, List<Int>) -> Unit) {
         val request = Request.Builder().url(apiUrl).get().build()
 
         client.newCall(request).enqueue(object : Callback {
@@ -30,40 +29,42 @@ class APICaller {
                 response.body?.let {
                     val responseData = it.string()
                     Log.d("API Response", responseData)
-                    parseAndDisplayData(responseData, textView, recyclerView)
+
+                    // Parse the response data here and call the callback with the results
+                    val (posterUrls, movieIds) = parseAndDisplayData(responseData, textView)
+                    // Make sure to call the callback on the main thread
+                    (recyclerView.context as MainActivity).runOnUiThread {
+                        callback(posterUrls, movieIds)
+                    }
                 }
             }
         })
     }
 
-    private fun parseAndDisplayData(response: String, textView: TextView, recyclerView: RecyclerView) {
+    private fun parseAndDisplayData(response: String, textView: TextView): Pair<List<String>, List<Int>> {
+        val posterUrls = mutableListOf<String>()
+        val movieIds = mutableListOf<Int>()
+
         try {
             val jsonObject = JSONObject(response)
             val resultsArray = jsonObject.getJSONArray("results")
 
-            // Display details about the movie in the TextView
-            val movieDetails = StringBuilder()
             for (i in 0 until resultsArray.length()) {
                 val movieObject = resultsArray.getJSONObject(i)
-                val title = movieObject.optString("title")
-                val releaseDate = movieObject.optString("release_date")
-                val overview = movieObject.optString("overview")
-                val posterPath = movieObject.optString("poster_path")
+                val id = movieObject.getInt("id")
+                val posterPath = movieObject.getString("poster_path")
+                val posterUrl = "https://image.tmdb.org/t/p/w500$posterPath"
 
-                val details = "Title: $title\nRelease Date: $releaseDate\nOverview: $overview\nPoster: $posterPath\n\n"
-                movieDetails.append(details)
+                movieIds.add(id)
+                posterUrls.add(posterUrl)
             }
-            textView.post { textView.text = movieDetails.toString() }
-
-            // Load poster images into the RecyclerView
-            val adapter = MoviePosterAdapter(getPosterUrls(resultsArray))
-            recyclerView.post { recyclerView.adapter = adapter }
-
-
         } catch (e: JSONException) {
             Log.e("JSON Error", "Error parsing JSON: $e")
         }
+
+        return Pair(posterUrls, movieIds)
     }
+
 
 
     private fun getPosterUrls(resultsArray: JSONArray): List<String> {
