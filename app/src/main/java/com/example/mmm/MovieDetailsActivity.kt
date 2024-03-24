@@ -16,6 +16,10 @@ class MovieDetailsActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_movie_details)
 
+        val toolbar: androidx.appcompat.widget.Toolbar = findViewById(R.id.toolbar_movie_details)
+        setSupportActionBar(toolbar)
+        supportActionBar?.setDisplayHomeAsUpEnabled(true)
+        supportActionBar?.setDisplayShowHomeEnabled(true)
         // Get the movie ID from the intent
         val movieId = intent.getIntExtra("MOVIE_ID", -1)
         if (movieId != -1) {
@@ -24,6 +28,10 @@ class MovieDetailsActivity : AppCompatActivity() {
             // Handle the case where the movie ID wasn't passed correctly
             finish() // Close the activity, or show an error message
         }
+    }
+    override fun onSupportNavigateUp(): Boolean {
+        finish() // Close this activity and return to the previous one
+        return true
     }
 
     private fun fetchMovieDetails(movieId: Int) {
