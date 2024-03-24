@@ -2,28 +2,27 @@ package com.example.mmm
 
 
 //imported classes
+
+//import com.google.gson.Gson
+
+//For the TMDB update
 import APICaller
 import MoviePosterAdapter
 import android.annotation.SuppressLint
 import android.os.Bundle
 import android.view.Menu
-import com.google.android.material.snackbar.Snackbar
-import com.google.android.material.navigation.NavigationView
+import android.widget.TextView
+import androidx.appcompat.app.AppCompatActivity
+import androidx.drawerlayout.widget.DrawerLayout
 import androidx.navigation.findNavController
 import androidx.navigation.ui.AppBarConfiguration
 import androidx.navigation.ui.navigateUp
 import androidx.navigation.ui.setupActionBarWithNavController
 import androidx.navigation.ui.setupWithNavController
-import androidx.drawerlayout.widget.DrawerLayout
-import androidx.appcompat.app.AppCompatActivity
-import com.example.mmm.databinding.ActivityMainBinding
-
-//import com.google.gson.Gson
-import android.widget.TextView
 import androidx.recyclerview.widget.LinearLayoutManager
-
-//For the TMDB update
 import androidx.recyclerview.widget.RecyclerView
+import com.example.mmm.databinding.ActivityMainBinding
+import com.google.android.material.navigation.NavigationView
 
 class MainActivity : AppCompatActivity() {
 
@@ -41,10 +40,6 @@ class MainActivity : AppCompatActivity() {
 
         setSupportActionBar(binding.appBarMain.toolbar)
 
-        binding.appBarMain.fab.setOnClickListener { view ->
-            Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                .setAction("Action", null).show()
-        }
         val drawerLayout: DrawerLayout = binding.drawerLayout
         val navView: NavigationView = binding.navView
         val navController = findNavController(R.id.nav_host_fragment_content_main)
