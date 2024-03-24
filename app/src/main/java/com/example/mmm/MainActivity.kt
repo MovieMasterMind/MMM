@@ -1,15 +1,13 @@
 package com.example.mmm
 
-
 //imported classes
-
 //For the TMDB update
-
 import APICaller
 import android.annotation.SuppressLint
 import android.content.Intent
 import android.os.Bundle
 import android.view.Menu
+import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.SearchView
 import androidx.drawerlayout.widget.DrawerLayout
@@ -18,27 +16,15 @@ import androidx.navigation.ui.AppBarConfiguration
 import androidx.navigation.ui.navigateUp
 import androidx.navigation.ui.setupActionBarWithNavController
 import androidx.navigation.ui.setupWithNavController
-import com.example.mmm.databinding.ActivityMainBinding
-import com.example.mmm.R
-
-
-//import com.google.gson.Gson
-import android.widget.TextView
-import android.widget.ImageView
 import androidx.recyclerview.widget.LinearLayoutManager
-
-//For the TMDB update
 import androidx.recyclerview.widget.RecyclerView
-import com.android.volley.RequestQueue
-import com.android.volley.toolbox.StringRequest
+import com.example.mmm.databinding.ActivityMainBinding
 import com.google.android.material.navigation.NavigationView
-import com.google.android.material.snackbar.Snackbar
 
 class MainActivity : AppCompatActivity() {
 
     private lateinit var appBarConfiguration: AppBarConfiguration
     private lateinit var binding: ActivityMainBinding
-    private lateinit var recyclerView: RecyclerView
     private lateinit var adapter: MoviePosterAdapter
 
     @SuppressLint("CutPasteId")
@@ -48,6 +34,7 @@ class MainActivity : AppCompatActivity() {
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
+        supportActionBar?.setDisplayHomeAsUpEnabled(true)
         setSupportActionBar(binding.appBarMain.toolbar)
 
         val drawerLayout: DrawerLayout = binding.drawerLayout
@@ -124,14 +111,13 @@ class MainActivity : AppCompatActivity() {
 
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
-        // Inflate the menu; this adds items to the action bar if it is present.
-        // Removed settings button temporarily since it may cause the search
-        // function to disappear if clicked while in search bar
         menuInflater.inflate(R.menu.main, menu)
         menuInflater.inflate(R.menu.options_menu, menu)
 
         val searchItem = menu.findItem(R.id.search)
         val searchView = searchItem.actionView as SearchView
+
+        searchView.setQuery("", false)
 
         searchView.queryHint = "Search for movies"
 
@@ -141,6 +127,7 @@ class MainActivity : AppCompatActivity() {
                 // Navigate to the search_results activity
                 val intent = Intent(applicationContext, SearchableActivity::class.java)
                 intent.putExtra("QUERY", query)
+                intent.flags = Intent.FLAG_ACTIVITY_SINGLE_TOP
                 startActivity(intent)
 
                 return true

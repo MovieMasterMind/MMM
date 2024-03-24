@@ -1,7 +1,6 @@
 package com.example.mmm
 
 import APICaller
-import android.content.Intent
 import android.os.Bundle
 import android.view.Menu
 import android.widget.TextView
@@ -32,8 +31,7 @@ class SearchableActivity : AppCompatActivity() {
 
         if (query != null) {
             // Pass movie name to dynamic string and print query
-            val string = getString(R.string.search_results, query)
-            searchQueryName.text=string
+            searchQueryName.text = getString(R.string.search_results, query)
 
             fetchMovieInfo(query)
         }
@@ -83,7 +81,6 @@ class SearchableActivity : AppCompatActivity() {
         menuInflater.inflate(R.menu.main, menu)
         menuInflater.inflate(R.menu.options_menu, menu)
 
-
         // Display search bar
         val searchItem = menu.findItem(R.id.search)
         val searchView = searchItem.actionView as SearchView
@@ -94,10 +91,9 @@ class SearchableActivity : AppCompatActivity() {
             // Called when the user submits final query
             override fun onQueryTextSubmit(query: String?): Boolean {
                 // Navigate to the search_results activity
-                val intent = Intent(applicationContext, SearchableActivity::class.java)
-                intent.putExtra("QUERY", query)
-                startActivity(intent)
-
+                query?.let {
+                    fetchMovieInfo(it)
+                }
                 return true
             }
 
