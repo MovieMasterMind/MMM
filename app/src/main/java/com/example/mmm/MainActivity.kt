@@ -105,19 +105,20 @@ class MainActivity : AppCompatActivity() {
         val layoutManager = LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false)
         recyclerView.layoutManager = layoutManager
 
-        // Initialize your adapter with empty lists for URLs and IDs
+        // Placeholder adapter initialization
         adapter = MoviePosterAdapter(emptyList(), emptyList())
-
-        // Set the adapter to the RecyclerView
         recyclerView.adapter = adapter
 
         val apiCaller = APICaller()
 
-        // Perform the API call and handle the results
+        // Get data from API and update the adapter
         apiCaller.getData(apiUrl, textView, recyclerView) { posterUrls, movieIds ->
-            // Update the adapter with the fetched data
-            adapter = MoviePosterAdapter(posterUrls, movieIds)
-            recyclerView.adapter = adapter
+            // Run on UI thread since response callback is on a background thread
+            runOnUiThread {
+                // Create a new adapter with the data
+                adapter = MoviePosterAdapter(posterUrls, movieIds)
+                recyclerView.adapter = adapter
+            }
         }
     }
 

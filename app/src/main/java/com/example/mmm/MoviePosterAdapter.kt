@@ -5,6 +5,7 @@ import android.view.ViewGroup
 import android.widget.ImageView
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
+import com.example.mmm.MovieDetailsActivity
 import com.example.mmm.R
 
 class MoviePosterAdapter(private val posterUrls: List<String>, private val movieIds: List<Int>) :
@@ -36,5 +37,20 @@ class MoviePosterAdapter(private val posterUrls: List<String>, private val movie
 
     inner class PosterViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         val imageView: ImageView = itemView.findViewById(R.id.imageViewPoster)
+
+        init {
+            itemView.setOnClickListener {
+                // Get the adapter position
+                val position = adapterPosition
+                if(position != RecyclerView.NO_POSITION) {
+                    val context = itemView.context
+                    val intent = Intent(context, MovieDetailsActivity::class.java).apply {
+                        // Make sure movieIds[position] is valid
+                        putExtra("MOVIE_ID", movieIds[position])
+                    }
+                    context.startActivity(intent)
+                }
+            }
+        }
     }
 }

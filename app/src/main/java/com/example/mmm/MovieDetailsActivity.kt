@@ -1,4 +1,4 @@
-
+package com.example.mmm
 import android.os.Bundle
 import android.util.Log
 import android.widget.ImageView
@@ -8,7 +8,6 @@ import com.android.volley.Request
 import com.android.volley.toolbox.JsonObjectRequest
 import com.android.volley.toolbox.Volley
 import com.bumptech.glide.Glide
-import com.example.mmm.R
 import org.json.JSONObject
 
 class MovieDetailsActivity : AppCompatActivity() {
@@ -17,9 +16,13 @@ class MovieDetailsActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_movie_details)
 
-        val movieId = intent.getIntExtra("MOVIE_ID", 0)
-        if (movieId != 0) {
+        // Get the movie ID from the intent
+        val movieId = intent.getIntExtra("MOVIE_ID", -1)
+        if (movieId != -1) {
             fetchMovieDetails(movieId)
+        } else {
+            // Handle the case where the movie ID wasn't passed correctly
+            finish() // Close the activity, or show an error message
         }
     }
 
