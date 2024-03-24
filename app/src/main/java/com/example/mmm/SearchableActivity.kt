@@ -1,5 +1,6 @@
 package com.example.mmm
 
+import APICaller
 import android.content.Intent
 import android.os.Bundle
 import android.view.Menu
@@ -49,13 +50,21 @@ class SearchableActivity : AppCompatActivity() {
         val layoutManager = LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false)
         recyclerView.layoutManager = layoutManager
         // Create an instance of the adapter with layout params
-        adapter = MoviePosterAdapter(emptyList())
+        adapter = MoviePosterAdapter(emptyList(), emptyList())
         // Set the adapter to the RecyclerView
         recyclerView.adapter = adapter
 
         val apiCaller = APICaller() // Create an instance of APICaller
 
-        apiCaller.getData(apiUrl, textView, recyclerView)
+        // Get data from API and update the adapter
+        apiCaller.getData(apiUrl, textView, recyclerView) { posterUrls, movieIds ->
+            // Run on UI thread since response callback is on a background thread
+            runOnUiThread {
+                // Create a new adapter with the data
+                adapter = MoviePosterAdapter(posterUrls, movieIds)
+                recyclerView.adapter = adapter
+            }
+        }
 
     }
 

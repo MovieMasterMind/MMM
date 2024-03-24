@@ -5,11 +5,11 @@ package com.example.mmm
 
 //For the TMDB update
 
+import APICaller
 import android.annotation.SuppressLint
 import android.content.Intent
 import android.os.Bundle
 import android.view.Menu
-import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.SearchView
 import androidx.drawerlayout.widget.DrawerLayout
@@ -18,9 +18,9 @@ import androidx.navigation.ui.AppBarConfiguration
 import androidx.navigation.ui.navigateUp
 import androidx.navigation.ui.setupActionBarWithNavController
 import androidx.navigation.ui.setupWithNavController
-import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.recyclerview.widget.RecyclerView
 import com.example.mmm.databinding.ActivityMainBinding
+import com.example.mmm.R
+
 
 //import com.google.gson.Gson
 import android.widget.TextView
@@ -29,17 +29,12 @@ import androidx.recyclerview.widget.LinearLayoutManager
 
 //For the TMDB update
 import androidx.recyclerview.widget.RecyclerView
+import com.android.volley.RequestQueue
+import com.android.volley.toolbox.StringRequest
 import com.google.android.material.navigation.NavigationView
+import com.google.android.material.snackbar.Snackbar
 
 class MainActivity : AppCompatActivity() {
-
-    //Adding variables API
-    private var mRequestQueue: RequestQueue? = null
-    private var mStringRequest: StringRequest? = null
-    private val movieUrl = "//https://www.omdbapi.com/?t=batman&apikey=8081b028"
-    private val searchUrl = "https://www.omdbapi.com/?t=batman&apikey=8081b028"
-
-
 
     private lateinit var appBarConfiguration: AppBarConfiguration
     private lateinit var binding: ActivityMainBinding
@@ -55,10 +50,6 @@ class MainActivity : AppCompatActivity() {
 
         setSupportActionBar(binding.appBarMain.toolbar)
 
-        binding.appBarMain.fab.setOnClickListener { view ->
-            Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                .setAction("Action", null).show()
-        }
         val drawerLayout: DrawerLayout = binding.drawerLayout
         val navView: NavigationView = binding.navView
         val navController = findNavController(R.id.nav_host_fragment_content_main)
@@ -168,23 +159,4 @@ class MainActivity : AppCompatActivity() {
         val navController = findNavController(R.id.nav_host_fragment_content_main)
         return navController.navigateUp(appBarConfiguration) || super.onSupportNavigateUp()
     }
-}
-
-
-    data class Rating(
-        val source: String,
-        val value: String
-    )
-
-    data class SearchResult(
-        val search: List<MovieItem>
-    )
-
-    data class MovieItem(
-        val title: String,
-        val year: String,
-        val imdbID: String,
-        val type: String,
-        val poster: String
-    )
 }

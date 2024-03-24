@@ -1,8 +1,9 @@
 
+import android.os.Handler
+import android.os.Looper
 import android.util.Log
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
-import com.example.mmm.MainActivity
 import okhttp3.Call
 import okhttp3.Callback
 import okhttp3.OkHttpClient
@@ -30,10 +31,10 @@ class APICaller {
                     val responseData = it.string()
                     Log.d("API Response", responseData)
 
-                    // Parse the response data here and call the callback with the results
                     val (posterUrls, movieIds) = parseAndDisplayData(responseData, textView)
-                    // Make sure to call the callback on the main thread
-                    (recyclerView.context as MainActivity).runOnUiThread {
+
+                    // Post to the main thread without casting to MainActivity
+                    Handler(Looper.getMainLooper()).post {
                         callback(posterUrls, movieIds)
                     }
                 }
