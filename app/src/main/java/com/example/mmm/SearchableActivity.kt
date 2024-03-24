@@ -7,6 +7,7 @@ import android.view.Menu
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.SearchView
+import androidx.appcompat.widget.Toolbar
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 
@@ -21,9 +22,12 @@ class SearchableActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.search_results)
-        val searchQueryName = findViewById<TextView>(R.id.query_search_results)
 
-        // Get "QUERY" passed as extra
+        val toolbar: Toolbar = findViewById(R.id.toolbar_search_results) // Make sure this ID matches your layout
+        setSupportActionBar(toolbar)
+        supportActionBar?.setDisplayHomeAsUpEnabled(true)
+
+        val searchQueryName = findViewById<TextView>(R.id.query_search_results)
         val query = intent.getStringExtra("QUERY")
 
         if (query != null) {
@@ -33,6 +37,11 @@ class SearchableActivity : AppCompatActivity() {
 
             fetchMovieInfo(query)
         }
+    }
+
+    override fun onSupportNavigateUp(): Boolean {
+        onBackPressed()
+        return true
     }
 
     // Pass search query to setUpRecyclerView
