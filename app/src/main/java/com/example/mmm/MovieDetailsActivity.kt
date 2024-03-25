@@ -61,11 +61,15 @@ class MovieDetailsActivity : AppCompatActivity() {
         val overviewTextView: TextView = findViewById(R.id.movieOverview)
         val genreTextView: TextView = findViewById(R.id.movieGenre)
         val posterImageView: ImageView = findViewById(R.id.moviePoster)
+        val voteAverageTextView: TextView = findViewById(R.id.movieVoteAverage)
+
 
         titleTextView.text = movieDetails.getString("title")
         overviewTextView.text = movieDetails.getString("overview")
         val releaseDateTextView: TextView = findViewById(R.id.movieReleaseDate)
         releaseDateTextView.text = movieDetails.getString("release_date")
+        val voteAverage = movieDetails.getDouble("vote_average")
+        voteAverageTextView.text = getString(R.string.vote_average_format, voteAverage)
 
 
         val genresArray = movieDetails.getJSONArray("genres")
