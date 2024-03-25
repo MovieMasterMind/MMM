@@ -1,8 +1,9 @@
 
+import android.os.Handler
+import android.os.Looper
 import android.util.Log
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
-import com.example.mmm.MainActivity
 import okhttp3.Call
 import okhttp3.Callback
 import okhttp3.OkHttpClient
@@ -30,10 +31,10 @@ class APICaller {
                     val responseData = it.string()
                     Log.d("API Response", responseData)
 
-                    // Parse the response data here and call the callback with the results
                     val (posterUrls, movieIds) = parseAndDisplayData(responseData, textView)
-                    // Make sure to call the callback on the main thread
-                    (recyclerView.context as MainActivity).runOnUiThread {
+
+                    // Post to the main thread without casting to MainActivity
+                    Handler(Looper.getMainLooper()).post {
                         callback(posterUrls, movieIds)
                     }
                 }
@@ -65,7 +66,44 @@ class APICaller {
         return Pair(posterUrls, movieIds)
     }
 
+    fun getCastDetails(movieId: Int, callback: (List<String>) -> Unit) {
+        val url = "https://api.themoviedb.org/3/movie/$movieId/credits?api_key=1f443a53a6aabe4de284f9c46a17f64c"
+        val request = Request.Builder().url(url).get().build()
 
+        client.newCall(request).enqueue(object : Callback {
+            override fun onFailure(call: Call, e: IOException) {
+                Log.e("API Error", "Error fetching cast details: $e")
+            }
+
+            override fun onResponse(call: Call, response: Response) {
+                response.body?.let {
+                    val responseData = it.string()
+                    Log.d("API Response", responseData)
+                    val castList = parseCastData(responseData)
+                    // Post to the main thread
+                    Handler(Looper.getMainLooper()).post {
+                        callback(castList)
+                    }
+                }
+            }
+        })
+    }
+
+    private fun parseCastData(response: String): List<String> {
+        val castList = mutableListOf<String>()
+        try {
+            val jsonObject = JSONObject(response)
+            val castArray = jsonObject.getJSONArray("cast")
+            for (i in 0 until castArray.length()) {
+                val castObject = castArray.getJSONObject(i)
+                val name = castObject.getString("name")
+                castList.add(name)
+            }
+        } catch (e: JSONException) {
+            Log.e("JSON Error", "Error parsing JSON: $e")
+        }
+        return castList
+    }
 
     private fun getPosterUrls(resultsArray: JSONArray): List<String> {
         val posterUrls = mutableListOf<String>()
@@ -76,5 +114,7 @@ class APICaller {
             posterUrls.add(posterUrl)
         }
         return posterUrls
+
+
     }
 }

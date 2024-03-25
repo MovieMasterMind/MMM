@@ -5,7 +5,6 @@
     android:id="@+id/drawer_layout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:fitsSystemWindows="true"
     tools:openDrawer="start">
 
     <include
@@ -14,10 +13,11 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent" />
 
-
     <ScrollView
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        android:layout_marginTop="?attr/actionBarSize"
+        android:fitsSystemWindows="true">
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -32,11 +32,11 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Trending Horror Movies"
+                android:text="@string/trending_horror_movies"
                 android:textSize="20sp"
                 android:textStyle="bold"
                 android:layout_marginBottom="8dp"
-                android:paddingTop="64dp"
+                android:paddingTop="16dp"
                 android:paddingBottom="8dp"
                 android:paddingStart="8dp"
                 android:paddingEnd="8dp"/>
@@ -45,11 +45,11 @@
                 android:id="@+id/movieDetailsTextViewHorror"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Movie Details"
+                android:text="@string/movie_details"
                 android:textSize="16sp"
                 android:gravity="center"
 
-                android:paddingTop="64dp"
+                android:paddingTop="16dp"
                 android:paddingBottom="8dp"
                 android:paddingStart="8dp"
                 android:paddingEnd="8dp"
@@ -61,18 +61,15 @@
                 android:layout_height="match_parent" />
 
 
-
-
-
             <!-- Title For Drama Movies -->
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Trending Drama Movies"
+                android:text="@string/trending_drama_movies"
                 android:textSize="20sp"
                 android:textStyle="bold"
                 android:layout_marginBottom="8dp"
-                android:paddingTop="64dp"
+                android:paddingTop="16dp"
                 android:paddingBottom="8dp"
                 android:paddingStart="8dp"
                 android:paddingEnd="8dp"/>
@@ -81,10 +78,10 @@
                 android:id="@+id/movieDetailsTextViewDrama"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Movie Details"
+                android:text="@string/movie_details"
                 android:textSize="16sp"
                 android:gravity="center"
-                android:paddingTop="64dp"
+                android:paddingTop="16dp"
                 android:paddingBottom="8dp"
                 android:paddingStart="8dp"
                 android:paddingEnd="8dp"
@@ -100,11 +97,11 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Trending Action Movies"
+                android:text="@string/trending_action_movies"
                 android:textSize="20sp"
                 android:textStyle="bold"
                 android:layout_marginBottom="8dp"
-                android:paddingTop="64dp"
+                android:paddingTop="16dp"
                 android:paddingBottom="8dp"
                 android:paddingStart="8dp"
                 android:paddingEnd="8dp"/>
@@ -113,10 +110,10 @@
                 android:id="@+id/movieDetailsTextViewAction"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Movie Details"
+                android:text="@string/movie_details"
                 android:textSize="16sp"
                 android:gravity="center"
-                android:paddingTop="64dp"
+                android:paddingTop="16dp"
                 android:paddingBottom="8dp"
                 android:paddingStart="8dp"
                 android:paddingEnd="8dp"
@@ -129,17 +126,15 @@
 
 
 
-
-
             <!-- Title For Comedy Movies -->
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Trending Comedy Movies"
+                android:text="@string/trending_comedy_movies"
                 android:textSize="20sp"
                 android:textStyle="bold"
                 android:layout_marginBottom="8dp"
-                android:paddingTop="64dp"
+                android:paddingTop="16dp"
                 android:paddingBottom="8dp"
                 android:paddingStart="8dp"
                 android:paddingEnd="8dp"/>
@@ -148,10 +143,10 @@
                 android:id="@+id/movieDetailsTextViewComedy"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Movie Details"
+                android:text="@string/movie_details"
                 android:textSize="16sp"
                 android:gravity="center"
-                android:paddingTop="64dp"
+                android:paddingTop="16dp"
                 android:paddingBottom="8dp"
                 android:paddingStart="8dp"
                 android:paddingEnd="8dp"
@@ -163,18 +158,15 @@
                 android:layout_height="match_parent" />
 
 
-
-
             <!-- Title For Award Winning Movies -->
-
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Trending Award Winning Movies"
+                android:text="@string/trending_award_winning_movies"
                 android:textSize="20sp"
                 android:textStyle="bold"
                 android:layout_marginBottom="8dp"
-                android:paddingTop="64dp"
+                android:paddingTop="14dp"
                 android:paddingBottom="8dp"
                 android:paddingStart="8dp"
                 android:paddingEnd="8dp"/>
@@ -183,11 +175,11 @@
                 android:id="@+id/movieDetailsTextViewAwards"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Movie Details"
+                android:text="@string/movie_details"
                 android:textSize="16sp"
                 android:gravity="center"
 
-                android:paddingTop="64dp"
+                android:paddingTop="16dp"
                 android:paddingBottom="8dp"
                 android:paddingStart="8dp"
                 android:paddingEnd="8dp"
@@ -200,15 +192,43 @@
 
             <!-- add other views -->
 
+            <TextView
+                android:id="@+id/query_search_results"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/search_results"
+                android:textSize="16sp"
+                android:gravity="center"
+                android:paddingTop="16dp"
+                android:paddingBottom="16dp"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"/>
+
+            <TextView
+                android:id="@+id/queryTextView"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/search_query"
+                android:textSize="16sp"
+                android:gravity="center"
+                android:paddingTop="16dp"
+                android:paddingBottom="16dp"
+                app:layout_constraintTop_toBottomOf="@id/query_search_results"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintBottom_toBottomOf="parent"
+                android:visibility="gone"/>
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/recyclerViewResults"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                app:layout_constraintTop_toBottomOf="@id/query_search_results"
+                app:layout_constraintBottom_toBottomOf="parent"/>
+
         </LinearLayout>
     </ScrollView>
-
-    <!--    <ImageView-->
-    <!--        android:id="@+id/imageView"-->
-    <!--        android:layout_width="wrap_content"-->
-    <!--        android:layout_height="wrap_content"-->
-    <!--        android:layout_centerInParent="true"-->
-    <!--        android:src="@drawable/placeholder_image" />-->
 
     <androidx.compose.ui.platform.ComposeView
         android:id="@+id/compose_view"
@@ -226,7 +246,5 @@
         android:fitsSystemWindows="true"
         app:headerLayout="@layout/nav_header_main"
         app:menu="@menu/activity_main_drawer" />
-
-
 
 </androidx.drawerlayout.widget.DrawerLayout>
