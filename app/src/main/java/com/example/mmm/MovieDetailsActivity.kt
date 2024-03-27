@@ -1,10 +1,13 @@
 package com.example.mmm
 
 import APICaller
+import android.content.Context
 import android.os.Bundle
 import android.util.Log
+import android.widget.Button
 import android.widget.ImageView
 import android.widget.TextView
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import com.android.volley.Request
 import com.android.volley.toolbox.JsonObjectRequest
@@ -14,6 +17,7 @@ import org.json.JSONObject
 
 class MovieDetailsActivity : AppCompatActivity() {
 
+    private lateinit var movieDetailsObj: JSONObject
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_movie_details)
@@ -22,12 +26,24 @@ class MovieDetailsActivity : AppCompatActivity() {
         setSupportActionBar(toolbar)
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
         supportActionBar?.setDisplayShowHomeEnabled(true)
-
         val movieId = intent.getIntExtra("MOVIE_ID", -1)
+//        val movieId = intent.getIntExtra("MOVIE_ID", -1)
         if (movieId != -1) {
             fetchMovieDetails(movieId)
         } else {
             finish() // Close the activity if movie ID wasn't passed correctly
+        }
+        val addToWatchlistButton: Button = findViewById(R.id.addToWatchlistButton)
+        addToWatchlistButton.setOnClickListener {
+            // Now check if movieDetails is initialized before using it
+            if (this::movieDetailsObj.isInitialized) {
+                val movieTitle = movieDetailsObj.getString("title")
+                val moviePosterPath = movieDetailsObj.getString("poster_path")
+                val moviePosterUrl = "https://image.tmdb.org/t/p/w500$moviePosterPath"
+                addToWatchlist(movieId, movieTitle, moviePosterUrl)
+            } else {
+                Toast.makeText(this, "Movie details not loaded yet", Toast.LENGTH_SHORT).show()
+            }
         }
     }
 
@@ -57,6 +73,7 @@ class MovieDetailsActivity : AppCompatActivity() {
     }
 
     private fun displayMovieDetails(movieDetails: JSONObject) {
+        movieDetailsObj = movieDetails
         val titleTextView: TextView = findViewById(R.id.movieTitle)
         val overviewTextView: TextView = findViewById(R.id.movieOverview)
         val genreTextView: TextView = findViewById(R.id.movieGenre)
@@ -91,5 +108,20 @@ class MovieDetailsActivity : AppCompatActivity() {
     override fun onSupportNavigateUp(): Boolean {
         finish() // Close this activity and return to the previous one
         return true
+    }
+
+    private fun addToWatchlist(movieId: Int, movieTitle: String, moviePosterUrl: String) {
+        val sharedPrefs = getSharedPreferences("watchlist", Context.MODE_PRIVATE)
+        val editor = sharedPrefs.edit()
+
+        // Create a composite string of movie details
+        val movieDetails = "$movieId|$movieTitle|$moviePosterUrl"
+
+        // Retrieve the current watchlist, add the new item, and save it back
+        val watchlist = sharedPrefs.getStringSet("watchlist", mutableSetOf()) ?: mutableSetOf()
+        watchlist.add(movieDetails)
+        editor.putStringSet("watchlist", watchlist).apply()
+
+        Toast.makeText(this, "Added to watchlist", Toast.LENGTH_SHORT).show()
     }
 }

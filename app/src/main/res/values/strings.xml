@@ -29,4 +29,5 @@
     <string name="movie_poster">Movie poster</string>
     <string name="cast_format">Cast: %s</string>
     <string name="vote_average_format">Rating: %1$.1f/10</string>
+    <string name="add_to_watchlist">Add to watch list</string>
 </resources>
