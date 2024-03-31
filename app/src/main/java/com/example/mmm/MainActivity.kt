@@ -2,7 +2,6 @@ package com.example.mmm
 
 //imported classes
 //For the TMDB update
-import APICaller
 import android.annotation.SuppressLint
 import android.content.Intent
 import android.os.Bundle
