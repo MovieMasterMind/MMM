@@ -1,18 +1,15 @@
 package com.example.mmm
 
-
 //imported classes
-
-//import com.google.gson.Gson
-
 //For the TMDB update
 import APICaller
-import MoviePosterAdapter
 import android.annotation.SuppressLint
+import android.content.Intent
 import android.os.Bundle
 import android.view.Menu
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
+import androidx.appcompat.widget.SearchView
 import androidx.drawerlayout.widget.DrawerLayout
 import androidx.navigation.findNavController
 import androidx.navigation.ui.AppBarConfiguration
@@ -28,7 +25,6 @@ class MainActivity : AppCompatActivity() {
 
     private lateinit var appBarConfiguration: AppBarConfiguration
     private lateinit var binding: ActivityMainBinding
-    private lateinit var recyclerView: RecyclerView
     private lateinit var adapter: MoviePosterAdapter
 
     @SuppressLint("CutPasteId")
@@ -38,6 +34,7 @@ class MainActivity : AppCompatActivity() {
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
+        supportActionBar?.setDisplayHomeAsUpEnabled(true)
         setSupportActionBar(binding.appBarMain.toolbar)
 
         val drawerLayout: DrawerLayout = binding.drawerLayout
@@ -92,26 +89,57 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun setUpRecyclerView(apiUrl: String, textView: TextView, recyclerView: RecyclerView) {
-        // Set up layout manager
         val layoutManager = LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false)
         recyclerView.layoutManager = layoutManager
-        // Create an instance of the adapter
-        adapter = MoviePosterAdapter(emptyList())
-        // Set the adapter to the RecyclerView
+
+        // Placeholder adapter initialization
+        adapter = MoviePosterAdapter(emptyList(), emptyList())
         recyclerView.adapter = adapter
 
-        val apiCaller = APICaller() // Create an instance of APICaller
+        val apiCaller = APICaller()
 
-
-        apiCaller.getData(apiUrl, textView, recyclerView)
-
+        // Get data from API and update the adapter
+        apiCaller.getData(apiUrl, textView, recyclerView) { posterUrls, movieIds ->
+            // Run on UI thread since response callback is on a background thread
+            runOnUiThread {
+                // Create a new adapter with the data
+                adapter = MoviePosterAdapter(posterUrls, movieIds)
+                recyclerView.adapter = adapter
+            }
+        }
     }
 
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
-        // Inflate the menu; this adds items to the action bar if it is present.
         menuInflater.inflate(R.menu.main, menu)
-        return true
+        menuInflater.inflate(R.menu.options_menu, menu)
+
+        val searchItem = menu.findItem(R.id.search)
+        val searchView = searchItem.actionView as SearchView
+
+        searchView.setQuery("", false)
+
+        searchView.queryHint = "Search for movies"
+
+        searchView.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
+            // Called when the user submits final query
+            override fun onQueryTextSubmit(query: String?): Boolean {
+                // Navigate to the search_results activity
+                val intent = Intent(applicationContext, SearchableActivity::class.java)
+                intent.putExtra("QUERY", query)
+                intent.flags = Intent.FLAG_ACTIVITY_SINGLE_TOP
+                startActivity(intent)
+
+                return true
+            }
+
+            // Called everytime a character is changed in the query
+            override fun onQueryTextChange(newText: String?): Boolean {
+                // Not needed yet
+                return false
+            }
+        })
+        return super.onCreateOptionsMenu(menu)
     }
 
     override fun onSupportNavigateUp(): Boolean {
@@ -119,4 +147,3 @@ class MainActivity : AppCompatActivity() {
         return navController.navigateUp(appBarConfiguration) || super.onSupportNavigateUp()
     }
 }
-
