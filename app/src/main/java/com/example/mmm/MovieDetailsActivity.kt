@@ -18,7 +18,6 @@ import com.android.volley.Request
 import com.android.volley.toolbox.JsonObjectRequest
 import com.android.volley.toolbox.Volley
 import com.bumptech.glide.Glide
-import com.example.mmm.databinding.ActivityMovieDetailsBinding
 import org.json.JSONObject
 import java.util.Locale
 
@@ -59,33 +58,56 @@ import java.util.Locale
             }
 
             private fun fetchMovieDetails(movieId: Int) {
-                val url =
-                    "https://api.themoviedb.org/3/movie/$movieId?api_key=1f443a53a6aabe4de284f9c46a17f64c&language=en-US"
+                val tmdbUrl = "https://api.themoviedb.org/3/movie/$movieId?api_key=1f443a53a6aabe4de284f9c46a17f64c&language=en-US"
+                val apiCaller = APICaller() // Ensure you have an instance of APICaller
 
-                val jsonObjectRequest = JsonObjectRequest(Request.Method.GET, url, null,
-                    { response ->
-                        // Existing code to display movie details
-                        displayMovieDetails(response)
 
-                        // New code to fetch and display cast details
-                        val apiCaller = APICaller() // Ensure you have an instance of APICaller
-                        apiCaller.getCastDetails(movieId) { castList ->
-                            val castString = castList.joinToString(", ")
-                            runOnUiThread {
-                                findViewById<TextView>(R.id.movieCast).text =
-                                    getString(R.string.cast_format, castString)
+
+                apiCaller.getMovieStreamingLocationJSON(movieId) { streamingDetails ->
+                    // Log or display the streaming details
+                    Log.e("StreamingDetails", streamingDetails.toString())
+
+                    //streamingDetails hold links of locations of the streaming service
+
+
+                    val jsonObjectRequest = JsonObjectRequest(Request.Method.GET, tmdbUrl, null,
+                        { response ->
+                            // Existing code to display movie details
+                            displayMovieDetails(response, streamingDetails)
+
+                            // New code to fetch and display cast details
+                            apiCaller.getCastDetails(movieId) { castList ->
+                                val castString = castList.joinToString(", ")
+                                runOnUiThread {
+                                    findViewById<TextView>(R.id.movieCast).text = getString(R.string.cast_format, castString)
+                                }
                             }
+                        },
+                        { error ->
+                            Log.e("MovieDetailsActivity", "Error fetching movie details: $error")
                         }
-                    },
-                    { error ->
-                        Log.e("MovieDetailsActivity", "Error fetching movie details: $error")
-                    }
-                )
+                    )
 
-                Volley.newRequestQueue(this).add(jsonObjectRequest)
+                    Volley.newRequestQueue(this).add(jsonObjectRequest)
+                }
             }
 
-            private fun displayMovieDetails(movieDetails: JSONObject) {
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+            private fun displayMovieDetails(movieDetails: JSONObject, streamingDetails: Map<String, String>) {
                 movieDetailsObj = movieDetails
                 val titleTextView: TextView = findViewById(R.id.movieTitle)
                 val overviewTextView: TextView = findViewById(R.id.movieOverview)
@@ -112,15 +134,15 @@ import java.util.Locale
 
 
                 //here we add text to the streamView
-                Log.e("WHY", streamingDetails.toString())
+                Log.e("WHY", this.streamingDetails.toString())
                 //steamingTextView.text = streamingDetails
 
-                val streamingJson = JSONObject(streamingDetails)
+                val streamingJson = JSONObject(this.streamingDetails)
                 val streamingLayout: LinearLayout = findViewById(R.id.streamingLayout)
 
 
                 // Create buttons for streaming services
-                for ((service, link) in streamingDetails) {
+                for ((service, link) in this.streamingDetails) {
                     val button = Button(this)
                     button.text = service
                     val colors = getColorForService(service)
