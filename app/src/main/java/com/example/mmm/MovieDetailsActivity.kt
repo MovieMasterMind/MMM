@@ -148,7 +148,9 @@ class MovieDetailsActivity : AppCompatActivity() {
         "prime" to Pair(Color.parseColor("#00A8E1"), Color.BLACK),
         "hulu" to Pair(Color.parseColor("#1CE783"), Color.BLACK),
         "apple" to Pair(Color.GRAY, Color.BLACK),
-        "peacock" to Pair(Color.BLACK, Color.WHITE)
+        "peacock" to Pair(Color.BLACK, Color.WHITE),
+        "hbo" to Pair(Color.WHITE, Color.BLACK)
+
 
         // Add more services and colors as needed
     )
