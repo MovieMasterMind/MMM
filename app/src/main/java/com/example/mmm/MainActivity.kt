@@ -20,6 +20,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.mmm.databinding.ActivityMainBinding
 import com.google.android.material.navigation.NavigationView
+import android.util.Log
 
 class MainActivity : AppCompatActivity() {
 
@@ -97,7 +98,15 @@ class MainActivity : AppCompatActivity() {
         recyclerView.adapter = adapter
 
         val apiCaller = APICaller()
+//        apiCaller.getMovieStreamingLocationJSON(597) { details ->
+//            // Log or display the streaming details
+//            Log.e("StreamingDetails", details.toString())
+//        }
 
+
+
+        //apiCaller.getMovieStreamingLocationJSON(597
+        //println("This is print onces")
         // Get data from API and update the adapter
         apiCaller.getData(apiUrl, textView, recyclerView) { posterUrls, movieIds ->
             // Run on UI thread since response callback is on a background thread

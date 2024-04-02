@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.coordinatorlayout.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
@@ -35,7 +36,9 @@
                 app:cardCornerRadius="8dp"
                 app:cardElevation="4dp"
                 android:layout_marginBottom="16dp"
-                app:layout_constraintTop_toBottomOf="@id/toolbar_movie_details">
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="parent">
 
                 <ImageView
                     android:id="@+id/moviePoster"
@@ -54,7 +57,8 @@
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintEnd_toStartOf="@id/movieGenre"
                 app:layout_constraintTop_toBottomOf="@id/cardView"
-                android:layout_marginEnd="8dp" />
+                android:layout_marginEnd="8dp"
+                android:layout_marginTop="16dp" />
 
             <TextView
                 android:id="@+id/movieGenre"
@@ -63,7 +67,23 @@
                 android:layout_height="wrap_content"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintBaseline_toBaselineOf="@id/movieTitle"
-                android:layout_marginStart="8dp" />
+                android:layout_marginStart="16dp"
+                android:layout_marginEnd="16dp" />
+
+            <TextView
+                android:id="@+id/movieStreamingLocation"
+                style="@style/TextAppearance.MaterialComponents.Body2"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:paddingTop="16dp"
+                android:paddingBottom="8dp"
+                android:paddingStart="8dp"
+                android:paddingEnd="8dp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintBaseline_toBaselineOf="@id/movieTitle"
+                android:layout_marginStart="8dp"
+                android:layout_marginEnd="8dp"
+                android:layout_marginTop="16dp" />
 
             <TextView
                 android:id="@+id/movieReleaseDate"
@@ -73,7 +93,9 @@
                 android:layout_marginTop="8dp"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/movieTitle" />
+                app:layout_constraintTop_toBottomOf="@id/movieTitle"
+                android:layout_marginStart="16dp"
+                android:layout_marginEnd="16dp" />
 
             <TextView
                 android:id="@+id/movieOverview"
@@ -83,19 +105,53 @@
                 android:layout_marginTop="8dp"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/movieReleaseDate" />
+                app:layout_constraintTop_toBottomOf="@id/movieReleaseDate"
+                android:layout_marginStart="16dp"
+                android:layout_marginEnd="16dp" />
+
+
+            <TextView
+                android:id="@+id/titleAboveButtons"
+                style="@style/TextAppearance.MaterialComponents.Headline6"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Can be found on these following platforms"
+                android:layout_marginTop="8dp"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/movieOverview"
+                android:layout_marginStart="16dp"
+                android:layout_marginEnd="16dp" />
+            <LinearLayout
+                android:id="@+id/streamingLayout"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:layout_marginTop="16dp"
+                android:layout_marginStart="16dp"
+                android:layout_marginEnd="16dp"
+                android:layout_marginBottom="16dp"
+                app:layout_constraintTop_toBottomOf="@id/titleAboveButtons"
+                app:layout_constraintBottom_toTopOf="@+id/movieCast"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="parent">
+            </LinearLayout>
 
             <TextView
                 android:id="@+id/movieCast"
                 style="@style/TextAppearance.MaterialComponents.Body1"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="8dp"
+                android:layout_marginTop="16dp"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/movieOverview" />
+                app:layout_constraintTop_toBottomOf="@id/streamingLayout"
+                android:layout_marginStart="16dp"
+                android:layout_marginEnd="16dp" />
+
 
 
         </androidx.constraintlayout.widget.ConstraintLayout>
+
     </androidx.core.widget.NestedScrollView>
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

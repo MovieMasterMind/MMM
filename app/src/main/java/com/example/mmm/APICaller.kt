@@ -13,6 +13,10 @@ import org.json.JSONArray
 import org.json.JSONException
 import org.json.JSONObject
 import java.io.IOException
+//Add for the APIs
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.launch
 
 class APICaller {
 
@@ -117,4 +121,54 @@ class APICaller {
 
 
     }
+
+    fun getMovieStreamingLocationJSON(tmdbId: Int, callback: (Map<String, String>) -> Unit) {
+        GlobalScope.launch(Dispatchers.IO) {
+            val client = OkHttpClient()
+
+            val url = "https://streaming-availability.p.rapidapi.com/get?output_language=en&tmdb_id=movie%2F$tmdbId"
+            val request = Request.Builder()
+                .url(url)
+                .get()
+                .addHeader("X-RapidAPI-Key", "24562cc0e2msh9d6623953b461fdp18b00ejsna654dc783352")
+                .addHeader("X-RapidAPI-Host", "streaming-availability.p.rapidapi.com")
+                .build()
+
+            try {
+                val response = client.newCall(request).execute()
+                if (response.isSuccessful) {
+                    val responseBody = response.body?.string()
+                    val streamingDetails = parseStreamingInfo(responseBody)
+                    callback(streamingDetails)
+                } else {
+                    Log.e("APICaller", "Request failed with code: ${response.code}")
+                }
+            } catch (e: IOException) {
+                Log.e("APICaller", "Exception: ${e.message}")
+            }
+        }
+    }
+
+    private fun parseStreamingInfo(responseBody: String?): Map<String, String> {
+        val streamingDetails = mutableMapOf<String, String>()
+        responseBody?.let {
+            val jsonObject = JSONObject(it)
+            val resultObject = jsonObject.optJSONObject("result")
+            val streamingInfoObject = resultObject?.optJSONObject("streamingInfo")
+            streamingInfoObject?.let {
+                val usStreamingArray = streamingInfoObject.optJSONArray("us")
+                usStreamingArray?.let {
+                    for (i in 0 until usStreamingArray.length()) {
+                        val usStreamingDetail = usStreamingArray.getJSONObject(i)
+                        val service = usStreamingDetail.getString("service")
+                        val streamingType = usStreamingDetail.getString("streamingType")
+                        val link = usStreamingDetail.getString("link")
+                        streamingDetails[service] = link
+                    }
+                }
+            }
+        }
+        return streamingDetails
+    }
+
 }
