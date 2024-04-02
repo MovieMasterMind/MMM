@@ -2,15 +2,22 @@ package com.example.mmm
 
 //imported classes
 //For the TMDB update
-import APICaller
-import android.annotation.SuppressLint
+
+//imported classes
 import android.content.Intent
+import APICaller
+import MoviePosterAdapter
+import android.annotation.SuppressLint
+import android.graphics.Rect
 import android.os.Bundle
 import android.view.Menu
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.SearchView
 import androidx.drawerlayout.widget.DrawerLayout
+import android.view.View
+import com.google.android.material.snackbar.Snackbar
+import com.google.android.material.navigation.NavigationView
 import androidx.navigation.findNavController
 import androidx.navigation.ui.AppBarConfiguration
 import androidx.navigation.ui.navigateUp
@@ -19,12 +26,12 @@ import androidx.navigation.ui.setupWithNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.mmm.databinding.ActivityMainBinding
-import com.google.android.material.navigation.NavigationView
 
 class MainActivity : AppCompatActivity() {
 
     private lateinit var appBarConfiguration: AppBarConfiguration
     private lateinit var binding: ActivityMainBinding
+    private lateinit var recyclerView: RecyclerView
     private lateinit var adapter: MoviePosterAdapter
 
     @SuppressLint("CutPasteId")
@@ -89,6 +96,22 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun setUpRecyclerView(apiUrl: String, textView: TextView, recyclerView: RecyclerView) {
+        // Set up layout manager
+        val layoutManager = LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false)
+        recyclerView.layoutManager = layoutManager
+        // Create an instance of the adapter
+        adapter = MoviePosterAdapter(emptyList())
+        // Set the adapter to the RecyclerView
+        recyclerView.adapter = adapter
+
+        val apiCaller = APICaller() // Create an instance of APICaller
+
+
+        apiCaller.getData(apiUrl, textView, recyclerView)
+
+    }
+
+    private fun setUpRecyclerView(apiUrl: String, textView: TextView, recyclerView: RecyclerView) {
         val layoutManager = LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false)
         recyclerView.layoutManager = layoutManager
 
@@ -108,7 +131,6 @@ class MainActivity : AppCompatActivity() {
             }
         }
     }
-
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
         menuInflater.inflate(R.menu.main, menu)
@@ -147,3 +169,4 @@ class MainActivity : AppCompatActivity() {
         return navController.navigateUp(appBarConfiguration) || super.onSupportNavigateUp()
     }
 }
+
