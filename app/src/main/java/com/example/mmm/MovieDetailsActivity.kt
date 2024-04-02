@@ -134,15 +134,15 @@ import java.util.Locale
 
 
                 //here we add text to the streamView
-                Log.e("WHY", this.streamingDetails.toString())
+                Log.e("WHY", streamingDetails.toString())
                 //steamingTextView.text = streamingDetails
 
-                val streamingJson = JSONObject(this.streamingDetails)
+                val streamingJson = JSONObject(streamingDetails)
                 val streamingLayout: LinearLayout = findViewById(R.id.streamingLayout)
 
 
                 // Create buttons for streaming services
-                for ((service, link) in this.streamingDetails) {
+                for ((service, link) in streamingDetails) {
                     val button = Button(this)
                     button.text = service
                     val colors = getColorForService(service)
