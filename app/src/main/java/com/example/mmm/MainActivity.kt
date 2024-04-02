@@ -6,17 +6,13 @@ package com.example.mmm
 //imported classes
 import android.content.Intent
 import APICaller
-import MoviePosterAdapter
 import android.annotation.SuppressLint
-import android.graphics.Rect
 import android.os.Bundle
 import android.view.Menu
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.SearchView
 import androidx.drawerlayout.widget.DrawerLayout
-import android.view.View
-import com.google.android.material.snackbar.Snackbar
 import com.google.android.material.navigation.NavigationView
 import androidx.navigation.findNavController
 import androidx.navigation.ui.AppBarConfiguration
@@ -95,21 +91,7 @@ class MainActivity : AppCompatActivity() {
 
     }
 
-    private fun setUpRecyclerView(apiUrl: String, textView: TextView, recyclerView: RecyclerView) {
-        // Set up layout manager
-        val layoutManager = LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false)
-        recyclerView.layoutManager = layoutManager
-        // Create an instance of the adapter
-        adapter = MoviePosterAdapter(emptyList())
-        // Set the adapter to the RecyclerView
-        recyclerView.adapter = adapter
 
-        val apiCaller = APICaller() // Create an instance of APICaller
-
-
-        apiCaller.getData(apiUrl, textView, recyclerView)
-
-    }
 
     private fun setUpRecyclerView(apiUrl: String, textView: TextView, recyclerView: RecyclerView) {
         val layoutManager = LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false)
@@ -133,36 +115,41 @@ class MainActivity : AppCompatActivity() {
     }
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
+        // Inflate the main menu and options menu
         menuInflater.inflate(R.menu.main, menu)
         menuInflater.inflate(R.menu.options_menu, menu)
 
+        // Find the search item in the menu
         val searchItem = menu.findItem(R.id.search)
+        // Extract the SearchView from the search item
         val searchView = searchItem.actionView as SearchView
 
+        // Set an empty query and a hint for the search view
         searchView.setQuery("", false)
-
         searchView.queryHint = "Search for movies"
 
+        // Set up a listener for query text changes
         searchView.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
             // Called when the user submits final query
             override fun onQueryTextSubmit(query: String?): Boolean {
-                // Navigate to the search_results activity
+                // Navigate to the SearchableActivity with the query
                 val intent = Intent(applicationContext, SearchableActivity::class.java)
                 intent.putExtra("QUERY", query)
                 intent.flags = Intent.FLAG_ACTIVITY_SINGLE_TOP
                 startActivity(intent)
-
                 return true
             }
 
-            // Called everytime a character is changed in the query
+            // Called when the query text is changed by the user
             override fun onQueryTextChange(newText: String?): Boolean {
-                // Not needed yet
-                return false
+                // You can perform actions based on text changes here if needed
+                return true
             }
         })
-        return super.onCreateOptionsMenu(menu)
+
+        return true
     }
+
 
     override fun onSupportNavigateUp(): Boolean {
         val navController = findNavController(R.id.nav_host_fragment_content_main)
