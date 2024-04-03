@@ -143,12 +143,19 @@ class APICaller {
                     callback(streamingDetails)
                 } else {
                     Log.e("APICaller", "Request failed with code: ${response.code}")
+                    Log.e("APICaller", "Request failed with tmdbId: $tmdbId")
+                    // Return an empty map as an empty response
+                    callback(emptyMap())
                 }
             } catch (e: IOException) {
                 Log.e("APICaller", "Exception: ${e.message}")
+                // Return an empty map as an empty response
+                callback(emptyMap())
             }
         }
     }
+
+
 
     private fun parseStreamingInfo(responseBody: String?): Map<String, String> {
         val streamingDetails = mutableMapOf<String, String>()

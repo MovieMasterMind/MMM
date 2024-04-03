@@ -68,7 +68,16 @@ import java.util.Locale
                     Log.e("StreamingDetails", streamingDetails.toString())
 
                     //streamingDetails hold links of locations of the streaming service
-
+                    val streamingDetailsFound = streamingDetails.isNotEmpty()
+                    val textViewText = if (streamingDetailsFound) {
+                        "Can be found on these following platforms"
+                    } else {
+                        "No streaming platforms found :("
+                    }
+                    // Display text in the TextView
+                    runOnUiThread {
+                        findViewById<TextView>(R.id.titleAboveButtons).text = textViewText
+                    }
 
                     val jsonObjectRequest = JsonObjectRequest(Request.Method.GET, tmdbUrl, null,
                         { response ->
