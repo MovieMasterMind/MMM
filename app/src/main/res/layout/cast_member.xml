@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:padding="8dp">
+
+    <ImageView
+        android:id="@+id/cast_member_image"
+        android:layout_width="150dp"
+        android:layout_height="225dp"
+        android:scaleType="centerCrop"
+        android:src="@drawable/placeholder_image"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        android:contentDescription="@string/cast_member_image"/>
+
+    <TextView
+        android:id="@+id/cast_member_name"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:text="Name"
+        android:textAppearance="?android:textAppearanceMedium"
+        android:ellipsize="end"
+        android:maxLines="2"
+        app:layout_constraintStart_toStartOf="@+id/cast_member_image"
+        app:layout_constraintEnd_toEndOf="@+id/cast_member_image"
+        app:layout_constraintTop_toBottomOf="@id/cast_member_image" />
+
+    <TextView
+        android:id="@+id/cast_member_character"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:text="Character"
+        android:textAppearance="?android:textAppearanceSmall"
+        android:paddingBottom="16dp"
+        android:ellipsize="end"
+        android:maxLines="2"
+        app:layout_constraintStart_toStartOf="@+id/cast_member_name"
+        app:layout_constraintEnd_toEndOf="@+id/cast_member_name"
+        app:layout_constraintTop_toBottomOf="@id/cast_member_name" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>

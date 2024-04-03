@@ -66,7 +66,7 @@ class APICaller {
         return Pair(posterUrls, movieIds)
     }
 
-    fun getCastDetails(movieId: Int, callback: (List<String>) -> Unit) {
+    fun getCastDetails(movieId: Int, callback: (List<CastMember>) -> Unit) {
         val url = "https://api.themoviedb.org/3/movie/$movieId/credits?api_key=1f443a53a6aabe4de284f9c46a17f64c"
         val request = Request.Builder().url(url).get().build()
 
@@ -78,32 +78,55 @@ class APICaller {
             override fun onResponse(call: Call, response: Response) {
                 response.body?.let {
                     val responseData = it.string()
-                    Log.d("API Response", responseData)
-                    val castList = parseCastData(responseData)
-                    // Post to the main thread
-                    Handler(Looper.getMainLooper()).post {
-                        callback(castList)
+                    val castList = mutableListOf<CastMember>()
+                    try {
+                        val jsonObject = JSONObject(responseData)
+                        val castArray = jsonObject.getJSONArray("cast")
+                        for (i in 0 until castArray.length()) {
+                            val castObject = castArray.getJSONObject(i)
+                            val name = castObject.getString("name")
+                            val character = castObject.getString("character") // Extract character name
+                            val profilePath = castObject.optString("profile_path", "")
+                            val imageUrl = if (profilePath.isNotEmpty()) {
+                                "https://image.tmdb.org/t/p/w500$profilePath"
+                            } else {
+                                "https://www.nicepng.com/png/full/73-730154_open-default-profile-picture-png.png" // Placeholder image URL if no profile path is available
+                            }
+                            castList.add(CastMember(name, character, imageUrl)) // Include character name when creating CastMember
+                        }
+                        // Post to the main thread
+                        Handler(Looper.getMainLooper()).post {
+                            callback(castList)
+                        }
+                    } catch (e: JSONException) {
+                        Log.e("JSON Error", "Error parsing JSON: $e")
                     }
                 }
             }
         })
     }
 
-    private fun parseCastData(response: String): List<String> {
-        val castList = mutableListOf<String>()
+
+
+    private fun parseCastData(response: String): List<CastMember> {
+        val castList = mutableListOf<CastMember>()
         try {
             val jsonObject = JSONObject(response)
             val castArray = jsonObject.getJSONArray("cast")
             for (i in 0 until castArray.length()) {
                 val castObject = castArray.getJSONObject(i)
                 val name = castObject.getString("name")
-                castList.add(name)
+                val character = castObject.getString("character") // Get character from the object
+                val profilePath = castObject.optString("profile_path", "")
+                val imageUrl = "https://image.tmdb.org/t/p/w500$profilePath"
+                castList.add(CastMember(name, imageUrl, character)) // Include character in the constructor
             }
         } catch (e: JSONException) {
             Log.e("JSON Error", "Error parsing JSON: $e")
         }
         return castList
     }
+
 
     private fun getPosterUrls(resultsArray: JSONArray): List<String> {
         val posterUrls = mutableListOf<String>()
