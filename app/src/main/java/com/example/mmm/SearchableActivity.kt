@@ -79,7 +79,6 @@ class SearchableActivity : AppCompatActivity() {
     // Add search functionality in search result page
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
         menuInflater.inflate(R.menu.main, menu)
-        menuInflater.inflate(R.menu.options_menu, menu)
 
         // Display search bar
         val searchItem = menu.findItem(R.id.search)

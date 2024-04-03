@@ -2,16 +2,16 @@ package com.example.mmm
 
 
 
-import android.content.Intent
 import APICaller
 import android.annotation.SuppressLint
+import android.content.Intent
 import android.os.Bundle
 import android.view.Menu
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.SearchView
+import androidx.core.view.GravityCompat
 import androidx.drawerlayout.widget.DrawerLayout
-import com.google.android.material.navigation.NavigationView
 import androidx.navigation.findNavController
 import androidx.navigation.ui.AppBarConfiguration
 import androidx.navigation.ui.navigateUp
@@ -20,8 +20,7 @@ import androidx.navigation.ui.setupWithNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.mmm.databinding.ActivityMainBinding
-import android.util.Log
-import androidx.core.view.GravityCompat
+import com.google.android.material.navigation.NavigationView
 
 class MainActivity : AppCompatActivity() {
 
@@ -121,7 +120,7 @@ class MainActivity : AppCompatActivity() {
 
 
         //apiCaller.getMovieStreamingLocationJSON(597
-        //println("This is print onces")
+        //println("This is print once")
         // Get data from API and update the adapter
         apiCaller.getData(apiUrl, textView, recyclerView) { posterUrls, movieIds ->
             // Run on UI thread since response callback is on a background thread
@@ -137,7 +136,6 @@ class MainActivity : AppCompatActivity() {
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
         // Inflate the main menu and options menu
         menuInflater.inflate(R.menu.main, menu)
-        menuInflater.inflate(R.menu.options_menu, menu)
 
         // Find the search item in the menu
         val searchItem = menu.findItem(R.id.search)

@@ -75,6 +75,8 @@ dependencies {
 
     implementation("androidx.lifecycle:lifecycle-runtime-ktx:VERSION")
 
+    implementation("androidx.appcompat:appcompat:1.6.1")
+
 
     // START OF JETPACK COMPOSE
     val composeBom = platform("androidx.compose:compose-bom:2024.02.02")
