@@ -171,8 +171,30 @@ class MainActivity : AppCompatActivity() {
         return true
     }
 
+    override fun onBackPressed() {
+        if (binding.drawerLayout.isDrawerOpen(GravityCompat.START)) {
+            binding.drawerLayout.closeDrawer(GravityCompat.START)
+        } else {
+            super.onBackPressed()
+            updateNavigationSelection()
+        }
+    }
+
+    private fun updateNavigationSelection() {
+        val navController = findNavController(R.id.nav_host_fragment_content_main)
+        when (navController.currentDestination?.id) {
+            R.id.nav_home -> binding.navView.setCheckedItem(R.id.nav_home)
+            R.id.nav_gallery -> binding.navView.setCheckedItem(R.id.nav_gallery)
+            R.id.nav_slideshow -> binding.navView.setCheckedItem(R.id.nav_slideshow)
+        }
+    }
+
     override fun onSupportNavigateUp(): Boolean {
         val navController = findNavController(R.id.nav_host_fragment_content_main)
-        return navController.navigateUp(appBarConfiguration) || super.onSupportNavigateUp()
+        val upNavigated = navController.navigateUp(appBarConfiguration) || super.onSupportNavigateUp()
+        if (upNavigated) {
+            updateNavigationSelection()
+        }
+        return upNavigated
     }
 }
