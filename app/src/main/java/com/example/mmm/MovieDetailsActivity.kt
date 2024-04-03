@@ -13,6 +13,8 @@ import com.android.volley.Request
 import com.android.volley.toolbox.JsonObjectRequest
 import com.android.volley.toolbox.Volley
 import com.bumptech.glide.Glide
+import com.google.gson.Gson
+import com.google.gson.reflect.TypeToken
 import org.json.JSONObject
 
 class MovieDetailsActivity : AppCompatActivity() {
@@ -112,16 +114,34 @@ class MovieDetailsActivity : AppCompatActivity() {
 
     private fun addToWatchlist(movieId: Int, movieTitle: String, moviePosterUrl: String) {
         val sharedPrefs = getSharedPreferences("watchlist", Context.MODE_PRIVATE)
-        val editor = sharedPrefs.edit()
+        val watchlistJson = sharedPrefs.getString("watchlistJson", "[]")
 
-        // Create a composite string of movie details
-        val movieDetails = "$movieId|$movieTitle|$moviePosterUrl"
+        val gson = Gson()
+        val type = object : TypeToken<MutableList<WatchlistItem>>() {}.type
+        val watchlist: MutableList<WatchlistItem> = gson.fromJson(watchlistJson, type)
 
-        // Retrieve the current watchlist, add the new item, and save it back
-        val watchlist = sharedPrefs.getStringSet("watchlist", mutableSetOf()) ?: mutableSetOf()
-        watchlist.add(movieDetails)
-        editor.putStringSet("watchlist", watchlist).apply()
+        // Check if the movie is already in the watchlist
+        if (watchlist.any { it.movieId == movieId }) {
+            // Movie is already in the watchlist, show a toast message
+            Toast.makeText(this, "Movie is already in the watchlist", Toast.LENGTH_SHORT).show()
+        } else {
+            // Movie is not in the watchlist, add it
+            watchlist.add(WatchlistItem(movieId, movieTitle, moviePosterUrl))
 
-        Toast.makeText(this, "Added to watchlist", Toast.LENGTH_SHORT).show()
+            // Convert the updated list back into JSON
+            val updatedJson = gson.toJson(watchlist, type)
+
+            // Save the updated JSON in SharedPreferences
+            with(sharedPrefs.edit()) {
+                putString("watchlistJson", updatedJson)
+                apply()
+            }
+
+            // Show a toast message confirming the addition
+            Toast.makeText(this, "Movie added to watchlist", Toast.LENGTH_SHORT).show()
+        }
     }
+
+
 }
+
