@@ -1,6 +1,7 @@
 package com.example.mmm
 
 
+
 import android.content.Intent
 import APICaller
 import android.annotation.SuppressLint
@@ -19,10 +20,8 @@ import androidx.navigation.ui.setupWithNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.mmm.databinding.ActivityMainBinding
-import com.google.android.material.navigation.NavigationView
-import androidx.core.view.GravityCompat
-
 import android.util.Log
+import androidx.core.view.GravityCompat
 
 class MainActivity : AppCompatActivity() {
 

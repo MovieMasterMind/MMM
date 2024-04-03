@@ -4,20 +4,19 @@ import android.os.Looper
 import android.util.Log
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.launch
 import okhttp3.Call
 import okhttp3.Callback
 import okhttp3.OkHttpClient
 import okhttp3.Request
 import okhttp3.Response
-import okhttp3.*
 import org.json.JSONArray
 import org.json.JSONException
 import org.json.JSONObject
 import java.io.IOException
-//Add for the APIs
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.GlobalScope
-import kotlinx.coroutines.launch
+
 
 class APICaller {
 
@@ -201,5 +200,4 @@ class APICaller {
         }
         return streamingDetails
     }
-
 }
