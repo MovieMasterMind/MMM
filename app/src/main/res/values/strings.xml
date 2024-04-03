@@ -30,4 +30,5 @@
     <string name="cast_format">Cast: %s</string>
     <string name="vote_average_format">Rating: %1$.1f/10</string>
     <string name="add_to_watchlist">Add to watch list</string>
+    <string name="cast_member_image">Cast member image</string>
 </resources>
