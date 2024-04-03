@@ -1,0 +1,66 @@
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:padding="16dp">
+
+        <CheckBox
+            android:id="@+id/checkboxAdventure"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/adventure" />
+
+        <CheckBox
+            android:id="@+id/checkboxAction"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/action" />
+
+        <CheckBox
+            android:id="@+id/checkboxComedy"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/comedy" />
+
+        <CheckBox
+            android:id="@+id/checkboxDrama"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/drama" />
+
+        <CheckBox
+            android:id="@+id/checkboxThriller"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/thriller" />
+
+        <CheckBox
+            android:id="@+id/checkboxHorror"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/horror" />
+
+        <CheckBox
+            android:id="@+id/checkboxRomanticComedy"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/romantic_comedy" />
+
+        <CheckBox
+            android:id="@+id/checkboxMusical"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/musical" />
+
+        <CheckBox
+            android:id="@+id/checkboxDocumentary"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/documentary" />
+
+    </LinearLayout>
+</ScrollView>

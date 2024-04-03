@@ -6,7 +6,12 @@ import APICaller
 import android.annotation.SuppressLint
 import android.content.Intent
 import android.os.Bundle
+import android.util.Log
 import android.view.Menu
+import android.view.MenuItem
+import android.view.View
+import android.widget.Button
+import android.widget.CheckBox
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.SearchView
@@ -26,8 +31,18 @@ class MainActivity : AppCompatActivity() {
 
     private lateinit var appBarConfiguration: AppBarConfiguration
     private lateinit var binding: ActivityMainBinding
-    private lateinit var recyclerView: RecyclerView
     private lateinit var adapter: MoviePosterAdapter
+
+    private val checkboxMap = mapOf<String, CheckBox>(
+        "Adventure" to findViewById(R.id.checkboxAdventure),
+        "Action" to findViewById(R.id.checkboxAction),
+        "Comedy" to findViewById(R.id.checkboxComedy),
+        "Drama" to findViewById(R.id.checkboxDrama),
+        "Thriller" to findViewById(R.id.checkboxThriller),
+        "Horror" to findViewById(R.id.checkboxHorror),
+        "Romantic Comedy" to findViewById(R.id.checkboxRomanticComedy),
+        "Musical" to findViewById(R.id.checkboxMusical),
+        "Documentary" to findViewById(R.id.checkboxDocumentary))
 
     @SuppressLint("CutPasteId")
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -65,6 +80,16 @@ class MainActivity : AppCompatActivity() {
             }
         }
 
+//        val applyButton: Button = findViewById(R.id.buttonApply)
+//        applyButton.setOnClickListener {
+//            val selectedGenres = mutableListOf<String>()
+//            for ((genre, checkBox) in checkboxMap) {
+//                if (checkBox.isChecked) {
+//                    selectedGenres.add(genre)
+//                }
+//            }
+//            // Construct search query based on selected options
+//            val query = selectedGenres.joinToString("|")
 
         //template API calls
         val apiUrlsHorror =
@@ -132,6 +157,17 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        return when (item.itemId) {
+            R.id.action_filter -> {
+                // Handle click on filter icon
+                val dialogFragment = FilterDialogFragment()
+                dialogFragment.show(supportFragmentManager, "FilterDialogFragment")
+                true
+            }
+            else -> super.onOptionsItemSelected(item)
+        }
+    }
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
         // Inflate the main menu and options menu
@@ -169,8 +205,29 @@ class MainActivity : AppCompatActivity() {
         return true
     }
 
+    override fun onBackPressed() {
+        if (binding.drawerLayout.isDrawerOpen(GravityCompat.START)) {
+            binding.drawerLayout.closeDrawer(GravityCompat.START)
+        } else {
+            super.onBackPressed()
+            updateNavigationSelection()
+        }
+    }
+
+    private fun updateNavigationSelection() {
+        val navController = findNavController(R.id.nav_host_fragment_content_main)
+        when (navController.currentDestination?.id) {
+            R.id.nav_home -> binding.navView.setCheckedItem(R.id.nav_home)
+            R.id.nav_gallery -> binding.navView.setCheckedItem(R.id.nav_gallery)
+            R.id.nav_slideshow -> binding.navView.setCheckedItem(R.id.nav_slideshow)
+        }
+    }
+
     override fun onSupportNavigateUp(): Boolean {
         val navController = findNavController(R.id.nav_host_fragment_content_main)
-        return navController.navigateUp(appBarConfiguration) || super.onSupportNavigateUp()
-    }
-}
+        val upNavigated = navController.navigateUp(appBarConfiguration) || super.onSupportNavigateUp()
+        if (upNavigated) {
+            updateNavigationSelection()
+        }
+        return upNavigated
+    }}
