@@ -35,5 +35,10 @@
             android:exported="true"
             android:label="@string/app_name"
             android:theme="@style/Theme.MMM.NoActionBar"/>
+        <activity
+            android:name=".WatchlistActivity"
+            android:exported="true"
+            android:label="@string/app_name"
+            android:theme="@style/Theme.MMM.NoActionBar" />
     </application>
 </manifest>
