@@ -6,11 +6,8 @@ import APICaller
 import android.annotation.SuppressLint
 import android.content.Intent
 import android.os.Bundle
-import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
-import android.view.View
-import android.widget.Button
 import android.widget.CheckBox
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
@@ -32,17 +29,7 @@ class MainActivity : AppCompatActivity() {
     private lateinit var appBarConfiguration: AppBarConfiguration
     private lateinit var binding: ActivityMainBinding
     private lateinit var adapter: MoviePosterAdapter
-
-    private val checkboxMap = mapOf<String, CheckBox>(
-        "Adventure" to findViewById(R.id.checkboxAdventure),
-        "Action" to findViewById(R.id.checkboxAction),
-        "Comedy" to findViewById(R.id.checkboxComedy),
-        "Drama" to findViewById(R.id.checkboxDrama),
-        "Thriller" to findViewById(R.id.checkboxThriller),
-        "Horror" to findViewById(R.id.checkboxHorror),
-        "Romantic Comedy" to findViewById(R.id.checkboxRomanticComedy),
-        "Musical" to findViewById(R.id.checkboxMusical),
-        "Documentary" to findViewById(R.id.checkboxDocumentary))
+    private var checkboxMap: MutableMap<String, CheckBox?> = mutableMapOf()
 
     @SuppressLint("CutPasteId")
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -53,6 +40,8 @@ class MainActivity : AppCompatActivity() {
 
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
         setSupportActionBar(binding.appBarMain.toolbar)
+
+        initializeCheckboxMap()
 
         val drawerLayout: DrawerLayout = binding.drawerLayout
         val navView: NavigationView = binding.navView
@@ -128,7 +117,25 @@ class MainActivity : AppCompatActivity() {
 
     }
 
-    private fun setUpRecyclerView(apiUrl: String, textView: TextView, recyclerView: RecyclerView) {
+    fun onFiltersApplied(selectedGenresString: String) {
+        // Handle the selected genres string here
+        println("Selected genres: $selectedGenresString")
+    }
+    private fun initializeCheckboxMap() {
+//        checkboxMap = mapOf(
+//            "Adventure" to findViewById<CheckBox>(R.id.checkboxAdventure),
+//            "Action" to findViewById<CheckBox>(R.id.checkboxAction),
+//            "Comedy" to findViewById<CheckBox>(R.id.checkboxComedy),
+//            "Drama" to findViewById<CheckBox>(R.id.checkboxDrama),
+//            "Thriller" to findViewById<CheckBox>(R.id.checkboxThriller),
+//            "Horror" to findViewById<CheckBox>(R.id.checkboxHorror),
+//            "Romantic Comedy" to findViewById<CheckBox>(R.id.checkboxRomanticComedy),
+//            "Musical" to findViewById<CheckBox>(R.id.checkboxMusical),
+//            "Documentary" to findViewById<CheckBox>(R.id.checkboxDocumentary)
+//        ) as MutableMap<String, CheckBox?>
+    }
+
+        private fun setUpRecyclerView(apiUrl: String, textView: TextView, recyclerView: RecyclerView) {
         val layoutManager = LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false)
         recyclerView.layoutManager = layoutManager
 
@@ -230,4 +237,5 @@ class MainActivity : AppCompatActivity() {
             updateNavigationSelection()
         }
         return upNavigated
-    }}
+    }
+}
