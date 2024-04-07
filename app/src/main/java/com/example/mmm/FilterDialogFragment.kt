@@ -19,7 +19,13 @@ class FilterDialogFragment : DialogFragment() {
             // Get references to the checkboxes in the dialog layout
             val checkboxAdventure = view.findViewById<CheckBox>(R.id.checkboxAdventure)
             val checkboxAction = view.findViewById<CheckBox>(R.id.checkboxAction)
+            val checkboxComedy = view.findViewById<CheckBox>(R.id.checkboxComedy)
+            val checkboxDrama = view.findViewById<CheckBox>(R.id.checkboxDrama)
+            val checkboxThriller = view.findViewById<CheckBox>(R.id.checkboxThriller)
             val checkboxHorror = view.findViewById<CheckBox>(R.id.checkboxHorror)
+            val checkboxRomanticComedy = view.findViewById<CheckBox>(R.id.checkboxRomanticComedy)
+            val checkboxMusical = view.findViewById<CheckBox>(R.id.checkboxMusical)
+            val checkboxDocumentary = view.findViewById<CheckBox>(R.id.checkboxDocumentary)
 
             builder.setView(view)
                 .setTitle("Filter Options")

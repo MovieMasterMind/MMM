@@ -122,17 +122,17 @@ class MainActivity : AppCompatActivity() {
         println("Selected genres: $selectedGenresString")
     }
     private fun initializeCheckboxMap() {
-//        checkboxMap = mapOf(
-//            "Adventure" to findViewById<CheckBox>(R.id.checkboxAdventure),
-//            "Action" to findViewById<CheckBox>(R.id.checkboxAction),
-//            "Comedy" to findViewById<CheckBox>(R.id.checkboxComedy),
-//            "Drama" to findViewById<CheckBox>(R.id.checkboxDrama),
-//            "Thriller" to findViewById<CheckBox>(R.id.checkboxThriller),
-//            "Horror" to findViewById<CheckBox>(R.id.checkboxHorror),
-//            "Romantic Comedy" to findViewById<CheckBox>(R.id.checkboxRomanticComedy),
-//            "Musical" to findViewById<CheckBox>(R.id.checkboxMusical),
-//            "Documentary" to findViewById<CheckBox>(R.id.checkboxDocumentary)
-//        ) as MutableMap<String, CheckBox?>
+        checkboxMap = mapOf(
+            "Adventure" to findViewById<CheckBox>(R.id.checkboxAdventure),
+            "Action" to findViewById<CheckBox>(R.id.checkboxAction),
+            "Comedy" to findViewById<CheckBox>(R.id.checkboxComedy),
+            "Drama" to findViewById<CheckBox>(R.id.checkboxDrama),
+            "Thriller" to findViewById<CheckBox>(R.id.checkboxThriller),
+            "Horror" to findViewById<CheckBox>(R.id.checkboxHorror),
+            "Romantic Comedy" to findViewById<CheckBox>(R.id.checkboxRomanticComedy),
+            "Musical" to findViewById<CheckBox>(R.id.checkboxMusical),
+            "Documentary" to findViewById<CheckBox>(R.id.checkboxDocumentary)
+        ) as MutableMap<String, CheckBox?>
     }
 
         private fun setUpRecyclerView(apiUrl: String, textView: TextView, recyclerView: RecyclerView) {
