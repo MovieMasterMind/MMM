@@ -14,6 +14,7 @@ import android.widget.LinearLayout
 import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.android.volley.Request
@@ -44,21 +45,66 @@ class MovieDetailsActivity : AppCompatActivity() {
 //        val movieId = intent.getIntExtra("MOVIE_ID", -1)
         if (movieId != -1) {
             fetchMovieDetails(movieId)
+            initializeWatchlistButton(movieId)
         } else {
             finish() // Close the activity if movie ID wasn't passed correctly
         }
+    }
+
+    private fun initializeWatchlistButton(movieId: Int) {
+        val sharedPrefs = getSharedPreferences("watchlist", Context.MODE_PRIVATE)
+        val gson = Gson()
+        val type = object : TypeToken<List<WatchlistItem>>() {}.type
+        val watchlist: List<WatchlistItem> = gson.fromJson(sharedPrefs.getString("watchlistJson", "[]"), type)
+
+        val isMovieInWatchlist = watchlist.any { it.movieId == movieId }
+
         val addToWatchlistButton: Button = findViewById(R.id.addToWatchlistButton)
-        addToWatchlistButton.setOnClickListener {
-            // Now check if movieDetails is initialized before using it
+        updateButtonAppearanceAndAction(isMovieInWatchlist, addToWatchlistButton, movieId)
+    }
+
+    private fun updateButtonAppearanceAndAction(isInWatchlist: Boolean, button: Button, movieId: Int) {
+        button.text = if (isInWatchlist) {
+            getString(R.string.remove_from_watchlist)
+        } else {
+            getString(R.string.add_to_watchlist)
+        }
+
+        // Update button appearance based on whether the movie is in the watchlist
+        button.setBackgroundColor(ContextCompat.getColor(this, if (isInWatchlist) R.color.remove_from_watchlist_background else R.color.add_to_watchlist_background))
+
+        button.setOnClickListener {
             if (this::movieDetailsObj.isInitialized) {
                 val movieTitle = movieDetailsObj.getString("title")
                 val moviePosterPath = movieDetailsObj.getString("poster_path")
                 val moviePosterUrl = "https://image.tmdb.org/t/p/w500$moviePosterPath"
-                addToWatchlist(movieId, movieTitle, moviePosterUrl)
+                checkAddOrRemoveFromWatchlist(movieId, movieTitle, moviePosterUrl)
+                updateButtonAppearanceAndAction(!isInWatchlist, button, movieId)
             } else {
                 Toast.makeText(this, "Movie details not loaded yet", Toast.LENGTH_SHORT).show()
             }
         }
+    }
+
+    private fun checkAddOrRemoveFromWatchlist(movieId: Int, movieTitle: String, moviePosterUrl: String) {
+        val sharedPrefs = getSharedPreferences("watchlist", Context.MODE_PRIVATE)
+        val gson = Gson()
+        val type = object : TypeToken<MutableList<WatchlistItem>>() {}.type
+        var watchlist: MutableList<WatchlistItem> = gson.fromJson(sharedPrefs.getString("watchlistJson", "[]"), type)
+
+        val itemIndex = watchlist.indexOfFirst { it.movieId == movieId }
+        if (itemIndex != -1) {
+            // Movie is already in the watchlist, remove it
+            watchlist.removeAt(itemIndex)
+            Toast.makeText(this, "Removed from watchlist", Toast.LENGTH_SHORT).show()
+        } else {
+            // Movie is not in the watchlist, add it
+            watchlist.add(WatchlistItem(movieId, movieTitle, moviePosterUrl))
+            Toast.makeText(this, "Added to watchlist", Toast.LENGTH_SHORT).show()
+        }
+
+        // Save the updated watchlist back to SharedPreferences
+        sharedPrefs.edit().putString("watchlistJson", gson.toJson(watchlist, type)).apply()
     }
 
     private fun fetchMovieDetails(movieId: Int) {
@@ -193,36 +239,5 @@ class MovieDetailsActivity : AppCompatActivity() {
         finish() // Close this activity and return to the previous one
         return true
     }
-
-    private fun addToWatchlist(movieId: Int, movieTitle: String, moviePosterUrl: String) {
-        val sharedPrefs = getSharedPreferences("watchlist", Context.MODE_PRIVATE)
-        val watchlistJson = sharedPrefs.getString("watchlistJson", "[]")
-
-        val gson = Gson()
-        val type = object : TypeToken<MutableList<WatchlistItem>>() {}.type
-        val watchlist: MutableList<WatchlistItem> = gson.fromJson(watchlistJson, type)
-
-        // Check if the movie is already in the watchlist
-        if (watchlist.any { it.movieId == movieId }) {
-            // Movie is already in the watchlist, show a toast message
-            Toast.makeText(this, "Movie is already in the watchlist", Toast.LENGTH_SHORT).show()
-        } else {
-            // Movie is not in the watchlist, add it
-            watchlist.add(WatchlistItem(movieId, movieTitle, moviePosterUrl))
-
-            // Convert the updated list back into JSON
-            val updatedJson = gson.toJson(watchlist, type)
-
-            // Save the updated JSON in SharedPreferences
-            with(sharedPrefs.edit()) {
-                putString("watchlistJson", updatedJson)
-                apply()
-            }
-
-            // Show a toast message confirming the addition
-            Toast.makeText(this, "Movie added to watchlist", Toast.LENGTH_SHORT).show()
-        }
-    }
-
 
 }
