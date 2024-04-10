@@ -1,18 +1,37 @@
 package com.example.mmm
 
 import APICaller
+import CastAdapter
+import android.content.Context
+import android.content.Intent
+import android.graphics.Color
+import android.net.Uri
 import android.os.Bundle
 import android.util.Log
+import android.widget.Button
 import android.widget.ImageView
+import android.widget.LinearLayout
 import android.widget.TextView
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.content.ContextCompat
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import com.android.volley.Request
 import com.android.volley.toolbox.JsonObjectRequest
 import com.android.volley.toolbox.Volley
 import com.bumptech.glide.Glide
+import com.google.gson.Gson
+import com.google.gson.reflect.TypeToken
 import org.json.JSONObject
+import java.util.Locale
+
 
 class MovieDetailsActivity : AppCompatActivity() {
+    //GLOBAL VARIABLES
+    private var streamingDetails: Map<String, String> = emptyMap()
+    private lateinit var movieDetailsObj: JSONObject
+    private val apiCaller = APICaller()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -22,51 +41,120 @@ class MovieDetailsActivity : AppCompatActivity() {
         setSupportActionBar(toolbar)
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
         supportActionBar?.setDisplayShowHomeEnabled(true)
-
         val movieId = intent.getIntExtra("MOVIE_ID", -1)
+//        val movieId = intent.getIntExtra("MOVIE_ID", -1)
         if (movieId != -1) {
             fetchMovieDetails(movieId)
+            initializeWatchlistButton(movieId)
         } else {
             finish() // Close the activity if movie ID wasn't passed correctly
         }
     }
 
-    private fun fetchMovieDetails(movieId: Int) {
-        val url = "https://api.themoviedb.org/3/movie/$movieId?api_key=1f443a53a6aabe4de284f9c46a17f64c&language=en-US"
+    private fun initializeWatchlistButton(movieId: Int) {
+        val sharedPrefs = getSharedPreferences("watchlist", Context.MODE_PRIVATE)
+        val gson = Gson()
+        val type = object : TypeToken<List<WatchlistItem>>() {}.type
+        val watchlist: List<WatchlistItem> = gson.fromJson(sharedPrefs.getString("watchlistJson", "[]"), type)
 
-        val jsonObjectRequest = JsonObjectRequest(Request.Method.GET, url, null,
-            { response ->
-                // Existing code to display movie details
-                displayMovieDetails(response)
+        val isMovieInWatchlist = watchlist.any { it.movieId == movieId }
 
-                // New code to fetch and display cast details
-                val apiCaller = APICaller() // Ensure you have an instance of APICaller
-                apiCaller.getCastDetails(movieId) { castList ->
-                    val castString = castList.joinToString(", ")
-                    runOnUiThread {
-                        findViewById<TextView>(R.id.movieCast).text = getString(R.string.cast_format, castString)
-                    }
-                }
-            },
-            { error ->
-                Log.e("MovieDetailsActivity", "Error fetching movie details: $error")
-            }
-        )
-
-        Volley.newRequestQueue(this).add(jsonObjectRequest)
+        val addToWatchlistButton: Button = findViewById(R.id.addToWatchlistButton)
+        updateButtonAppearanceAndAction(isMovieInWatchlist, addToWatchlistButton, movieId)
     }
 
-    private fun displayMovieDetails(movieDetails: JSONObject) {
+    private fun updateButtonAppearanceAndAction(isInWatchlist: Boolean, button: Button, movieId: Int) {
+        button.text = if (isInWatchlist) {
+            getString(R.string.remove_from_watchlist)
+        } else {
+            getString(R.string.add_to_watchlist)
+        }
+
+        // Update button appearance based on whether the movie is in the watchlist
+        button.setBackgroundColor(ContextCompat.getColor(this, if (isInWatchlist) R.color.remove_from_watchlist_background else R.color.add_to_watchlist_background))
+
+        button.setOnClickListener {
+            if (this::movieDetailsObj.isInitialized) {
+                val movieTitle = movieDetailsObj.getString("title")
+                val moviePosterPath = movieDetailsObj.getString("poster_path")
+                val moviePosterUrl = "https://image.tmdb.org/t/p/w500$moviePosterPath"
+                checkAddOrRemoveFromWatchlist(movieId, movieTitle, moviePosterUrl)
+                updateButtonAppearanceAndAction(!isInWatchlist, button, movieId)
+            } else {
+                Toast.makeText(this, "Movie details not loaded yet", Toast.LENGTH_SHORT).show()
+            }
+        }
+    }
+
+    private fun checkAddOrRemoveFromWatchlist(movieId: Int, movieTitle: String, moviePosterUrl: String) {
+        val sharedPrefs = getSharedPreferences("watchlist", Context.MODE_PRIVATE)
+        val gson = Gson()
+        val type = object : TypeToken<MutableList<WatchlistItem>>() {}.type
+        var watchlist: MutableList<WatchlistItem> = gson.fromJson(sharedPrefs.getString("watchlistJson", "[]"), type)
+
+        val itemIndex = watchlist.indexOfFirst { it.movieId == movieId }
+        if (itemIndex != -1) {
+            // Movie is already in the watchlist, remove it
+            watchlist.removeAt(itemIndex)
+            Toast.makeText(this, "Removed from watchlist", Toast.LENGTH_SHORT).show()
+        } else {
+            // Movie is not in the watchlist, add it
+            watchlist.add(WatchlistItem(movieId, movieTitle, moviePosterUrl))
+            Toast.makeText(this, "Added to watchlist", Toast.LENGTH_SHORT).show()
+        }
+
+        // Save the updated watchlist back to SharedPreferences
+        sharedPrefs.edit().putString("watchlistJson", gson.toJson(watchlist, type)).apply()
+    }
+
+    private fun fetchMovieDetails(movieId: Int) {
+        val url =
+            "https://api.themoviedb.org/3/movie/$movieId?api_key=1f443a53a6aabe4de284f9c46a17f64c&language=en-US"
+
+        apiCaller.getMovieStreamingLocationJSON(movieId) { streamingDetails ->
+            // Log or display the streaming details
+            Log.e("StreamingDetails", streamingDetails.toString())
+
+            //streamingDetails hold links of locations of the streaming service
+            val streamingDetailsFound = streamingDetails.isNotEmpty()
+            val textViewText = if (streamingDetailsFound) {
+                "Can be found on these following platforms"
+            } else {
+                "No streaming platforms found :("
+            }
+            // Display text in the TextView
+            runOnUiThread {
+                findViewById<TextView>(R.id.titleBeforeStreamingServices).text = textViewText
+            }
+
+            val jsonObjectRequest = JsonObjectRequest(Request.Method.GET, url, null,
+                { response ->
+                    // Existing code to display movie details
+                    displayMovieDetails(response, streamingDetails)
+                },
+                { error ->
+                    Log.e("MovieDetailsActivity", "Error fetching movie details: $error")
+                }
+            )
+
+            Volley.newRequestQueue(this).add(jsonObjectRequest)
+        }
+    }
+
+    private fun displayMovieDetails(movieDetails: JSONObject, streamingDetails: Map<String, String>) {
+        movieDetailsObj = movieDetails
         val titleTextView: TextView = findViewById(R.id.movieTitle)
         val overviewTextView: TextView = findViewById(R.id.movieOverview)
         val genreTextView: TextView = findViewById(R.id.movieGenre)
         val posterImageView: ImageView = findViewById(R.id.moviePoster)
+        val voteAverageTextView: TextView = findViewById(R.id.movieVoteAverage)
 
         titleTextView.text = movieDetails.getString("title")
         overviewTextView.text = movieDetails.getString("overview")
         val releaseDateTextView: TextView = findViewById(R.id.movieReleaseDate)
         releaseDateTextView.text = movieDetails.getString("release_date")
-
+        val voteAverage = movieDetails.getDouble("vote_average")
+        voteAverageTextView.text = getString(R.string.vote_average_format, voteAverage)
 
         val genresArray = movieDetails.getJSONArray("genres")
         val genreNames = mutableListOf<String>()
@@ -76,16 +164,80 @@ class MovieDetailsActivity : AppCompatActivity() {
         }
         genreTextView.text = genreNames.joinToString(", ")
 
-        // For stars, you may need to use another API call or a fixed value, as TMDB API doesn't directly provide star ratings in the way users might expect (like 5 stars out of 5)
-
+        // Load movie poster
         val posterPath = movieDetails.getString("poster_path")
-        Glide.with(this)
-            .load("https://image.tmdb.org/t/p/w500$posterPath")
-            .into(posterImageView)
+        val posterUrl = "https://image.tmdb.org/t/p/w500$posterPath"
+        Glide.with(this).load(posterUrl).into(posterImageView)
+
+        // Initialize RecyclerView and its adapter for cast members
+        val castRecyclerView: RecyclerView = findViewById(R.id.castRecyclerView)
+        val castAdapter = CastAdapter(emptyList()) // Initialize with an empty list
+        castRecyclerView.layoutManager = LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false)
+        castRecyclerView.adapter = castAdapter
+
+        // Fetch and display cast details
+        apiCaller.getCastDetails(movieDetails.getInt("id")) { castList ->
+            runOnUiThread {
+                castAdapter.updateCastList(castList)
+            }
+        }
+
+        //here we add text to the streamView
+        Log.e("WHY", streamingDetails.toString())
+        //steamingTextView.text = streamingDetails
+
+        val streamingJson = JSONObject(streamingDetails)
+        val streamingLayout: LinearLayout = findViewById(R.id.streamingLayout)
+
+
+        // Create buttons for streaming services
+        for ((service, link) in streamingDetails) {
+            val button = Button(this)
+            button.text = service
+            val colors = getColorForService(service)
+            colors?.let { (backgroundColor, textColor) ->
+                button.setBackgroundColor(backgroundColor)
+                button.setTextColor(textColor)
+            }
+            button.setOnClickListener {
+                // Open the link in the browser when the button is clicked
+                val intent = Intent(Intent.ACTION_VIEW)
+                intent.data = Uri.parse(link)
+                startActivity(intent)
+            }
+            val params = LinearLayout.LayoutParams(
+                LinearLayout.LayoutParams.MATCH_PARENT,
+                LinearLayout.LayoutParams.WRAP_CONTENT
+            )
+            params.setMargins(
+                0,
+                0,
+                0,
+                24
+            ) // Add bottom margin to create spacing between buttons
+            button.layoutParams = params
+            streamingLayout.addView(button)
+        }
     }
 
+    private val serviceColorsMap = mapOf(
+        "netflix" to Pair(Color.BLACK, Color.parseColor("#E50914")),
+        "prime" to Pair(Color.parseColor("#00A8E1"), Color.BLACK),
+        "hulu" to Pair(Color.parseColor("#1CE783"), Color.BLACK),
+        "apple" to Pair(Color.GRAY, Color.BLACK),
+        "peacock" to Pair(Color.BLACK, Color.WHITE),
+        "hbo" to Pair(Color.WHITE, Color.BLACK)
+
+
+        // Add more services and colors as needed
+    )
+
+    private fun getColorForService(service: String): Pair<Int, Int>? {
+        return serviceColorsMap[service.lowercase(Locale.ROOT)]
+    }
     override fun onSupportNavigateUp(): Boolean {
         finish() // Close this activity and return to the previous one
         return true
     }
+
 }

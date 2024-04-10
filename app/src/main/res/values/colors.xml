@@ -7,4 +7,8 @@
     <color name="teal_700">#FF018786</color>
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
+    <color name="add_to_watchlist_background">#FF6200EE</color> <!-- Example color for adding -->
+    <color name="add_to_watchlist_text">#000000</color> <!-- Black -->
+    <color name="remove_from_watchlist_background">#D32F2F</color> <!-- Red -->
+    <color name="remove_from_watchlist_text">#FFFFFF</color> <!-- White -->
 </resources>

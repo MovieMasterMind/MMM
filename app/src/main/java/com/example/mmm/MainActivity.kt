@@ -1,16 +1,17 @@
 package com.example.mmm
 
-//imported classes
-//For the TMDB update
+
+
+import android.content.Intent
 import APICaller
 import android.annotation.SuppressLint
-import android.content.Intent
 import android.os.Bundle
 import android.view.Menu
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.SearchView
 import androidx.drawerlayout.widget.DrawerLayout
+import com.google.android.material.navigation.NavigationView
 import androidx.navigation.findNavController
 import androidx.navigation.ui.AppBarConfiguration
 import androidx.navigation.ui.navigateUp
@@ -19,12 +20,14 @@ import androidx.navigation.ui.setupWithNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.mmm.databinding.ActivityMainBinding
-import com.google.android.material.navigation.NavigationView
+import android.util.Log
+import androidx.core.view.GravityCompat
 
 class MainActivity : AppCompatActivity() {
 
     private lateinit var appBarConfiguration: AppBarConfiguration
     private lateinit var binding: ActivityMainBinding
+    private lateinit var recyclerView: RecyclerView
     private lateinit var adapter: MoviePosterAdapter
 
     @SuppressLint("CutPasteId")
@@ -47,8 +50,21 @@ class MainActivity : AppCompatActivity() {
                 R.id.nav_home, R.id.nav_gallery, R.id.nav_slideshow
             ), drawerLayout
         )
+
         setupActionBarWithNavController(navController, appBarConfiguration)
         navView.setupWithNavController(navController) // Injecting the code for network request
+
+        navView.setNavigationItemSelectedListener { menuItem ->
+            when (menuItem.itemId) {
+                R.id.nav_watchlist -> {
+                    val intent = Intent(this, WatchlistActivity::class.java)
+                    startActivity(intent)
+                    drawerLayout.closeDrawer(GravityCompat.START)
+                    true
+                }
+                else -> false
+            }
+        }
 
 
         //template API calls
@@ -97,7 +113,15 @@ class MainActivity : AppCompatActivity() {
         recyclerView.adapter = adapter
 
         val apiCaller = APICaller()
+//        apiCaller.getMovieStreamingLocationJSON(597) { details ->
+//            // Log or display the streaming details
+//            Log.e("StreamingDetails", details.toString())
+//        }
 
+
+
+        //apiCaller.getMovieStreamingLocationJSON(597
+        //println("This is print onces")
         // Get data from API and update the adapter
         apiCaller.getData(apiUrl, textView, recyclerView) { posterUrls, movieIds ->
             // Run on UI thread since response callback is on a background thread
@@ -111,39 +135,66 @@ class MainActivity : AppCompatActivity() {
 
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
+        // Inflate the main menu and options menu
         menuInflater.inflate(R.menu.main, menu)
         menuInflater.inflate(R.menu.options_menu, menu)
 
+        // Find the search item in the menu
         val searchItem = menu.findItem(R.id.search)
+        // Extract the SearchView from the search item
         val searchView = searchItem.actionView as SearchView
 
+        // Set an empty query and a hint for the search view
         searchView.setQuery("", false)
 
         searchView.queryHint = "Search for movies"
 
+        // Set up a listener for query text changes
         searchView.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
             // Called when the user submits final query
             override fun onQueryTextSubmit(query: String?): Boolean {
-                // Navigate to the search_results activity
+                // Navigate to the SearchableActivity with the query
                 val intent = Intent(applicationContext, SearchableActivity::class.java)
                 intent.putExtra("QUERY", query)
                 intent.flags = Intent.FLAG_ACTIVITY_SINGLE_TOP
                 startActivity(intent)
-
                 return true
             }
 
-            // Called everytime a character is changed in the query
+            // Called when the query text is changed by the user
             override fun onQueryTextChange(newText: String?): Boolean {
-                // Not needed yet
-                return false
+                // You can perform actions based on text changes here if needed
+                return true
             }
         })
-        return super.onCreateOptionsMenu(menu)
+
+        return true
+    }
+
+    override fun onBackPressed() {
+        if (binding.drawerLayout.isDrawerOpen(GravityCompat.START)) {
+            binding.drawerLayout.closeDrawer(GravityCompat.START)
+        } else {
+            super.onBackPressed()
+            updateNavigationSelection()
+        }
+    }
+
+    private fun updateNavigationSelection() {
+        val navController = findNavController(R.id.nav_host_fragment_content_main)
+        when (navController.currentDestination?.id) {
+            R.id.nav_home -> binding.navView.setCheckedItem(R.id.nav_home)
+            R.id.nav_gallery -> binding.navView.setCheckedItem(R.id.nav_gallery)
+            R.id.nav_slideshow -> binding.navView.setCheckedItem(R.id.nav_slideshow)
+        }
     }
 
     override fun onSupportNavigateUp(): Boolean {
         val navController = findNavController(R.id.nav_host_fragment_content_main)
-        return navController.navigateUp(appBarConfiguration) || super.onSupportNavigateUp()
+        val upNavigated = navController.navigateUp(appBarConfiguration) || super.onSupportNavigateUp()
+        if (upNavigated) {
+            updateNavigationSelection()
+        }
+        return upNavigated
     }
 }
