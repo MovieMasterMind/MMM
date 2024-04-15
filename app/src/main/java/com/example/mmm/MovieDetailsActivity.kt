@@ -163,8 +163,14 @@ class MovieDetailsActivity : AppCompatActivity() {
         genreTextView.text = genreNames.joinToString(", ")
 
         val posterPath = movieDetails.getString("poster_path")
-        val posterUrl = "https://image.tmdb.org/t/p/w500$posterPath"
-        Glide.with(this).load(posterUrl).into(posterImageView)
+        if (posterPath != "null") {
+            val posterUrl = "https://image.tmdb.org/t/p/w500$posterPath"
+            Glide.with(this).load(posterUrl).into(posterImageView)
+        } else {
+            val posterUrl =  "https://external-content.duckduckgo.com/iu/?u=https%3A%2F%2Ftse4.mm.bing.net%2Fth%3Fid%3DOIP.IkbcciGb75wX7U5WeANuDQHaLE%26pid%3DApi&f=1&ipt=a36f8b1fdf094f9245bbbfbf6e0d0908dd49b8c2ae8557f5632a06cce2c36cf2&ipo=images"
+            Glide.with(this).load(posterUrl).into(posterImageView)
+        }
+
 
         // Initialize RecyclerView and its adapter for cast members
         val castRecyclerView: RecyclerView = findViewById(R.id.castRecyclerView)
