@@ -113,15 +113,7 @@ class MainActivity : AppCompatActivity() {
         recyclerView.adapter = adapter
 
         val apiCaller = APICaller()
-//        apiCaller.getMovieStreamingLocationJSON(597) { details ->
-//            // Log or display the streaming details
-//            Log.e("StreamingDetails", details.toString())
-//        }
 
-
-
-        //apiCaller.getMovieStreamingLocationJSON(597
-        //println("This is print onces")
         // Get data from API and update the adapter
         apiCaller.getData(apiUrl, textView, recyclerView) { posterUrls, movieIds ->
             // Run on UI thread since response callback is on a background thread
@@ -143,7 +135,6 @@ class MainActivity : AppCompatActivity() {
         val searchItem = menu.findItem(R.id.search)
         // Extract the SearchView from the search item
         val searchView = searchItem.actionView as SearchView
-
         // Set an empty query and a hint for the search view
         searchView.setQuery("", false)
 
