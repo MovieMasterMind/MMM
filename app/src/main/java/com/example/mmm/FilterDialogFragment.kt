@@ -1,14 +1,21 @@
 package com.example.mmm
 
 import android.app.Dialog
+import android.content.Context
+import android.content.SharedPreferences
 import android.os.Bundle
 import android.widget.CheckBox
 import androidx.appcompat.app.AlertDialog
 import androidx.fragment.app.DialogFragment
 
 class FilterDialogFragment : DialogFragment() {
-
+    private lateinit var sharedPreferences: SharedPreferences
     private var selectedGenres: MutableList<String> = mutableListOf()
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        sharedPreferences = requireActivity().getSharedPreferences("FilterPreferences", Context.MODE_PRIVATE)
+    }
 
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
         return activity?.let {
@@ -16,7 +23,6 @@ class FilterDialogFragment : DialogFragment() {
             val inflater = requireActivity().layoutInflater
             val view = inflater.inflate(R.layout.filter_dialog, null)
 
-            // Get references to the checkboxes in the dialog layout
             val checkboxAdventure = view.findViewById<CheckBox>(R.id.checkboxAdventure)
             val checkboxAction = view.findViewById<CheckBox>(R.id.checkboxAction)
             val checkboxComedy = view.findViewById<CheckBox>(R.id.checkboxComedy)
@@ -26,10 +32,19 @@ class FilterDialogFragment : DialogFragment() {
             val checkboxRomance = view.findViewById<CheckBox>(R.id.checkboxRomance)
             val checkboxDocumentary = view.findViewById<CheckBox>(R.id.checkboxDocumentary)
 
+            // Load checkbox states from SharedPreferences
+            checkboxAdventure.isChecked = sharedPreferences.getBoolean("Adventure", false)
+            checkboxAction.isChecked = sharedPreferences.getBoolean("Action", false)
+            checkboxComedy.isChecked = sharedPreferences.getBoolean("Comedy", false)
+            checkboxDrama.isChecked = sharedPreferences.getBoolean("Drama", false)
+            checkboxThriller.isChecked = sharedPreferences.getBoolean("Thriller", false)
+            checkboxHorror.isChecked = sharedPreferences.getBoolean("Horror", false)
+            checkboxRomance.isChecked = sharedPreferences.getBoolean("Romance", false)
+            checkboxDocumentary.isChecked = sharedPreferences.getBoolean("Documentary", false)
+
             builder.setView(view)
                 .setTitle("Filter Options")
                 .setPositiveButton("Apply") { dialog, _ ->
-                    // Clear the list of selected genres
                     selectedGenres.clear()
 
                     // Map each checkbox to its TMDB genre ID
@@ -49,6 +64,7 @@ class FilterDialogFragment : DialogFragment() {
                         if (checkbox.isChecked) {
                             selectedGenres.add(genreId)
                         }
+                        sharedPreferences.edit().putBoolean(checkbox.text.toString(), checkbox.isChecked).apply()
                     }
 
                     // Print out the selected genres
