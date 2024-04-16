@@ -30,9 +30,7 @@ class SearchableActivity : AppCompatActivity() {
         val query = intent.getStringExtra("QUERY")
 
         if (query != null) {
-            // Pass movie name to dynamic string and print query
             searchQueryName.text = getString(R.string.search_results, query)
-
             fetchMovieInfo(query)
         }
     }
@@ -42,7 +40,6 @@ class SearchableActivity : AppCompatActivity() {
         return true
     }
 
-    // Pass search query to setUpRecyclerView
     private fun fetchMovieInfo(query: String) {
         val apiUrl = "https://api.themoviedb.org/3/search/movie?api_key=$apiKey&query=$query"
         queryTextView = findViewById(R.id.queryTextView)
@@ -51,23 +48,16 @@ class SearchableActivity : AppCompatActivity() {
         setUpRecyclerView(apiUrl, queryTextView, recyclerViewResults)
     }
 
-    // Do the search and display results
     private fun setUpRecyclerView(apiUrl: String, textView: TextView, recyclerView: RecyclerView) {
-        // Set up layout manager
         val layoutManager = LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false)
         recyclerView.layoutManager = layoutManager
-        // Create an instance of the adapter with layout params
         adapter = MoviePosterAdapter(emptyList(), emptyList())
-        // Set the adapter to the RecyclerView
         recyclerView.adapter = adapter
 
-        val apiCaller = APICaller() // Create an instance of APICaller
+        val apiCaller = APICaller()
 
-        // Get data from API and update the adapter
         apiCaller.getData(apiUrl, textView, recyclerView) { posterUrls, movieIds ->
-            // Run on UI thread since response callback is on a background thread
             runOnUiThread {
-                // Create a new adapter with the data
                 adapter = MoviePosterAdapter(posterUrls, movieIds)
                 recyclerView.adapter = adapter
             }
@@ -75,12 +65,9 @@ class SearchableActivity : AppCompatActivity() {
 
     }
 
-
-    // Add search functionality in search result page
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
         menuInflater.inflate(R.menu.main, menu)
 
-        // Display search bar
         val searchItem = menu.findItem(R.id.search)
         val searchView = searchItem.actionView as SearchView
 
@@ -89,7 +76,6 @@ class SearchableActivity : AppCompatActivity() {
         searchView.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
             // Called when the user submits final query
             override fun onQueryTextSubmit(query: String?): Boolean {
-                // Navigate to the search_results activity
                 query?.let {
                     fetchMovieInfo(it)
                 }
@@ -98,7 +84,6 @@ class SearchableActivity : AppCompatActivity() {
 
             // Called everytime a character is changed in the query
             override fun onQueryTextChange(newText: String?): Boolean {
-                // Not needed for this case
                 return false
             }
         })

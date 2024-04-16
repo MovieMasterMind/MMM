@@ -67,20 +67,7 @@ class FilterDialogFragment : DialogFragment() {
                         sharedPreferences.edit().putBoolean(checkbox.text.toString(), checkbox.isChecked).apply()
                     }
 
-                    // Print out the selected genres
                     println("Selected genres: ${selectedGenres.joinToString(", ")}")
-
-//                    // Find checkboxes and add selected genres to the list
-//                    if(checkboxAdventure.isChecked) selectedGenres.add("12")
-//                    if(checkboxAction.isChecked) selectedGenres.add("28")
-//                    if(checkboxComedy.isChecked) selectedGenres.add("35")
-//                    if(checkboxDrama.isChecked) selectedGenres.add("18")
-//                    if(checkboxThriller.isChecked) selectedGenres.add("53")
-//                    if(checkboxHorror.isChecked) selectedGenres.add("27")
-//                    if(checkboxRomance.isChecked) selectedGenres.add("10749")
-//                    if(checkboxDocumentary.isChecked) selectedGenres.add("99")
-
-//                    applyFilters()
                 }
                 .setNegativeButton("Cancel") { dialog, _ ->
                     // Handle canceling filter selection
@@ -89,9 +76,5 @@ class FilterDialogFragment : DialogFragment() {
 
             builder.create()
         } ?: throw IllegalStateException("Activity cannot be null")
-    }
-
-    private fun applyFilters() {
-
     }
 }
