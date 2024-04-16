@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <item name="search_result_item_title" type="id" />
+    <item name="search_result_item_poster" type="id" />
+    <item name="view_details_button" type="id" />
+</resources>
