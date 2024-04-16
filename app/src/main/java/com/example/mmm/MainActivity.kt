@@ -41,8 +41,6 @@ class MainActivity : AppCompatActivity() {
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
         setSupportActionBar(binding.appBarMain.toolbar)
 
-        initializeCheckboxMap()
-
         val drawerLayout: DrawerLayout = binding.drawerLayout
         val navView: NavigationView = binding.navView
         val navController = findNavController(R.id.nav_host_fragment_content_main)
@@ -117,24 +115,6 @@ class MainActivity : AppCompatActivity() {
 
     }
 
-    fun onFiltersApplied(selectedGenresString: String) {
-        // Handle the selected genres string here
-        println("Selected genres: $selectedGenresString")
-    }
-    private fun initializeCheckboxMap() {
-        checkboxMap = mapOf(
-            "Adventure" to findViewById<CheckBox>(R.id.checkboxAdventure),
-            "Action" to findViewById<CheckBox>(R.id.checkboxAction),
-            "Comedy" to findViewById<CheckBox>(R.id.checkboxComedy),
-            "Drama" to findViewById<CheckBox>(R.id.checkboxDrama),
-            "Thriller" to findViewById<CheckBox>(R.id.checkboxThriller),
-            "Horror" to findViewById<CheckBox>(R.id.checkboxHorror),
-            "Romantic Comedy" to findViewById<CheckBox>(R.id.checkboxRomanticComedy),
-            "Musical" to findViewById<CheckBox>(R.id.checkboxMusical),
-            "Documentary" to findViewById<CheckBox>(R.id.checkboxDocumentary)
-        ) as MutableMap<String, CheckBox?>
-    }
-
         private fun setUpRecyclerView(apiUrl: String, textView: TextView, recyclerView: RecyclerView) {
         val layoutManager = LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false)
         recyclerView.layoutManager = layoutManager
@@ -148,8 +128,6 @@ class MainActivity : AppCompatActivity() {
 //            // Log or display the streaming details
 //            Log.e("StreamingDetails", details.toString())
 //        }
-
-
 
         //apiCaller.getMovieStreamingLocationJSON(597
         //println("This is print once")
@@ -212,6 +190,7 @@ class MainActivity : AppCompatActivity() {
         return true
     }
 
+    @Deprecated("Deprecated in Java")
     override fun onBackPressed() {
         if (binding.drawerLayout.isDrawerOpen(GravityCompat.START)) {
             binding.drawerLayout.closeDrawer(GravityCompat.START)

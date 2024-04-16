@@ -45,16 +45,10 @@
             android:text="@string/horror" />
 
         <CheckBox
-            android:id="@+id/checkboxRomanticComedy"
+            android:id="@+id/checkboxRomance"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/romantic_comedy" />
-
-        <CheckBox
-            android:id="@+id/checkboxMusical"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/musical" />
+            android:text="@string/romance" />
 
         <CheckBox
             android:id="@+id/checkboxDocumentary"
