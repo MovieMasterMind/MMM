@@ -84,7 +84,11 @@ class SearchableActivity : AppCompatActivity() {
 
             // Called everytime a character is changed in the query
             override fun onQueryTextChange(newText: String?): Boolean {
-                return false
+                newText?.let {
+                    fetchMovieInfo(it)
+                }
+                return true
+
             }
         })
         return super.onCreateOptionsMenu(menu)
