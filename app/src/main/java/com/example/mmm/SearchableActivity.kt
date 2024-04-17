@@ -1,7 +1,10 @@
 package com.example.mmm
 
 import APICaller
+import MoviePoster
+import SearchResultAdapter
 import android.os.Bundle
+import android.util.Log
 import android.view.Menu
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
@@ -9,100 +12,102 @@ import androidx.appcompat.widget.SearchView
 import androidx.appcompat.widget.Toolbar
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import org.json.JSONException
+import org.json.JSONObject
 
 class SearchableActivity : AppCompatActivity() {
-
     private lateinit var queryTextView: TextView
     private lateinit var recyclerViewResults: RecyclerView
-    private lateinit var adapter: MoviePosterAdapter
-
+    private lateinit var adapter: SearchResultAdapter
     private val apiKey = "1f443a53a6aabe4de284f9c46a17f64c"
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.search_results)
 
-        val toolbar: Toolbar = findViewById(R.id.toolbar_search_results) // Make sure this ID matches your layout
+        val toolbar: Toolbar = findViewById(R.id.toolbar_search_results)
         setSupportActionBar(toolbar)
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
 
-        val searchQueryName = findViewById<TextView>(R.id.query_search_results)
-        val query = intent.getStringExtra("QUERY")
-
-        if (query != null) {
-            // Pass movie name to dynamic string and print query
-            searchQueryName.text = getString(R.string.search_results, query)
-
-            fetchMovieInfo(query)
-        }
-    }
-
-    override fun onSupportNavigateUp(): Boolean {
-        onBackPressed()
-        return true
-    }
-
-    // Pass search query to setUpRecyclerView
-    private fun fetchMovieInfo(query: String) {
-        val apiUrl = "https://api.themoviedb.org/3/search/movie?api_key=$apiKey&query=$query"
         queryTextView = findViewById(R.id.queryTextView)
         recyclerViewResults = findViewById(R.id.recyclerViewResults)
+        recyclerViewResults.layoutManager = LinearLayoutManager(this)
 
-        setUpRecyclerView(apiUrl, queryTextView, recyclerViewResults)
+        intent.getStringExtra("QUERY")?.let {
+            queryTextView.text = getString(R.string.search_results, it)
+            fetchMovieInfo(it)
+        }
     }
 
-    // Do the search and display results
-    private fun setUpRecyclerView(apiUrl: String, textView: TextView, recyclerView: RecyclerView) {
-        // Set up layout manager
-        val layoutManager = LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false)
-        recyclerView.layoutManager = layoutManager
-        // Create an instance of the adapter with layout params
-        adapter = MoviePosterAdapter(emptyList(), emptyList())
-        // Set the adapter to the RecyclerView
-        recyclerView.adapter = adapter
-
-        val apiCaller = APICaller() // Create an instance of APICaller
-
-        // Get data from API and update the adapter
-        apiCaller.getData(apiUrl, textView, recyclerView) { posterUrls, movieIds ->
-            // Run on UI thread since response callback is on a background thread
+    private fun fetchMovieInfo(query: String) {
+        val apiUrl = "https://api.themoviedb.org/3/search/movie?api_key=$apiKey&query=$query"
+        APICaller().fetchData(apiUrl, this::parseSearchResults) { imageUrls, movieTitles, movieIds ->
+            val items = List(movieTitles.size) { index ->
+                MoviePoster(movieTitles[index], imageUrls[index], movieIds[index])
+            }
             runOnUiThread {
-                // Create a new adapter with the data
-                adapter = MoviePosterAdapter(posterUrls, movieIds)
-                recyclerView.adapter = adapter
+                adapter = SearchResultAdapter(items)
+                recyclerViewResults.adapter = adapter
             }
         }
+    }
 
+    private fun parseSearchResults(response: String): Triple<List<String>, List<String>, List<String>> {
+        val posterUrls = mutableListOf<String>()
+        val movieTitles = mutableListOf<String>()
+        val movieIds = mutableListOf<String>()
+
+        try {
+            val jsonObject = JSONObject(response)
+            val resultsArray = jsonObject.getJSONArray("results")
+            for (i in 0 until resultsArray.length()) {
+                val movieObject = resultsArray.getJSONObject(i)
+                val title = movieObject.getString("title")
+                val releaseDate = movieObject.optString("release_date", "") // Get release_date or empty string if null
+                val releaseYear = if (releaseDate.isNotEmpty() && releaseDate.length >= 4) releaseDate.substring(0, 4) else "" // Extract year from release_date
+                val id = movieObject.getInt("id").toString()
+                val formattedTitle = if (releaseYear.isNotEmpty()) "$title ($releaseYear)" else title // Append year to title if available
+                val posterPath = movieObject.optString("poster_path", "")
+                val posterUrl = if (posterPath != "null") "https://image.tmdb.org/t/p/w500$posterPath"
+                else "https://external-content.duckduckgo.com/iu/?u=https%3A%2F%2Fmedia.istockphoto.com%2Fvectors%2Fno-image-available-icon-vector-id1216251206%3Fk%3D20%26m%3D1216251206%26s%3D170667a%26w%3D0%26h%3DA72dFkHkDdSfmT6iWl6eMN9t_JZmqGeMoAycP-LMAw4%3D&f=1&nofb=1"  // Fallback for no image
+
+                posterUrls.add(posterUrl)
+                movieTitles.add(formattedTitle)
+                movieIds.add(id)
+            }
+        } catch (e: JSONException) {
+            Log.e("Search JSON Parsing", "Error parsing JSON: $e")
+        }
+
+        return Triple(posterUrls, movieTitles, movieIds)
     }
 
 
-    // Add search functionality in search result page
+
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
         menuInflater.inflate(R.menu.main, menu)
         menuInflater.inflate(R.menu.options_menu, menu)
 
-        // Display search bar
         val searchItem = menu.findItem(R.id.search)
         val searchView = searchItem.actionView as SearchView
-
         searchView.queryHint = "Search for movies"
 
         searchView.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
-            // Called when the user submits final query
             override fun onQueryTextSubmit(query: String?): Boolean {
-                // Navigate to the search_results activity
                 query?.let {
+                    queryTextView.text = getString(R.string.search_results, it)
                     fetchMovieInfo(it)
                 }
                 return true
             }
 
-            // Called everytime a character is changed in the query
-            override fun onQueryTextChange(newText: String?): Boolean {
-                // Not needed for this case
-                return false
-            }
+            override fun onQueryTextChange(newText: String?): Boolean = false
         })
         return super.onCreateOptionsMenu(menu)
+    }
+
+    override fun onSupportNavigateUp(): Boolean {
+        finish() // Close this activity and return to the previous one
+        return true
     }
 }
