@@ -25,9 +25,29 @@
     <string name="trending_action_movies">Trending Action Movies</string>
     <string name="trending_comedy_movies">Trending Comedy Movies</string>
     <string name="trending_award_winning_movies">Trending Award Winning Movies</string>
+    <string name="trending_adventure_movies">Trending Adventure Movies</string>
+    <string name="trending_animation_movies">Trending Animation Movies</string>
+    <string name="trending_crime_movies">Trending Crime Movies</string>
+    <string name="trending_documentary_movies">Trending Documentary Movies</string>
+    <string name="trending_family_movies">Trending Family Movies</string>
+    <string name="trending_fantasy_movies">Trending Fantasy Movies</string>
+    <string name="trending_history_movies">Trending History Movies</string>
+    <string name="trending_music_movies">Trending Music Movies</string>
+    <string name="trending_mystery_movies">Trending Mystery Movies</string>
+    <string name="trending_romance_movies">Trending Romance Movies</string>
+    <string name="trending_science_fiction_movies">Trending Science Fiction Movies</string>
+    <string name="trending_tv_movies">Trending TV Movies</string>
+    <string name="trending_thriller_movies">Trending Thriller Movies</string>
+    <string name="trending_war_movies">Trending War Movies</string>
+    <string name="trending_western_movies">Trending Western Movies</string>
+
+
+
     <string name="movie_title_descriptor">%s</string>
     <string name="movie_poster">Movie poster</string>
     <string name="cast_format">Cast: %s</string>
     <string name="vote_average_format">Rating: %1$.1f/10</string>
-    <string name="add_to_watchlist">Add to watch list</string>
+    <string name="add_to_watchlist">Add to Watchlist</string>
+    <string name="cast_member_image">Cast member image</string>
+    <string name="remove_from_watchlist">Remove from Watchlist</string>
 </resources>
