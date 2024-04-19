@@ -3,7 +3,10 @@ package com.example.mmm
 import APICaller
 import MoviePoster
 import SearchResultAdapter
+import android.graphics.Color
 import android.os.Bundle
+import android.os.Handler
+import android.os.Looper
 import android.util.Log
 import android.view.Menu
 import android.widget.TextView
@@ -15,11 +18,19 @@ import androidx.recyclerview.widget.RecyclerView
 import org.json.JSONException
 import org.json.JSONObject
 
+
 class SearchableActivity : AppCompatActivity() {
     private lateinit var queryTextView: TextView
     private lateinit var recyclerViewResults: RecyclerView
     private lateinit var adapter: SearchResultAdapter
+    private lateinit var searchView: SearchView
     private val apiKey = "1f443a53a6aabe4de284f9c46a17f64c"
+    private val handler = Handler(Looper.getMainLooper())
+    private val updateRunnable = Runnable {
+        val currentText = searchView.query.toString()
+        queryTextView.text = getString(R.string.search_results, currentText)
+        fetchMovieInfo(currentText)
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -89,11 +100,16 @@ class SearchableActivity : AppCompatActivity() {
         menuInflater.inflate(R.menu.options_menu, menu)
 
         val searchItem = menu.findItem(R.id.search)
-        val searchView = searchItem.actionView as SearchView
+        searchView = searchItem.actionView as SearchView
         searchView.queryHint = "Search for movies"
+
+        val searchEditText = searchView.findViewById(androidx.appcompat.R.id.search_src_text) as TextView
+        searchEditText.setTextColor(Color.WHITE)
+        searchEditText.setHintTextColor(Color.WHITE)
 
         searchView.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
             override fun onQueryTextSubmit(query: String?): Boolean {
+                handler.removeCallbacks(updateRunnable)
                 query?.let {
                     queryTextView.text = getString(R.string.search_results, it)
                     fetchMovieInfo(it)
@@ -101,8 +117,17 @@ class SearchableActivity : AppCompatActivity() {
                 return true
             }
 
-            override fun onQueryTextChange(newText: String?): Boolean = false
+            override fun onQueryTextChange(newText: String?): Boolean {
+                handler.removeCallbacks(updateRunnable)
+                newText?.let {
+                    if (it.length >= 3) {
+                        handler.postDelayed(updateRunnable, 500) // Defer fetching movie info for 500 ms
+                    }
+                }
+                return true
+            }
         })
+
         return super.onCreateOptionsMenu(menu)
     }
 
@@ -110,4 +135,5 @@ class SearchableActivity : AppCompatActivity() {
         finish() // Close this activity and return to the previous one
         return true
     }
+
 }

@@ -1,5 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <color name="colorPrimary">#333333</color> <!-- Dark grey for the AppBar background -->
+    <color name="colorPrimaryDark">#121212</color> <!-- Even darker grey for the status bar -->
+    <color name="colorAccent">#BB86FC</color> <!-- Example accent color -->
+    <color name="windowBackgroundColor">#121212</color> <!-- Background color for the window -->
+    <color name="textColorPrimary">#FFFFFF</color> <!-- Primary text color -->
     <color name="purple_200">#FFBB86FC</color>
     <color name="purple_500">#FF6200EE</color>
     <color name="purple_700">#FF3700B3</color>
@@ -11,4 +16,5 @@
     <color name="add_to_watchlist_text">#000000</color> <!-- Black -->
     <color name="remove_from_watchlist_background">#D32F2F</color> <!-- Red -->
     <color name="remove_from_watchlist_text">#FFFFFF</color> <!-- White -->
+    <color name="toolbarColor">#000000</color>
 </resources>

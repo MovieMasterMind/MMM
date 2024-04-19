@@ -39,7 +39,7 @@ class WatchlistAdapter(private val items: MutableList<WatchlistItem>) : Recycler
                 .load(watchlistItem.posterUrl)
                 .into(posterImageView)
 
-            posterImageView.setOnClickListener {
+            itemView.setOnClickListener {
                 val context = itemView.context
                 val intent = Intent(context, MovieDetailsActivity::class.java).apply {
                     putExtra("MOVIE_ID", watchlistItem.movieId)

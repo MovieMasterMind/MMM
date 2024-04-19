@@ -1,3 +1,4 @@
+
 import android.os.Handler
 import android.os.Looper
 import android.util.Log
@@ -61,10 +62,14 @@ class APICaller {
                 val movieObject = resultsArray.getJSONObject(i)
                 val id = movieObject.getInt("id").toString() // Treat ID as part of titles for callback structure
                 val posterPath = movieObject.getString("poster_path")
-                val posterUrl = if (posterPath != "null") "https://image.tmdb.org/t/p/w500$posterPath"
-                else "https://external-content.duckduckgo.com/iu/?u=https%3A%2F%2Fmedia.istockphoto.com%2Fvectors%2Fno-image-available-icon-vector-id1216251206%3Fk%3D20%26m%3D1216251206%26s%3D170667a%26w%3D0%26h%3DA72dFkHkDdSfmT6iWl6eMN9t_JZmqGeMoAycP-LMAw4%3D&f=1&nofb=1"
+                if (posterPath != "null") {
+                    val posterUrl = "https://image.tmdb.org/t/p/w500$posterPath"
+                    posterUrls.add(posterUrl)
+                } else {
+                    val posterUrl =  "https://external-content.duckduckgo.com/iu/?u=https%3A%2F%2Fmedia.istockphoto.com%2Fvectors%2Fno-image-available-icon-vector-id1216251206%3Fk%3D20%26m%3D1216251206%26s%3D170667a%26w%3D0%26h%3DA72dFkHkDdSfmT6iWl6eMN9t_JZmqGeMoAycP-LMAw4%3D&f=1&nofb=1&ipt=12f671b217ebd58fa8c31e315b3af2e39baaf804a5965f3c6fad463e5ed47cac&ipo=images"
+                    posterUrls.add(posterUrl)
+                }
 
-                posterUrls.add(posterUrl)
                 movieTitles.add(id)
             }
         } catch (e: JSONException) {
