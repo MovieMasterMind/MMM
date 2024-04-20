@@ -21,6 +21,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.mmm.databinding.ActivityMainBinding
 import android.util.Log
+import android.view.MenuItem
 import androidx.core.view.GravityCompat
 
 class MainActivity : AppCompatActivity() {
@@ -127,38 +128,20 @@ class MainActivity : AppCompatActivity() {
 
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
-        // Inflate the main menu and options menu
         menuInflater.inflate(R.menu.main, menu)
-        menuInflater.inflate(R.menu.options_menu, menu)
-
-        // Find the search item in the menu
         val searchItem = menu.findItem(R.id.search)
-        // Extract the SearchView from the search item
-        val searchView = searchItem.actionView as SearchView
-        // Set an empty query and a hint for the search view
-        searchView.setQuery("", false)
-
-        searchView.queryHint = "Search for movies"
-
-        // Set up a listener for query text changes
-        searchView.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
-            // Called when the user submits final query
-            override fun onQueryTextSubmit(query: String?): Boolean {
-                // Navigate to the SearchableActivity with the query
-                val intent = Intent(applicationContext, SearchableActivity::class.java)
-                intent.putExtra("QUERY", query)
-                intent.flags = Intent.FLAG_ACTIVITY_SINGLE_TOP
-                startActivity(intent)
-                return true
+        searchItem.setOnActionExpandListener(object : MenuItem.OnActionExpandListener {
+            override fun onMenuItemActionExpand(item: MenuItem): Boolean {
+                // Immediately start SearchableActivity without waiting for user input
+                startActivity(Intent(this@MainActivity, SearchableActivity::class.java))
+                return false // Prevents the SearchView from expanding
             }
 
-            // Called when the query text is changed by the user
-            override fun onQueryTextChange(newText: String?): Boolean {
-                // You can perform actions based on text changes here if needed
+            override fun onMenuItemActionCollapse(item: MenuItem): Boolean {
+                // Handle any cleanup if needed when search view is collapsed
                 return true
             }
         })
-
         return true
     }
 

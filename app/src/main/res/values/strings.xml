@@ -33,4 +33,7 @@
     <string name="cast_member_image">Cast member image</string>
     <string name="remove_from_watchlist">Remove from Watchlist</string>
     <string name="view_details" />
+    <string name="search_history" />
+    <string name="search_title" />
+    <string name="no_history_found">You don\'t currently have a search history, movies will be added here as you browse.</string>
 </resources>
