@@ -28,7 +28,6 @@ import java.util.Locale
 
 
 class MovieDetailsActivity : AppCompatActivity() {
-    //GLOBAL VARIABLES
     private var streamingDetails: Map<String, String> = emptyMap()
     private lateinit var movieDetailsObj: JSONObject
     private val apiCaller = APICaller()
@@ -42,7 +41,6 @@ class MovieDetailsActivity : AppCompatActivity() {
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
         supportActionBar?.setDisplayShowHomeEnabled(true)
         val movieId = intent.getIntExtra("MOVIE_ID", -1)
-//        val movieId = intent.getIntExtra("MOVIE_ID", -1)
         if (movieId != -1) {
             fetchMovieDetails(movieId)
             initializeWatchlistButton(movieId)
@@ -112,13 +110,13 @@ class MovieDetailsActivity : AppCompatActivity() {
             "https://api.themoviedb.org/3/movie/$movieId?api_key=1f443a53a6aabe4de284f9c46a17f64c&language=en-US"
 
         apiCaller.getMovieStreamingLocationJSON(movieId) { streamingDetails ->
-            // Log or display the streaming details
             Log.e("StreamingDetails", streamingDetails.toString())
 
             //streamingDetails hold links of locations of the streaming service
             val streamingDetailsFound = streamingDetails.isNotEmpty()
             val textViewText = if (streamingDetailsFound) {
-                "Can be found on these following platforms"
+                ""
+                //hide text view here
             } else {
                 "No streaming platforms found :("
             }
@@ -164,10 +162,15 @@ class MovieDetailsActivity : AppCompatActivity() {
         }
         genreTextView.text = genreNames.joinToString(", ")
 
-        // Load movie poster
         val posterPath = movieDetails.getString("poster_path")
-        val posterUrl = "https://image.tmdb.org/t/p/w500$posterPath"
-        Glide.with(this).load(posterUrl).into(posterImageView)
+        if (posterPath != "null") {
+            val posterUrl = "https://image.tmdb.org/t/p/w500$posterPath"
+            Glide.with(this).load(posterUrl).into(posterImageView)
+        } else {
+            val posterUrl =  "https://external-content.duckduckgo.com/iu/?u=https%3A%2F%2Ftse4.mm.bing.net%2Fth%3Fid%3DOIP.IkbcciGb75wX7U5WeANuDQHaLE%26pid%3DApi&f=1&ipt=a36f8b1fdf094f9245bbbfbf6e0d0908dd49b8c2ae8557f5632a06cce2c36cf2&ipo=images"
+            Glide.with(this).load(posterUrl).into(posterImageView)
+        }
+
 
         // Initialize RecyclerView and its adapter for cast members
         val castRecyclerView: RecyclerView = findViewById(R.id.castRecyclerView)
@@ -182,11 +185,9 @@ class MovieDetailsActivity : AppCompatActivity() {
             }
         }
 
-        //here we add text to the streamView
         Log.e("WHY", streamingDetails.toString())
-        //steamingTextView.text = streamingDetails
 
-        val streamingJson = JSONObject(streamingDetails)
+
         val streamingLayout: LinearLayout = findViewById(R.id.streamingLayout)
 
 
@@ -226,10 +227,11 @@ class MovieDetailsActivity : AppCompatActivity() {
         "hulu" to Pair(Color.parseColor("#1CE783"), Color.BLACK),
         "apple" to Pair(Color.GRAY, Color.BLACK),
         "peacock" to Pair(Color.BLACK, Color.WHITE),
-        "hbo" to Pair(Color.WHITE, Color.BLACK)
+        "hbo" to Pair(Color.WHITE, Color.BLACK),
+        "disney" to Pair(Color.parseColor("#000137"), Color.parseColor("#FFFFFF"))
 
 
-        // Add more services and colors as needed
+        // Add more services and colors as needed - "service" to Pair(Color.color, Color.color), -
     )
 
     private fun getColorForService(service: String): Pair<Int, Int>? {

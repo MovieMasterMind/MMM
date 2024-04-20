@@ -25,7 +25,6 @@
             android:orientation="vertical"
             android:gravity="center">
 
-            <!-- Your other views -->
 
 
             <!-- Title For Horror Movies -->
@@ -702,6 +701,7 @@
         android:layout_height="match_parent"
         android:layout_gravity="start"
         android:fitsSystemWindows="true"
+        style="@style/NavigationViewStyle"
         app:headerLayout="@layout/nav_header_main"
         app:menu="@menu/activity_main_drawer" />
 
