@@ -155,32 +155,6 @@ class MainActivity : AppCompatActivity() {
         setUpRecyclerView(apiUrlsWestern, textViewWestern, recyclerViewWestern)
 
 
-
-
-//
-//        //template textViews
-//        val textViewHorror = findViewById<TextView>(R.id.movieDetailsTextViewHorror)
-//        val textViewDrama = findViewById<TextView>(R.id.movieDetailsTextViewDrama)
-//        val textViewAction = findViewById<TextView>(R.id.movieDetailsTextViewAction)
-//        val textViewComedy = findViewById<TextView>(R.id.movieDetailsTextViewComedy)
-//        val textViewAward = findViewById<TextView>(R.id.movieDetailsTextViewAwards)
-//
-//
-//        //template recycleViews
-//        val recyclerViewHorror: RecyclerView = findViewById(R.id.recyclerViewHorror)
-//        val recyclerViewDrama: RecyclerView = findViewById(R.id.recyclerViewDrama)
-//        val recyclerViewAction: RecyclerView = findViewById(R.id.recyclerViewAction)
-//        val recyclerViewComedy: RecyclerView = findViewById(R.id.recyclerViewComedy)
-//        val recyclerViewAward: RecyclerView = findViewById(R.id.recyclerViewAward)
-//
-//        //Call setUpRecyclerView for each url textview and recyclerview
-//        setUpRecyclerView(apiUrlsHorror, textViewHorror, recyclerViewHorror)
-//        setUpRecyclerView(apiUrlsDrama, textViewDrama, recyclerViewDrama)
-//        setUpRecyclerView(apiUrlsAction, textViewAction, recyclerViewAction)
-//        setUpRecyclerView(apiUrlsComedy, textViewComedy, recyclerViewComedy)
-//        setUpRecyclerView(apiUrlsAward, textViewAward, recyclerViewAward)
-
-
     }
 
     private fun setUpRecyclerView(apiUrl: String, textView: TextView, recyclerView: RecyclerView) {
