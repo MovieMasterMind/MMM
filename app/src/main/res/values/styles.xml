@@ -11,5 +11,10 @@
         <item name="android:textColor">@color/textColorPrimary</item>
         <item name="android:windowBackground">@color/windowBackgroundColor</item>
     </style>
+    <style name="NavigationViewStyle" parent="Widget.MaterialComponents.NavigationView">
+        <item name="itemIconTint">@color/white</item>
+        <item name="itemTextColor">@color/white</item>
+        <item name="android:background">@color/colorPrimary</item>
+    </style>
 </resources>
 

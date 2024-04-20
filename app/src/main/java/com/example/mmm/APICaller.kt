@@ -66,7 +66,7 @@ class APICaller {
                     val posterUrl = "https://image.tmdb.org/t/p/w500$posterPath"
                     posterUrls.add(posterUrl)
                 } else {
-                    val posterUrl =  "https://external-content.duckduckgo.com/iu/?u=https%3A%2F%2Fmedia.istockphoto.com%2Fvectors%2Fno-image-available-icon-vector-id1216251206%3Fk%3D20%26m%3D1216251206%26s%3D170667a%26w%3D0%26h%3DA72dFkHkDdSfmT6iWl6eMN9t_JZmqGeMoAycP-LMAw4%3D&f=1&nofb=1&ipt=12f671b217ebd58fa8c31e315b3af2e39baaf804a5965f3c6fad463e5ed47cac&ipo=images"
+                    val posterUrl =  "https://external-content.duckduckgo.com/iu/?u=https%3A%2F%2Ftse4.mm.bing.net%2Fth%3Fid%3DOIP.IkbcciGb75wX7U5WeANuDQHaLE%26pid%3DApi&f=1&ipt=a36f8b1fdf094f9245bbbfbf6e0d0908dd49b8c2ae8557f5632a06cce2c36cf2&ipo=images"
                     posterUrls.add(posterUrl)
                 }
 

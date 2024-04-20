@@ -12,6 +12,7 @@ import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
 import android.view.View
+import android.view.inputmethod.InputMethodManager
 import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
@@ -53,8 +54,14 @@ class SearchableActivity : AppCompatActivity() {
         adapter = SearchResultAdapter(mutableListOf())
         recyclerViewResults.adapter = adapter
 
-        // Do not attempt to find searchView here, as the menu hasn't been created yet
-        // displayHistory() can be called here only if it doesn't depend on searchView
+        recyclerViewResults.addOnScrollListener(object : RecyclerView.OnScrollListener() {
+            override fun onScrollStateChanged(recyclerView: RecyclerView, newState: Int) {
+                if (newState == RecyclerView.SCROLL_STATE_DRAGGING) {
+                    hideKeyboard()
+                }
+            }
+        })
+
     }
 
     private fun fetchMovieInfo(query: String) {
@@ -121,7 +128,7 @@ class SearchableActivity : AppCompatActivity() {
                 val formattedTitle = if (releaseYear.isNotEmpty()) "$title ($releaseYear)" else title // Append year to title if available
                 val posterPath = movieObject.optString("poster_path", "")
                 val posterUrl = if (posterPath != "null") "https://image.tmdb.org/t/p/w500$posterPath"
-                else "https://external-content.duckduckgo.com/iu/?u=https%3A%2F%2Fmedia.istockphoto.com%2Fvectors%2Fno-image-available-icon-vector-id1216251206%3Fk%3D20%26m%3D1216251206%26s%3D170667a%26w%3D0%26h%3DA72dFkHkDdSfmT6iWl6eMN9t_JZmqGeMoAycP-LMAw4%3D&f=1&nofb=1"  // Fallback for no image
+                else "https://external-content.duckduckgo.com/iu/?u=https%3A%2F%2Ftse4.mm.bing.net%2Fth%3Fid%3DOIP.IkbcciGb75wX7U5WeANuDQHaLE%26pid%3DApi&f=1&ipt=a36f8b1fdf094f9245bbbfbf6e0d0908dd49b8c2ae8557f5632a06cce2c36cf2&ipo=images"  // Fallback for no image
 
                 posterUrls.add(posterUrl)
                 movieTitles.add(formattedTitle)
@@ -162,8 +169,11 @@ class SearchableActivity : AppCompatActivity() {
             queryHint = "Search for movies"
             setOnQueryTextListener(object : SearchView.OnQueryTextListener {
                 override fun onQueryTextSubmit(query: String?): Boolean {
-                    query?.let { performSearch(it) }
-                    return true
+                    hideKeyboard()
+                    query?.let {
+                        performSearch(it)
+                    }
+                    return true  // Return true to indicate that the action was handled
                 }
                 override fun onQueryTextChange(newText: String?): Boolean {
                     if (newText.isNullOrEmpty()) {
@@ -175,6 +185,12 @@ class SearchableActivity : AppCompatActivity() {
                 }
             })
         }
+    }
+
+    private fun hideKeyboard() {
+        val imm = getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
+        val view = currentFocus ?: View(this)
+        imm.hideSoftInputFromWindow(view.windowToken, 0)
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {

@@ -11,6 +11,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.example.mmm.MovieDetailsActivity
 import com.example.mmm.R
+import com.example.mmm.WatchlistActivity
 import com.example.mmm.WatchlistItem
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
@@ -66,15 +67,20 @@ class WatchlistAdapter(private val items: MutableList<WatchlistItem>) : Recycler
         val movieId = items[position].movieId
         items.removeAt(position)
         notifyItemRemoved(position)
+        notifyItemRangeChanged(position, itemCount) // Ensure that item positions update correctly
 
         // Update SharedPreferences
         val sharedPrefs = context.getSharedPreferences("watchlist", Context.MODE_PRIVATE)
         val gson = Gson()
         val type = object : TypeToken<List<WatchlistItem>>() {}.type
-        val watchlist = gson.fromJson<List<WatchlistItem>>(sharedPrefs.getString("watchlistJson", "[]"), type).toMutableList()
+        var watchlist = gson.fromJson<List<WatchlistItem>>(sharedPrefs.getString("watchlistJson", "[]"), type).toMutableList()
 
         watchlist.removeAll { it.movieId == movieId }
-
         sharedPrefs.edit().putString("watchlistJson", gson.toJson(watchlist, type)).apply()
+
+        // Call to check if the list is empty and update UI accordingly
+        if (context is WatchlistActivity) {
+            context.checkEmpty()
+        }
     }
 }
