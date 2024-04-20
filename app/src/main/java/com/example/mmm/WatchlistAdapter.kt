@@ -6,6 +6,7 @@ import android.view.ViewGroup
 import android.widget.Button
 import android.widget.ImageView
 import android.widget.TextView
+import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.example.mmm.MovieDetailsActivity
@@ -47,11 +48,19 @@ class WatchlistAdapter(private val items: MutableList<WatchlistItem>) : Recycler
                 context.startActivity(intent)
             }
 
-            removeButton.setOnClickListener {
-                removeFromWatchlist(adapterPosition, itemView.context)
+            removeButton.apply {
+                setBackgroundColor(
+                    ContextCompat.getColor(
+                        context,
+                        R.color.remove_from_watchlist_background
+                    )
+                )  // Set the background color
+                setOnClickListener {
+                    removeFromWatchlist(adapterPosition, itemView.context)
+                }
+            }
             }
         }
-    }
 
     private fun removeFromWatchlist(position: Int, context: Context) {
         val movieId = items[position].movieId
