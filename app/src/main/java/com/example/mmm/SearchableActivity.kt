@@ -61,8 +61,7 @@ class SearchableActivity : AppCompatActivity() {
         return true
     }
 
-    private fun fetchMovieInfo(query: String) {
-        val apiUrl = "https://api.themoviedb.org/3/search/movie?api_key=$apiKey&query=$query"
+    private fun fetchMovieInfo(apiUrl: String) {
         queryTextView = findViewById(R.id.queryTextView)
         recyclerViewResults = findViewById(R.id.recyclerViewResults)
 
