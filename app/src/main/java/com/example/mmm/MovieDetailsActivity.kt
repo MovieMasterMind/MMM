@@ -8,6 +8,7 @@ import android.graphics.Color
 import android.net.Uri
 import android.os.Bundle
 import android.util.Log
+import android.view.View
 import android.widget.Button
 import android.widget.ImageView
 import android.widget.LinearLayout
@@ -115,14 +116,21 @@ class MovieDetailsActivity : AppCompatActivity() {
             //streamingDetails hold links of locations of the streaming service
             val streamingDetailsFound = streamingDetails.isNotEmpty()
             val textViewText = if (streamingDetailsFound) {
-                ""
-                //hide text view here
+                // If details are found, hide the TextView and set text to empty
+                runOnUiThread {
+                    findViewById<TextView>(R.id.titleBeforeStreamingServices).apply {
+                        text = ""
+                        visibility = View.GONE  // Hide the TextView
+                    }
+                }
             } else {
-                "No streaming platforms found :("
-            }
-            // Display text in the TextView
-            runOnUiThread {
-                findViewById<TextView>(R.id.titleBeforeStreamingServices).text = textViewText
+                // If no details are found, show the TextView and set the no-data message
+                runOnUiThread {
+                    findViewById<TextView>(R.id.titleBeforeStreamingServices).apply {
+                        text = "No streaming platforms found :("
+                        visibility = View.VISIBLE  // Show the TextView
+                    }
+                }
             }
 
             val jsonObjectRequest = JsonObjectRequest(Request.Method.GET, url, null,

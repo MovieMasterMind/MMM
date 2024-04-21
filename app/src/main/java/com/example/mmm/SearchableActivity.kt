@@ -77,10 +77,13 @@ class SearchableActivity : AppCompatActivity() {
                 runOnUiThread {
                     if (items.isNotEmpty()) {
                         findViewById<TextView>(R.id.emptyHistoryView).visibility = View.GONE
+                        findViewById<TextView>(R.id.historyTextViewTitle).visibility = View.GONE
                         recyclerViewResults.visibility = View.VISIBLE
+
                         adapter.updateData(items)
                     } else {
                         findViewById<TextView>(R.id.emptyHistoryView).visibility = View.VISIBLE
+                        findViewById<TextView>(R.id.historyTextViewTitle).visibility = View.VISIBLE
                         recyclerViewResults.visibility = View.GONE
                     }
                 }
@@ -97,9 +100,11 @@ class SearchableActivity : AppCompatActivity() {
 
         if (history.isEmpty() && searchView.query.toString().isEmpty()) {
             findViewById<TextView>(R.id.emptyHistoryView).visibility = View.VISIBLE
+            findViewById<TextView>(R.id.historyTextViewTitle).visibility = View.GONE
             recyclerViewResults.visibility = View.GONE
         } else {
             findViewById<TextView>(R.id.emptyHistoryView).visibility = View.GONE
+            findViewById<TextView>(R.id.historyTextViewTitle).visibility = View.VISIBLE
             recyclerViewResults.visibility = View.VISIBLE
             adapter.updateData(history)
         }

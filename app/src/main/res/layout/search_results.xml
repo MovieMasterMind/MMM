@@ -45,14 +45,14 @@
         <TextView
             android:id="@+id/historyTextViewTitle"
             android:textColor="@android:color/white"
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="@string/search_history_title"
             android:paddingTop="16dp"
-            android:paddingBottom="16dp"
+            android:paddingStart="16dp"
             android:textSize="24sp"
             android:textStyle="bold"
-            android:gravity="center"
+            android:gravity="start"
             app:layout_constraintTop_toBottomOf="@id/query_search_results"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent"/>
