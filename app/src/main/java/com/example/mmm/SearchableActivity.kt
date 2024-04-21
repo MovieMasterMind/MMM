@@ -30,6 +30,7 @@ class SearchableActivity : AppCompatActivity() {
     private lateinit var adapter: SearchResultAdapter
     private lateinit var searchView: SearchView
     private val apiKey = "1f443a53a6aabe4de284f9c46a17f64c"
+    private lateinit var appliedFilters: ArrayList<String>
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -46,15 +47,8 @@ class SearchableActivity : AppCompatActivity() {
         adapter = SearchResultAdapter(mutableListOf())
         recyclerViewResults.adapter = adapter
 
-        val searchQueryName = findViewById<TextView>(R.id.query_search_results)
+        appliedFilters = intent.getStringArrayListExtra("FILTERS") ?: arrayListOf()
         val query = intent.getStringExtra("QUERY")
-        val appliedFilters = intent.getStringArrayListExtra("FILTERS")
-
-        if (query != null) {
-            searchQueryName.text = getString(R.string.search_results, query)
-            val apiUrl = constructApiUrl(query, appliedFilters)
-            fetchMovieInfo(query)
-        }
 
         recyclerViewResults.addOnScrollListener(object : RecyclerView.OnScrollListener() {
             override fun onScrollStateChanged(recyclerView: RecyclerView, newState: Int) {
@@ -88,7 +82,7 @@ class SearchableActivity : AppCompatActivity() {
         if (query.isEmpty()) {
             displayHistory()
         } else {
-            val apiUrl = "https://api.themoviedb.org/3/search/movie?api_key=$apiKey&query=$query&sort_by=popularity.desc"
+            val apiUrl = constructApiUrl(query, appliedFilters)
             APICaller().fetchData(apiUrl, this::parseSearchResults) { imageUrls, movieTitles, movieIds ->
                 val items = mutableListOf<MoviePoster>()
                 for (index in movieTitles.indices) {
