@@ -10,6 +10,7 @@ import androidx.appcompat.widget.SearchView
 import androidx.appcompat.widget.Toolbar
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import java.net.URLEncoder
 
 class SearchableActivity : AppCompatActivity() {
 
@@ -18,6 +19,7 @@ class SearchableActivity : AppCompatActivity() {
     private lateinit var adapter: MoviePosterAdapter
 
     private val apiKey = "1f443a53a6aabe4de284f9c46a17f64c"
+    private var searchQuery = "Empty query"
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -28,14 +30,13 @@ class SearchableActivity : AppCompatActivity() {
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
 
         val searchQueryName = findViewById<TextView>(R.id.query_search_results)
-        val query = intent.getStringExtra("QUERY")
+        val searchQuery = intent.getStringExtra("QUERY")
         val appliedFilters = intent.getStringArrayListExtra("FILTERS")
 
-        if (query != null) {
-            searchQueryName.text = getString(R.string.search_results, query)
-            val apiUrl = constructApiUrl(query, appliedFilters)
-            fetchMovieInfo(apiUrl)
-        }
+        searchQueryName.text = getString(R.string.search_results, searchQuery)
+
+        val apiUrl = constructApiUrl(searchQuery, appliedFilters)
+        fetchMovieInfo(apiUrl)
     }
 
     private fun constructApiUrl(query: String?, appliedFilters: List<String>?): String {
@@ -43,11 +44,12 @@ class SearchableActivity : AppCompatActivity() {
         val queryParams = mutableListOf<String>()
 
         query?.let {
-            queryParams.add("query=${it.trim()}")
+            val encodedQuery = URLEncoder.encode(it.trim(), "UTF-8")
+            queryParams.add("query=$encodedQuery")
         }
         appliedFilters?.let { filters ->
             if (filters.isNotEmpty()) {
-                val genreQuery = filters.joinToString(",") // Join multiple genre IDs with ","
+                val genreQuery = filters.joinToString(",")
                 queryParams.add("with_genres=$genreQuery")
             }
         }
@@ -62,6 +64,7 @@ class SearchableActivity : AppCompatActivity() {
     }
 
     private fun fetchMovieInfo(apiUrl: String) {
+        println("URL: $apiUrl")
         queryTextView = findViewById(R.id.queryTextView)
         recyclerViewResults = findViewById(R.id.recyclerViewResults)
 
@@ -90,8 +93,7 @@ class SearchableActivity : AppCompatActivity() {
             R.id.action_filter -> {
                 val filterListener = object : FilterDialogFragment.FilterListener {
                     override fun onFiltersApplied(selectedFilters: List<String>) {
-                        val query = queryTextView.text.toString() // Get the current query
-                        val apiUrl = constructApiUrl(query, selectedFilters)
+                        val apiUrl = constructApiUrl(searchQuery, selectedFilters)
                         fetchMovieInfo(apiUrl)
                     }
                 }
@@ -103,6 +105,7 @@ class SearchableActivity : AppCompatActivity() {
                 // Show the dialog fragment
                 dialogFragment.show(supportFragmentManager, "FilterDialogFragment")
                 true
+
             }
             else -> super.onOptionsItemSelected(item)
         }
@@ -121,6 +124,7 @@ class SearchableActivity : AppCompatActivity() {
             // Called when the user submits final query
             override fun onQueryTextSubmit(query: String?): Boolean {
                 query?.let {
+                    searchQuery = query
                     val appliedFilters = intent.getStringArrayListExtra("FILTERS")
                     val apiUrl = constructApiUrl(query, appliedFilters)
                     fetchMovieInfo(apiUrl)
