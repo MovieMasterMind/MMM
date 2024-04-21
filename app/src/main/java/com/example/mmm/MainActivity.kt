@@ -8,7 +8,6 @@ import android.content.Intent
 import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
-import android.widget.CheckBox
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.SearchView
@@ -29,7 +28,7 @@ class MainActivity : AppCompatActivity() {
     private lateinit var appBarConfiguration: AppBarConfiguration
     private lateinit var binding: ActivityMainBinding
     private lateinit var adapter: MoviePosterAdapter
-    private var checkboxMap: MutableMap<String, CheckBox?> = mutableMapOf()
+    private lateinit var searchView: SearchView
 
     @SuppressLint("CutPasteId")
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -44,8 +43,6 @@ class MainActivity : AppCompatActivity() {
         val drawerLayout: DrawerLayout = binding.drawerLayout
         val navView: NavigationView = binding.navView
         val navController = findNavController(R.id.nav_host_fragment_content_main)
-        // Passing each menu ID as a set of Ids because each
-        // menu should be considered as top level destinations.
         appBarConfiguration = AppBarConfiguration(
             setOf(
                 R.id.nav_home, R.id.nav_gallery, R.id.nav_slideshow
@@ -108,7 +105,6 @@ class MainActivity : AppCompatActivity() {
         val layoutManager = LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false)
         recyclerView.layoutManager = layoutManager
 
-        // Placeholder adapter initialization
         adapter = MoviePosterAdapter(emptyList(), emptyList())
         recyclerView.adapter = adapter
 
@@ -124,43 +120,54 @@ class MainActivity : AppCompatActivity() {
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         return when (item.itemId) {
             R.id.action_filter -> {
-                // Create an anonymous object implementing FilterListener
-                val filterListener = object : FilterDialogFragment.FilterListener {
-                    override fun onFiltersApplied(selectedFilters: List<String>) {
-                        // Handle the applied filters
-                        val intent = Intent(applicationContext, SearchableActivity::class.java)
-                        intent.putExtra("FILTERS", selectedFilters.toTypedArray())
-                        startActivity(intent)
+                val query = searchView.query.toString().trim()
+
+                if (query.isNotEmpty()) {
+                    val filterListener = object : FilterDialogFragment.FilterListener {
+                        override fun onFiltersApplied(selectedFilters: List<String>) {
+                            val intent = Intent(applicationContext, SearchableActivity::class.java)
+                            intent.putExtra("QUERY", query as CharSequence)
+                            intent.putExtra("FILTERS", selectedFilters.toTypedArray())
+                            startActivity(intent)
+                        }
                     }
+                    val dialogFragment = FilterDialogFragment()
+                    dialogFragment.setFilterListener(filterListener)
+
+                    dialogFragment.show(supportFragmentManager, "FilterDialogFragment")
+                } else {
+                    applyFiltersOnly()
                 }
-
-                // Create FilterDialogFragment and set the filter listener
-                val dialogFragment = FilterDialogFragment()
-                dialogFragment.setFilterListener(filterListener)
-
-                // Show the dialog fragment
-                dialogFragment.show(supportFragmentManager, "FilterDialogFragment")
                 true
             }
             else -> super.onOptionsItemSelected(item)
         }
     }
 
+    private fun applyFiltersOnly() {
+        val filterListener = object : FilterDialogFragment.FilterListener {
+            override fun onFiltersApplied(selectedFilters: List<String>) {
+                val intent = Intent(applicationContext, SearchableActivity::class.java)
+                intent.putExtra("FILTERS", selectedFilters.toTypedArray())
+                startActivity(intent)
+            }
+        }
+        val dialogFragment = FilterDialogFragment()
+        dialogFragment.setFilterListener(filterListener)
+
+        dialogFragment.show(supportFragmentManager, "FilterDialogFragment")
+    }
+
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
         menuInflater.inflate(R.menu.main, menu)
 
         val searchItem = menu.findItem(R.id.search)
-        val searchView = searchItem.actionView as SearchView
-
-        searchView.setQuery("", false)
+        searchView = searchItem.actionView as SearchView
 
         searchView.queryHint = "Search for movies"
 
-        // Set up a listener for query text changes
         searchView.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
-            // Called when the user submits final query
             override fun onQueryTextSubmit(query: String?): Boolean {
-                // Navigate to the SearchableActivity with the query
                 val intent = Intent(applicationContext, SearchableActivity::class.java)
                 intent.putExtra("QUERY", query)
                 intent.flags = Intent.FLAG_ACTIVITY_SINGLE_TOP
@@ -168,9 +175,7 @@ class MainActivity : AppCompatActivity() {
                 return true
             }
 
-            // Called when the query text is changed by the user
             override fun onQueryTextChange(newText: String?): Boolean {
-                // You can perform actions based on text changes here if needed
                 return true
             }
         })

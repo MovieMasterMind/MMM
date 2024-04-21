@@ -41,7 +41,6 @@ class FilterDialogFragment : DialogFragment() {
             val checkboxRomance = view.findViewById<CheckBox>(R.id.checkboxRomance)
             val checkboxDocumentary = view.findViewById<CheckBox>(R.id.checkboxDocumentary)
 
-            // Load checkbox states from SharedPreferences
             checkboxAdventure.isChecked = sharedPreferences.getBoolean("Adventure", false)
             checkboxAction.isChecked = sharedPreferences.getBoolean("Action", false)
             checkboxComedy.isChecked = sharedPreferences.getBoolean("Comedy", false)
@@ -56,7 +55,6 @@ class FilterDialogFragment : DialogFragment() {
                 .setPositiveButton("Apply") { dialog, _ ->
                     selectedGenres.clear()
 
-                    // Map each checkbox to its TMDB genre ID
                     val checkboxIds = mapOf(
                         checkboxAdventure to "12",
                         checkboxAction to "28",
@@ -68,7 +66,6 @@ class FilterDialogFragment : DialogFragment() {
                         checkboxDocumentary to "99"
                     )
 
-                    // Iterate over each checkbox and check if it's checked
                     checkboxIds.forEach { (checkbox, genreId) ->
                         if (checkbox.isChecked) {
                             selectedGenres.add(genreId)
@@ -82,11 +79,35 @@ class FilterDialogFragment : DialogFragment() {
                     dialog.dismiss()
                 }
                 .setNegativeButton("Cancel") { dialog, _ ->
-                    // Handle canceling filter selection
                     dialog.dismiss()
                 }
 
             builder.create()
         } ?: throw IllegalStateException("Activity cannot be null")
+    }
+
+    companion object {
+        fun getSelectedGenres(context: Context): List<String> {
+            val selectedGenres = mutableListOf<String>()
+            val sharedPreferences = context.getSharedPreferences("FilterPreferences", Context.MODE_PRIVATE)
+            val checkboxIds = mapOf(
+                "Adventure" to "12",
+                "Action" to "28",
+                "Comedy" to "35",
+                "Drama" to "18",
+                "Thriller" to "53",
+                "Horror" to "27",
+                "Romance" to "10749",
+                "Documentary" to "99"
+            )
+
+            checkboxIds.forEach { (checkboxText, genreId) ->
+                val isChecked = sharedPreferences.getBoolean(checkboxText, false)
+                if (isChecked) {
+                    selectedGenres.add(genreId)
+                }
+            }
+            return selectedGenres
+        }
     }
 }

@@ -25,7 +25,7 @@ class SearchableActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.search_results)
 
-        val toolbar: Toolbar = findViewById(R.id.toolbar_search_results) // Make sure this ID matches your layout
+        val toolbar: Toolbar = findViewById(R.id.toolbar_search_results)
         setSupportActionBar(toolbar)
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
 
@@ -97,12 +97,9 @@ class SearchableActivity : AppCompatActivity() {
                         fetchMovieInfo(apiUrl)
                     }
                 }
-
-                // Create FilterDialogFragment and set the filter listener
                 val dialogFragment = FilterDialogFragment()
                 dialogFragment.setFilterListener(filterListener)
 
-                // Show the dialog fragment
                 dialogFragment.show(supportFragmentManager, "FilterDialogFragment")
                 true
 
@@ -121,7 +118,6 @@ class SearchableActivity : AppCompatActivity() {
         searchView.queryHint = "Search for movies"
 
         searchView.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
-            // Called when the user submits final query
             override fun onQueryTextSubmit(query: String?): Boolean {
                 query?.let {
                     searchQuery = query
@@ -132,7 +128,6 @@ class SearchableActivity : AppCompatActivity() {
                 return true
             }
 
-            // Called everytime a character is changed in the query
             override fun onQueryTextChange(newText: String?): Boolean {
                 return false
             }
