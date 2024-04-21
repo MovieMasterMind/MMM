@@ -147,15 +147,11 @@ class MainActivity : AppCompatActivity() {
     }
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
-        // Inflate the main menu and options menu
         menuInflater.inflate(R.menu.main, menu)
 
-        // Find the search item in the menu
         val searchItem = menu.findItem(R.id.search)
-        // Extract the SearchView from the search item
         val searchView = searchItem.actionView as SearchView
 
-        // Set an empty query and a hint for the search view
         searchView.setQuery("", false)
 
         searchView.queryHint = "Search for movies"

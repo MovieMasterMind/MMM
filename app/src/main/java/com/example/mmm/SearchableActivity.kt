@@ -3,6 +3,7 @@ package com.example.mmm
 import APICaller
 import android.os.Bundle
 import android.view.Menu
+import android.view.MenuItem
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.SearchView
@@ -33,7 +34,7 @@ class SearchableActivity : AppCompatActivity() {
         if (query != null) {
             searchQueryName.text = getString(R.string.search_results, query)
             val apiUrl = constructApiUrl(query, appliedFilters)
-            fetchMovieInfo(query)
+            fetchMovieInfo(apiUrl)
         }
     }
 
@@ -84,6 +85,30 @@ class SearchableActivity : AppCompatActivity() {
         }
 
     }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        return when (item.itemId) {
+            R.id.action_filter -> {
+                val filterListener = object : FilterDialogFragment.FilterListener {
+                    override fun onFiltersApplied(selectedFilters: List<String>) {
+                        val query = queryTextView.text.toString() // Get the current query
+                        val apiUrl = constructApiUrl(query, selectedFilters)
+                        fetchMovieInfo(apiUrl)
+                    }
+                }
+
+                // Create FilterDialogFragment and set the filter listener
+                val dialogFragment = FilterDialogFragment()
+                dialogFragment.setFilterListener(filterListener)
+
+                // Show the dialog fragment
+                dialogFragment.show(supportFragmentManager, "FilterDialogFragment")
+                true
+            }
+            else -> super.onOptionsItemSelected(item)
+        }
+    }
+
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
         menuInflater.inflate(R.menu.main, menu)
