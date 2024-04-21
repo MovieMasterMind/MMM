@@ -22,7 +22,9 @@ import androidx.recyclerview.widget.RecyclerView
 import com.example.mmm.databinding.ActivityMainBinding
 import android.util.Log
 import android.view.MenuItem
+import android.widget.CheckBox
 import androidx.core.view.GravityCompat
+
 
 class MainActivity : AppCompatActivity() {
 
@@ -30,6 +32,7 @@ class MainActivity : AppCompatActivity() {
     private lateinit var binding: ActivityMainBinding
     private lateinit var recyclerView: RecyclerView
     private lateinit var adapter: MoviePosterAdapter
+    private var checkboxMap: MutableMap<String, CheckBox?> = mutableMapOf()
 
     @SuppressLint("CutPasteId")
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -178,6 +181,30 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        return when (item.itemId) {
+            R.id.action_filter -> {
+                // Create an anonymous object implementing FilterListener
+                val filterListener = object : FilterDialogFragment.FilterListener {
+                    override fun onFiltersApplied(selectedFilters: List<String>) {
+                        // Handle the applied filters
+                        val intent = Intent(applicationContext, SearchableActivity::class.java)
+                        intent.putExtra("FILTERS", selectedFilters.toTypedArray())
+                        startActivity(intent)
+                    }
+                }
+
+                // Create FilterDialogFragment and set the filter listener
+                val dialogFragment = FilterDialogFragment()
+                dialogFragment.setFilterListener(filterListener)
+
+                // Show the dialog fragment
+                dialogFragment.show(supportFragmentManager, "FilterDialogFragment")
+                true
+            }
+            else -> super.onOptionsItemSelected(item)
+        }
+    }
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
         menuInflater.inflate(R.menu.main, menu)
@@ -185,6 +212,7 @@ class MainActivity : AppCompatActivity() {
         searchItem.setOnActionExpandListener(object : MenuItem.OnActionExpandListener {
             override fun onMenuItemActionExpand(item: MenuItem): Boolean {
                 // Immediately start SearchableActivity without waiting for user input
+                intent.flags = Intent.FLAG_ACTIVITY_SINGLE_TOP
                 startActivity(Intent(this@MainActivity, SearchableActivity::class.java))
                 return false // Prevents the SearchView from expanding
             }

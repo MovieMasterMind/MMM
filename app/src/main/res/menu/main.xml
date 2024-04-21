@@ -12,4 +12,9 @@
         android:icon="@drawable/ic_search"
         app:actionViewClass="androidx.appcompat.widget.SearchView"
         app:showAsAction="ifRoom|collapseActionView" />
+    <item
+        android:id="@+id/action_filter"
+        android:icon="@drawable/filter_vector"
+        android:title="@string/filter"
+        app:showAsAction="always" />
 </menu>

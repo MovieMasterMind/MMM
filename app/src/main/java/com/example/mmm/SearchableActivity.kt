@@ -6,8 +6,6 @@ import SearchResultAdapter
 import android.content.Context
 import android.graphics.Color
 import android.os.Bundle
-import android.os.Handler
-import android.os.Looper
 import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
@@ -32,12 +30,6 @@ class SearchableActivity : AppCompatActivity() {
     private lateinit var adapter: SearchResultAdapter
     private lateinit var searchView: SearchView
     private val apiKey = "1f443a53a6aabe4de284f9c46a17f64c"
-    private val handler = Handler(Looper.getMainLooper())
-    private val updateRunnable = Runnable {
-        val currentText = searchView.query.toString()
-        queryTextView.text = getString(R.string.search_results, currentText)
-        fetchMovieInfo(currentText)
-    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -54,6 +46,16 @@ class SearchableActivity : AppCompatActivity() {
         adapter = SearchResultAdapter(mutableListOf())
         recyclerViewResults.adapter = adapter
 
+        val searchQueryName = findViewById<TextView>(R.id.query_search_results)
+        val query = intent.getStringExtra("QUERY")
+        val appliedFilters = intent.getStringArrayListExtra("FILTERS")
+
+        if (query != null) {
+            searchQueryName.text = getString(R.string.search_results, query)
+            val apiUrl = constructApiUrl(query, appliedFilters)
+            fetchMovieInfo(query)
+        }
+
         recyclerViewResults.addOnScrollListener(object : RecyclerView.OnScrollListener() {
             override fun onScrollStateChanged(recyclerView: RecyclerView, newState: Int) {
                 if (newState == RecyclerView.SCROLL_STATE_DRAGGING) {
@@ -62,6 +64,24 @@ class SearchableActivity : AppCompatActivity() {
             }
         })
 
+    }
+    private fun constructApiUrl(query: String?, appliedFilters: List<String>?): String {
+        val baseUrl = "https://api.themoviedb.org/3/search/movie"
+        val queryParams = mutableListOf<String>()
+
+        query?.let {
+            queryParams.add("query=${it.trim()}")
+        }
+        appliedFilters?.let { filters ->
+            if (filters.isNotEmpty()) {
+                val genreQuery = filters.joinToString(",") // Join multiple genre IDs with ","
+                queryParams.add("with_genres=$genreQuery")
+            }
+        }
+        queryParams.add("api_key=$apiKey")
+        queryParams.add("&sort_by=popularity.desc")
+
+        return "$baseUrl?${queryParams.joinToString("&")}"
     }
 
     private fun fetchMovieInfo(query: String) {

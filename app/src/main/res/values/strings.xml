@@ -55,4 +55,17 @@
     <string name="search_title" />
     <string name="no_history_found">You don\'t currently have a search history, movies will be added here as you browse.</string>
     <string name="search_history_title">Recently viewed</string>
+
+
+    <string name="filter">Filter</string>
+    <string name="adventure">Adventure</string>
+    <string name="action">Action</string>
+    <string name="comedy">Comedy</string>
+    <string name="drama">Drama</string>
+    <string name="thriller">Thriller</string>
+    <string name="horror">Horror</string>
+    <string name="romantic_comedy">Romantic Comedy</string>
+    <string name="musical">Musical</string>
+    <string name="documentary">Documentary</string>
+    <string name="romance">Romance</string>
 </resources>
