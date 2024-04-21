@@ -121,18 +121,16 @@ class SearchableActivity : AppCompatActivity() {
             // Called when the user submits final query
             override fun onQueryTextSubmit(query: String?): Boolean {
                 query?.let {
-                    fetchMovieInfo(it)
+                    val appliedFilters = intent.getStringArrayListExtra("FILTERS")
+                    val apiUrl = constructApiUrl(query, appliedFilters)
+                    fetchMovieInfo(apiUrl)
                 }
                 return true
             }
 
             // Called everytime a character is changed in the query
             override fun onQueryTextChange(newText: String?): Boolean {
-                newText?.let {
-                    fetchMovieInfo(it)
-                }
-                return true
-
+                return false
             }
         })
         return super.onCreateOptionsMenu(menu)
