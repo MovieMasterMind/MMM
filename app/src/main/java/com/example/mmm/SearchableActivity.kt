@@ -28,11 +28,31 @@ class SearchableActivity : AppCompatActivity() {
 
         val searchQueryName = findViewById<TextView>(R.id.query_search_results)
         val query = intent.getStringExtra("QUERY")
+        val appliedFilters = intent.getStringArrayListExtra("FILTERS")
 
         if (query != null) {
             searchQueryName.text = getString(R.string.search_results, query)
+            val apiUrl = constructApiUrl(query, appliedFilters)
             fetchMovieInfo(query)
         }
+    }
+
+    private fun constructApiUrl(query: String?, appliedFilters: List<String>?): String {
+        val baseUrl = "https://api.themoviedb.org/3/search/movie"
+        val queryParams = mutableListOf<String>()
+
+        query?.let {
+            queryParams.add("query=${it.trim()}")
+        }
+        appliedFilters?.let { filters ->
+            if (filters.isNotEmpty()) {
+                val genreQuery = filters.joinToString(",") // Join multiple genre IDs with ","
+                queryParams.add("with_genres=$genreQuery")
+            }
+        }
+        queryParams.add("api_key=$apiKey")
+
+        return "$baseUrl?${queryParams.joinToString("&")}"
     }
 
     override fun onSupportNavigateUp(): Boolean {

@@ -67,17 +67,6 @@ class MainActivity : AppCompatActivity() {
             }
         }
 
-//        val applyButton: Button = findViewById(R.id.buttonApply)
-//        applyButton.setOnClickListener {
-//            val selectedGenres = mutableListOf<String>()
-//            for ((genre, checkBox) in checkboxMap) {
-//                if (checkBox.isChecked) {
-//                    selectedGenres.add(genre)
-//                }
-//            }
-//            // Construct search query based on selected options
-//            val query = selectedGenres.joinToString("|")
-
         //template API calls
         val apiUrlsHorror =
             "https://api.themoviedb.org/3/discover/movie?api_key=1f443a53a6aabe4de284f9c46a17f64c&with_genres=27&sort_by=popularity.desc"
@@ -124,18 +113,8 @@ class MainActivity : AppCompatActivity() {
         recyclerView.adapter = adapter
 
         val apiCaller = APICaller()
-//        apiCaller.getMovieStreamingLocationJSON(597) { details ->
-//            // Log or display the streaming details
-//            Log.e("StreamingDetails", details.toString())
-//        }
-
-        //apiCaller.getMovieStreamingLocationJSON(597
-        //println("This is print once")
-        // Get data from API and update the adapter
         apiCaller.getData(apiUrl, textView, recyclerView) { posterUrls, movieIds ->
-            // Run on UI thread since response callback is on a background thread
             runOnUiThread {
-                // Create a new adapter with the data
                 adapter = MoviePosterAdapter(posterUrls, movieIds)
                 recyclerView.adapter = adapter
             }
@@ -145,8 +124,21 @@ class MainActivity : AppCompatActivity() {
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         return when (item.itemId) {
             R.id.action_filter -> {
-                // Handle click on filter icon
+                // Create an anonymous object implementing FilterListener
+                val filterListener = object : FilterDialogFragment.FilterListener {
+                    override fun onFiltersApplied(selectedFilters: List<String>) {
+                        // Handle the applied filters
+                        val intent = Intent(applicationContext, SearchableActivity::class.java)
+                        intent.putExtra("FILTERS", selectedFilters.toTypedArray())
+                        startActivity(intent)
+                    }
+                }
+
+                // Create FilterDialogFragment and set the filter listener
                 val dialogFragment = FilterDialogFragment()
+                dialogFragment.setFilterListener(filterListener)
+
+                // Show the dialog fragment
                 dialogFragment.show(supportFragmentManager, "FilterDialogFragment")
                 true
             }

@@ -9,8 +9,17 @@ import androidx.appcompat.app.AlertDialog
 import androidx.fragment.app.DialogFragment
 
 class FilterDialogFragment : DialogFragment() {
+    interface FilterListener {
+        fun onFiltersApplied(selectedFilters: List<String>)
+    }
+
+    private var filterListener: FilterListener? = null
     private lateinit var sharedPreferences: SharedPreferences
     private var selectedGenres: MutableList<String> = mutableListOf()
+
+    fun setFilterListener(listener: FilterListener) {
+        filterListener = listener
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -68,6 +77,9 @@ class FilterDialogFragment : DialogFragment() {
                     }
 
                     println("Selected genres: ${selectedGenres.joinToString(", ")}")
+
+                    filterListener?.onFiltersApplied(selectedGenres)
+                    dialog.dismiss()
                 }
                 .setNegativeButton("Cancel") { dialog, _ ->
                     // Handle canceling filter selection
