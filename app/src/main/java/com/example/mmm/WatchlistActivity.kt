@@ -3,6 +3,8 @@ package com.example.mmm
 import WatchlistAdapter
 import android.content.Context
 import android.os.Bundle
+import android.view.View
+import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -13,6 +15,7 @@ class WatchlistActivity : AppCompatActivity() {
 
     private lateinit var watchlistRecyclerView: RecyclerView
     private lateinit var watchlistAdapter: WatchlistAdapter
+    private lateinit var emptyView: TextView
     private var watchlistItems: MutableList<WatchlistItem> = mutableListOf()
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -25,6 +28,7 @@ class WatchlistActivity : AppCompatActivity() {
         supportActionBar?.setDisplayShowHomeEnabled(true)
 
         watchlistRecyclerView = findViewById(R.id.watchlist_recycler_view)
+        emptyView = findViewById(R.id.empty_view) // Initialize the empty view
         watchlistRecyclerView.layoutManager = LinearLayoutManager(this)
 
         loadWatchlist()
@@ -33,21 +37,29 @@ class WatchlistActivity : AppCompatActivity() {
     private fun loadWatchlist() {
         val sharedPrefs = getSharedPreferences("watchlist", Context.MODE_PRIVATE)
         val watchlistJson = sharedPrefs.getString("watchlistJson", "[]")
-
         val gson = Gson()
         val type = object : TypeToken<MutableList<WatchlistItem>>() {}.type
         watchlistItems = gson.fromJson(watchlistJson, type)
 
-        watchlistAdapter = WatchlistAdapter(watchlistItems).apply {
-            // If the adapter has a custom method to set a callback or listener, set it here
-        }
+        watchlistAdapter = WatchlistAdapter(watchlistItems)
         watchlistRecyclerView.adapter = watchlistAdapter
+
+        checkEmpty()  // Check if the list is empty and update the UI
+    }
+
+    fun checkEmpty() {
+        if (watchlistItems.isEmpty()) {
+            emptyView.visibility = View.VISIBLE
+            watchlistRecyclerView.visibility = View.GONE
+        } else {
+            emptyView.visibility = View.GONE
+            watchlistRecyclerView.visibility = View.VISIBLE
+        }
     }
 
     override fun onResume() {
         super.onResume()
-        // Refresh the watchlist in case of any changes made in the details view or elsewhere
-        loadWatchlist()
+        loadWatchlist()  // Ensure that the watchlist is up-to-date
     }
 
     override fun onSupportNavigateUp(): Boolean {
@@ -55,3 +67,4 @@ class WatchlistActivity : AppCompatActivity() {
         return true
     }
 }
+
