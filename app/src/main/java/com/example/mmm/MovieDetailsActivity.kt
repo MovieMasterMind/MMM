@@ -45,6 +45,7 @@ class MovieDetailsActivity : AppCompatActivity() {
         if (movieId != -1) {
             fetchMovieDetails(movieId)
             initializeWatchlistButton(movieId)
+            getRecommendations(movieId)
         } else {
             finish() // Close the activity if movie ID wasn't passed correctly
         }
@@ -106,6 +107,11 @@ class MovieDetailsActivity : AppCompatActivity() {
         sharedPrefs.edit().putString("watchlistJson", gson.toJson(watchlist, type)).apply()
     }
 
+    private fun getRecommendations(movieId: Int) {
+        val url =
+            "https://api.themoviedb.org/3/movie/$movieId/recommendations"
+    }
+
     private fun fetchMovieDetails(movieId: Int) {
         val url =
             "https://api.themoviedb.org/3/movie/$movieId?api_key=1f443a53a6aabe4de284f9c46a17f64c&language=en-US"
@@ -154,6 +160,7 @@ class MovieDetailsActivity : AppCompatActivity() {
         val genreTextView: TextView = findViewById(R.id.movieGenre)
         val posterImageView: ImageView = findViewById(R.id.moviePoster)
         val voteAverageTextView: TextView = findViewById(R.id.movieVoteAverage)
+        val runTimeTextView: TextView = findViewById(R.id.movieRuntime)
 
         titleTextView.text = movieDetails.getString("title")
         overviewTextView.text = movieDetails.getString("overview")
@@ -161,6 +168,14 @@ class MovieDetailsActivity : AppCompatActivity() {
         releaseDateTextView.text = movieDetails.getString("release_date")
         val voteAverage = movieDetails.getDouble("vote_average")
         voteAverageTextView.text = getString(R.string.vote_average_format, voteAverage)
+        var runTime = movieDetails.getInt("runtime")
+        var hours = 0
+        while (runTime > 60) {
+            runTime = runTime - 60
+            hours = hours + 1
+        }
+
+        runTimeTextView.text = getString(R.string.runtime, hours, runTime )
 
         val genresArray = movieDetails.getJSONArray("genres")
         val genreNames = mutableListOf<String>()
@@ -192,6 +207,8 @@ class MovieDetailsActivity : AppCompatActivity() {
                 castAdapter.updateCastList(castList)
             }
         }
+
+
 
         Log.e("WHY", streamingDetails.toString())
 
@@ -227,6 +244,7 @@ class MovieDetailsActivity : AppCompatActivity() {
             button.layoutParams = params
             streamingLayout.addView(button)
         }
+
     }
 
     private val serviceColorsMap = mapOf(
