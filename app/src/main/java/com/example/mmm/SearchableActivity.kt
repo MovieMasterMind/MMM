@@ -6,6 +6,8 @@ import SearchResultAdapter
 import android.content.Context
 import android.graphics.Color
 import android.os.Bundle
+import android.os.Handler
+import android.os.Looper
 import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
@@ -46,7 +48,6 @@ class SearchableActivity : AppCompatActivity() {
         adapter = SearchResultAdapter(mutableListOf())
         recyclerViewResults.adapter = adapter
 
-
         recyclerViewResults.addOnScrollListener(object : RecyclerView.OnScrollListener() {
             override fun onScrollStateChanged(recyclerView: RecyclerView, newState: Int) {
                 if (newState == RecyclerView.SCROLL_STATE_DRAGGING) {
@@ -61,7 +62,7 @@ class SearchableActivity : AppCompatActivity() {
         if (query.isEmpty()) {
             displayHistory()
         } else {
-            val apiUrl = "https://api.themoviedb.org/3/search/movie&api_key=$apiKey&query=$query"
+            val apiUrl = "https://api.themoviedb.org/3/search/movie?api_key=$apiKey&query=$query&sort_by=popularity.desc"
             APICaller().fetchData(apiUrl, this::parseSearchResults) { imageUrls, movieTitles, movieIds ->
                 val items = mutableListOf<MoviePoster>()
                 for (index in movieTitles.indices) {
@@ -70,13 +71,10 @@ class SearchableActivity : AppCompatActivity() {
                 runOnUiThread {
                     if (items.isNotEmpty()) {
                         findViewById<TextView>(R.id.emptyHistoryView).visibility = View.GONE
-                        findViewById<TextView>(R.id.historyTextViewTitle).visibility = View.GONE
                         recyclerViewResults.visibility = View.VISIBLE
-
                         adapter.updateData(items)
                     } else {
                         findViewById<TextView>(R.id.emptyHistoryView).visibility = View.VISIBLE
-                        findViewById<TextView>(R.id.historyTextViewTitle).visibility = View.VISIBLE
                         recyclerViewResults.visibility = View.GONE
                     }
                 }

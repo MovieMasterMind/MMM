@@ -254,7 +254,8 @@ class MovieDetailsActivity : AppCompatActivity() {
         "apple" to Pair(Color.GRAY, Color.BLACK),
         "peacock" to Pair(Color.BLACK, Color.WHITE),
         "hbo" to Pair(Color.WHITE, Color.BLACK),
-        "disney" to Pair(Color.parseColor("#000137"), Color.parseColor("#FFFFFF"))
+        "disney" to Pair(Color.parseColor("#000137"), Color.parseColor("#FFFFFF")),
+        "paramount" to Pair(Color.parseColor("#0164FF"), Color.parseColor("#FFFFFF"))
 
 
         // Add more services and colors as needed - "service" to Pair(Color.color, Color.color), -
