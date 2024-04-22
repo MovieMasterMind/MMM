@@ -30,7 +30,6 @@ class SearchableActivity : AppCompatActivity() {
     private lateinit var adapter: SearchResultAdapter
     private lateinit var searchView: SearchView
     private val apiKey = "1f443a53a6aabe4de284f9c46a17f64c"
-    private lateinit var appliedFilters: ArrayList<String>
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -47,8 +46,6 @@ class SearchableActivity : AppCompatActivity() {
         adapter = SearchResultAdapter(mutableListOf())
         recyclerViewResults.adapter = adapter
 
-        appliedFilters = intent.getStringArrayListExtra("FILTERS") ?: arrayListOf()
-        val query = intent.getStringExtra("QUERY")
 
         recyclerViewResults.addOnScrollListener(object : RecyclerView.OnScrollListener() {
             override fun onScrollStateChanged(recyclerView: RecyclerView, newState: Int) {
@@ -59,30 +56,12 @@ class SearchableActivity : AppCompatActivity() {
         })
 
     }
-    private fun constructApiUrl(query: String?, appliedFilters: List<String>?): String {
-        val baseUrl = "https://api.themoviedb.org/3/search/movie"
-        val queryParams = mutableListOf<String>()
-
-        query?.let {
-            queryParams.add("query=${it.trim()}")
-        }
-        appliedFilters?.let { filters ->
-            if (filters.isNotEmpty()) {
-                val genreQuery = filters.joinToString(",") // Join multiple genre IDs with ","
-                queryParams.add("with_genres=$genreQuery")
-            }
-        }
-        queryParams.add("api_key=$apiKey")
-        queryParams.add("&sort_by=popularity.desc")
-
-        return "$baseUrl?${queryParams.joinToString("&")}"
-    }
 
     private fun fetchMovieInfo(query: String) {
         if (query.isEmpty()) {
             displayHistory()
         } else {
-            val apiUrl = constructApiUrl(query, appliedFilters)
+            val apiUrl = "https://api.themoviedb.org/3/search/movie&api_key=$apiKey&query=$query"
             APICaller().fetchData(apiUrl, this::parseSearchResults) { imageUrls, movieTitles, movieIds ->
                 val items = mutableListOf<MoviePoster>()
                 for (index in movieTitles.indices) {
