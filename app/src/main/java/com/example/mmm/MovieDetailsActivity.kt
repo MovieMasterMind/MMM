@@ -8,6 +8,7 @@ import android.graphics.Color
 import android.net.Uri
 import android.os.Bundle
 import android.util.Log
+import android.view.View
 import android.widget.Button
 import android.widget.ImageView
 import android.widget.LinearLayout
@@ -28,24 +29,28 @@ import java.util.Locale
 
 
 class MovieDetailsActivity : AppCompatActivity() {
-    //GLOBAL VARIABLES
     private var streamingDetails: Map<String, String> = emptyMap()
     private lateinit var movieDetailsObj: JSONObject
     private val apiCaller = APICaller()
+    private lateinit var adapter: MoviePosterAdapter
+//    private lateinit var progressDialog: ProgressDialog
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_movie_details)
+
+//        initProgressDialog()
 
         val toolbar: androidx.appcompat.widget.Toolbar = findViewById(R.id.toolbar_movie_details)
         setSupportActionBar(toolbar)
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
         supportActionBar?.setDisplayShowHomeEnabled(true)
         val movieId = intent.getIntExtra("MOVIE_ID", -1)
-//        val movieId = intent.getIntExtra("MOVIE_ID", -1)
         if (movieId != -1) {
+//            progressDialog.show()
             fetchMovieDetails(movieId)
             initializeWatchlistButton(movieId)
+//            displaySuggested(movieId)
         } else {
             finish() // Close the activity if movie ID wasn't passed correctly
         }
@@ -107,24 +112,37 @@ class MovieDetailsActivity : AppCompatActivity() {
         sharedPrefs.edit().putString("watchlistJson", gson.toJson(watchlist, type)).apply()
     }
 
+//    private fun initProgressDialog() {
+//        progressDialog = ProgressDialog(this)
+//        progressDialog.setMessage("Loading details...")
+//        progressDialog.setCancelable(false)  // Set false if you don't want it to be cancellable
+//    }
+
     private fun fetchMovieDetails(movieId: Int) {
         val url =
             "https://api.themoviedb.org/3/movie/$movieId?api_key=1f443a53a6aabe4de284f9c46a17f64c&language=en-US"
 
         apiCaller.getMovieStreamingLocationJSON(movieId) { streamingDetails ->
-            // Log or display the streaming details
             Log.e("StreamingDetails", streamingDetails.toString())
 
             //streamingDetails hold links of locations of the streaming service
             val streamingDetailsFound = streamingDetails.isNotEmpty()
             val textViewText = if (streamingDetailsFound) {
-                "Can be found on these following platforms"
+                // If details are found, hide the TextView and set text to empty
+                runOnUiThread {
+                    findViewById<TextView>(R.id.titleBeforeStreamingServices).apply {
+                        text = ""
+                        visibility = View.GONE  // Hide the TextView
+                    }
+                }
             } else {
-                "No streaming platforms found :("
-            }
-            // Display text in the TextView
-            runOnUiThread {
-                findViewById<TextView>(R.id.titleBeforeStreamingServices).text = textViewText
+                // If no details are found, show the TextView and set the no-data message
+                runOnUiThread {
+                    findViewById<TextView>(R.id.titleBeforeStreamingServices).apply {
+                        text = "No streaming platforms found :("
+                        visibility = View.VISIBLE  // Show the TextView
+                    }
+                }
             }
 
             val jsonObjectRequest = JsonObjectRequest(Request.Method.GET, url, null,
@@ -141,20 +159,63 @@ class MovieDetailsActivity : AppCompatActivity() {
         }
     }
 
+//    private fun displaySuggested(movieId: Int) {
+//        val apiUrlsSuggested = "https://api.themoviedb.org/3/movie/$movieId/recommendations?api_key=1f443a53a6aabe4de284f9c46a17f64c&language=en-US"
+//        val recyclerViewSuggested: RecyclerView = findViewById(R.id.recyclerViewSuggested)
+//        val textViewSuggested = findViewById<TextView>(R.id.movieDetailsTextViewSuggested)
+//        setUpRecyclerView(apiUrlsSuggested, textViewSuggested, recyclerViewSuggested)
+//    }
+
+//    private fun setUpRecyclerView(apiUrl: String, textView: TextView, recyclerView: RecyclerView) {
+//        val layoutManager = LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false)
+//        recyclerView.layoutManager = layoutManager
+//
+//        // Placeholder adapter initialization
+//        adapter = MoviePosterAdapter(emptyList(), emptyList())
+//        recyclerView.adapter = adapter
+//
+//        val apiCaller = APICaller()
+//
+//        // Get data from API and update the adapter
+//        apiCaller.getData(apiUrl, textView, recyclerView) { posterUrls, movieIds ->
+//            // Run on UI thread since response callback is on a background thread
+//            runOnUiThread {
+//                // Create a new adapter with the data
+//                adapter = MoviePosterAdapter(posterUrls, movieIds)
+//                recyclerView.adapter = adapter
+//            }
+//        }
+//    }
+
     private fun displayMovieDetails(movieDetails: JSONObject, streamingDetails: Map<String, String>) {
+//        progressDialog.dismiss()
         movieDetailsObj = movieDetails
         val titleTextView: TextView = findViewById(R.id.movieTitle)
         val overviewTextView: TextView = findViewById(R.id.movieOverview)
         val genreTextView: TextView = findViewById(R.id.movieGenre)
         val posterImageView: ImageView = findViewById(R.id.moviePoster)
         val voteAverageTextView: TextView = findViewById(R.id.movieVoteAverage)
+        val runTimeTextView: TextView = findViewById(R.id.movieRuntime)
+        val releaseDateTextView: TextView = findViewById(R.id.movieReleaseDate)
+        val voteAverage = movieDetails.getDouble("vote_average")
+        val drawableStar = ContextCompat.getDrawable(this, R.drawable.ic_star_vector)
 
         titleTextView.text = movieDetails.getString("title")
         overviewTextView.text = movieDetails.getString("overview")
-        val releaseDateTextView: TextView = findViewById(R.id.movieReleaseDate)
         releaseDateTextView.text = movieDetails.getString("release_date")
-        val voteAverage = movieDetails.getDouble("vote_average")
-        voteAverageTextView.text = getString(R.string.vote_average_format, voteAverage)
+        drawableStar?.setBounds(0, 0, drawableStar.intrinsicWidth, drawableStar.intrinsicHeight)
+        voteAverageTextView.setCompoundDrawablesWithIntrinsicBounds(drawableStar, null, null, null)
+        voteAverageTextView.compoundDrawablePadding = resources.getDimensionPixelSize(R.dimen.default_padding)
+        voteAverageTextView.text = String.format(Locale.getDefault(), "%.1f", voteAverage)
+        var runTime = movieDetails.getInt("runtime")
+        var hours = 0
+        while (runTime > 60) {
+            runTime = runTime - 60
+            hours = hours + 1
+        }
+        if (hours > 0) {
+            runTimeTextView.text = getString(R.string.runtime, hours, runTime)
+        } else {runTimeTextView.text = getString(R.string.runtime_nohrs, runTime)}
 
         val genresArray = movieDetails.getJSONArray("genres")
         val genreNames = mutableListOf<String>()
@@ -164,10 +225,15 @@ class MovieDetailsActivity : AppCompatActivity() {
         }
         genreTextView.text = genreNames.joinToString(", ")
 
-        // Load movie poster
         val posterPath = movieDetails.getString("poster_path")
-        val posterUrl = "https://image.tmdb.org/t/p/w500$posterPath"
-        Glide.with(this).load(posterUrl).into(posterImageView)
+        if (posterPath != "null") {
+            val posterUrl = "https://image.tmdb.org/t/p/w500$posterPath"
+            Glide.with(this).load(posterUrl).into(posterImageView)
+        } else {
+            val posterUrl =  "https://external-content.duckduckgo.com/iu/?u=https%3A%2F%2Ftse4.mm.bing.net%2Fth%3Fid%3DOIP.IkbcciGb75wX7U5WeANuDQHaLE%26pid%3DApi&f=1&ipt=a36f8b1fdf094f9245bbbfbf6e0d0908dd49b8c2ae8557f5632a06cce2c36cf2&ipo=images"
+            Glide.with(this).load(posterUrl).into(posterImageView)
+        }
+
 
         // Initialize RecyclerView and its adapter for cast members
         val castRecyclerView: RecyclerView = findViewById(R.id.castRecyclerView)
@@ -182,11 +248,9 @@ class MovieDetailsActivity : AppCompatActivity() {
             }
         }
 
-        //here we add text to the streamView
         Log.e("WHY", streamingDetails.toString())
-        //steamingTextView.text = streamingDetails
 
-        val streamingJson = JSONObject(streamingDetails)
+
         val streamingLayout: LinearLayout = findViewById(R.id.streamingLayout)
 
 
@@ -226,10 +290,12 @@ class MovieDetailsActivity : AppCompatActivity() {
         "hulu" to Pair(Color.parseColor("#1CE783"), Color.BLACK),
         "apple" to Pair(Color.GRAY, Color.BLACK),
         "peacock" to Pair(Color.BLACK, Color.WHITE),
-        "hbo" to Pair(Color.WHITE, Color.BLACK)
+        "hbo" to Pair(Color.WHITE, Color.BLACK),
+        "disney" to Pair(Color.parseColor("#000137"), Color.parseColor("#FFFFFF")),
+        "paramount" to Pair(Color.parseColor("#0164FF"), Color.parseColor("#FFFFFF"))
 
 
-        // Add more services and colors as needed
+        // Add more services and colors as needed - "service" to Pair(Color.color, Color.color), -
     )
 
     private fun getColorForService(service: String): Pair<Int, Int>? {

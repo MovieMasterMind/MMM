@@ -13,7 +13,7 @@
             android:id="@+id/toolbar_movie_details"
             android:layout_width="match_parent"
             android:layout_height="?attr/actionBarSize"
-            android:background="?attr/colorPrimary"
+            app:theme="@style/ToolbarTheme"
             app:layout_scrollFlags="scroll|enterAlways"
             app:titleTextColor="@android:color/white" />
     </com.google.android.material.appbar.AppBarLayout>
@@ -48,6 +48,7 @@
             <TextView
                 android:id="@+id/movieTitle"
                 style="@style/TextAppearance.MaterialComponents.Headline6"
+                android:textColor="@android:color/white"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:textStyle="bold"
@@ -55,11 +56,14 @@
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/cardView"
+                android:layout_marginTop="10dp"
                 android:layout_marginBottom="8dp" />
+
 
             <TextView
                 android:id="@+id/movieGenre"
                 style="@style/TextAppearance.MaterialComponents.Body1"
+                android:textColor="@android:color/white"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 app:layout_constraintStart_toStartOf="parent"
@@ -70,6 +74,7 @@
             <TextView
                 android:id="@+id/movieReleaseDate"
                 style="@style/TextAppearance.MaterialComponents.Body1"
+                android:textColor="@android:color/white"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 app:layout_constraintStart_toStartOf="parent"
@@ -79,41 +84,55 @@
 
             <Button
                 android:id="@+id/addToWatchlistButton"
-                android:layout_width="wrap_content"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="16dp"
-                android:maxWidth="240dp"
+                android:layout_marginRight="30dp"
                 app:layout_constraintStart_toEndOf="@id/movieReleaseDate"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintTop_toTopOf="@id/movieReleaseDate"
-                app:layout_constraintBottom_toBottomOf="@id/movieReleaseDate" />
+                app:layout_constraintTop_toBottomOf="@id/movieReleaseDate"
+                app:layout_constraintBottom_toTopOf="@id/movieRuntime"
+                app:layout_constraintHorizontal_bias="0.5"
+                app:layout_constraintVertical_bias="0.5"/>
 
             <TextView
                 android:id="@+id/movieVoteAverage"
                 style="@style/TextAppearance.MaterialComponents.Body1"
+                android:textColor="@android:color/white"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
+                android:drawableStart="@drawable/ic_star_vector"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/movieReleaseDate"
                 app:layout_constraintEnd_toEndOf="parent" />
 
             <TextView
+                android:id="@+id/movieRuntime"
+                style="@style/TextAppearance.MaterialComponents.Body1"
+                android:textColor="@android:color/white"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/movieVoteAverage"
+                app:layout_constraintEnd_toEndOf="parent" />
+
+            <TextView
                 android:id="@+id/movieOverview"
                 style="@style/TextAppearance.MaterialComponents.Body1"
+                android:textColor="@android:color/white"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="8dp"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/movieVoteAverage"
+                app:layout_constraintTop_toBottomOf="@id/movieRuntime"
                 android:layout_marginBottom="8dp" />
 
             <TextView
                 android:id="@+id/titleBeforeStreamingServices"
                 style="@style/TextAppearance.MaterialComponents.Headline6"
+                android:textColor="@android:color/white"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Can be found on these following platforms"
                 android:layout_marginTop="8dp"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
@@ -156,6 +175,30 @@
                 app:layout_constraintTop_toBottomOf="@id/streamingLayout"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintEnd_toEndOf="parent" />
+
+<!--            <TextView-->
+<!--                android:id="@+id/movieDetailsTextViewSuggested"-->
+<!--                android:textColor="@android:color/white"-->
+<!--                android:layout_width="match_parent"-->
+<!--                android:layout_height="wrap_content"-->
+<!--                android:text="@string/suggested"-->
+<!--                android:paddingTop="16dp"-->
+<!--                android:paddingStart="8dp"-->
+<!--                android:textSize="24sp"-->
+<!--                android:textStyle="bold"-->
+<!--                android:gravity="start"-->
+<!--                app:layout_constraintTop_toBottomOf="@id/castRecyclerView"-->
+<!--                app:layout_constraintStart_toStartOf="parent"-->
+<!--                app:layout_constraintEnd_toEndOf="parent"/>-->
+
+
+<!--            <androidx.recyclerview.widget.RecyclerView-->
+<!--                android:id="@+id/recyclerViewSuggested"-->
+<!--                android:layout_width="match_parent"-->
+<!--                android:layout_height="match_parent"-->
+<!--                app:layout_constraintTop_toBottomOf="@id/movieDetailsTextViewSuggested"-->
+<!--                app:layout_constraintStart_toStartOf="parent"-->
+<!--                app:layout_constraintEnd_toEndOf="parent"/>-->
 
 
         </androidx.constraintlayout.widget.ConstraintLayout>
