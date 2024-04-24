@@ -181,31 +181,6 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
-    override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        return when (item.itemId) {
-            R.id.action_filter -> {
-                // Create an anonymous object implementing FilterListener
-                val filterListener = object : FilterDialogFragment.FilterListener {
-                    override fun onFiltersApplied(selectedFilters: List<String>) {
-                        // Handle the applied filters
-                        val intent = Intent(applicationContext, SearchableActivity::class.java)
-                        intent.putExtra("FILTERS", selectedFilters.toTypedArray())
-                        startActivity(intent)
-                    }
-                }
-
-                // Create FilterDialogFragment and set the filter listener
-                val dialogFragment = FilterDialogFragment()
-                dialogFragment.setFilterListener(filterListener)
-
-                // Show the dialog fragment
-                dialogFragment.show(supportFragmentManager, "FilterDialogFragment")
-                true
-            }
-            else -> super.onOptionsItemSelected(item)
-        }
-    }
-
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
         menuInflater.inflate(R.menu.main, menu)
         val searchItem = menu.findItem(R.id.search)
