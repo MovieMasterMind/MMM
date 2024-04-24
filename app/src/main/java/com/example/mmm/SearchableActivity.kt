@@ -68,11 +68,14 @@ class SearchableActivity : AppCompatActivity() {
                 }
                 runOnUiThread {
                     if (items.isNotEmpty()) {
-                        findViewById<TextView>(R.id.emptyHistoryView).visibility = View.GONE
+                        findViewById<TextView>(R.id.noSearchHistoryTextView).visibility = View.GONE
+                        findViewById<TextView>(R.id.searchHistoryTitleTextView).visibility = View.GONE
                         recyclerViewResults.visibility = View.VISIBLE
+
                         adapter.updateData(items)
                     } else {
-                        findViewById<TextView>(R.id.emptyHistoryView).visibility = View.VISIBLE
+                        findViewById<TextView>(R.id.noSearchHistoryTextView).visibility = View.VISIBLE
+                        findViewById<TextView>(R.id.searchHistoryTitleTextView).visibility = View.VISIBLE
                         recyclerViewResults.visibility = View.GONE
                     }
                 }
@@ -88,12 +91,12 @@ class SearchableActivity : AppCompatActivity() {
         val history = gson.fromJson<MutableList<MoviePoster>>(historyJson, type) ?: mutableListOf()
 
         if (history.isEmpty() && searchView.query.toString().isEmpty()) {
-            findViewById<TextView>(R.id.emptyHistoryView).visibility = View.VISIBLE
-            findViewById<TextView>(R.id.historyTextViewTitle).visibility = View.GONE
+            findViewById<TextView>(R.id.noSearchHistoryTextView).visibility = View.VISIBLE
+            findViewById<TextView>(R.id.searchHistoryTitleTextView).visibility = View.GONE
             recyclerViewResults.visibility = View.GONE
         } else {
-            findViewById<TextView>(R.id.emptyHistoryView).visibility = View.GONE
-            findViewById<TextView>(R.id.historyTextViewTitle).visibility = View.VISIBLE
+            findViewById<TextView>(R.id.noSearchHistoryTextView).visibility = View.GONE
+            findViewById<TextView>(R.id.searchHistoryTitleTextView).visibility = View.VISIBLE
             recyclerViewResults.visibility = View.VISIBLE
             adapter.updateData(history)
         }
