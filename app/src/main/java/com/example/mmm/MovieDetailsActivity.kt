@@ -1,6 +1,6 @@
 package com.example.mmm
 
-import APICaller
+import APICallerForMovie
 import CastAdapter
 import android.content.Context
 import android.content.Intent
@@ -31,7 +31,7 @@ import java.util.Locale
 class MovieDetailsActivity : AppCompatActivity() {
     private var streamingDetails: Map<String, String> = emptyMap()
     private lateinit var movieDetailsObj: JSONObject
-    private val apiCaller = APICaller()
+    private val apiCallerForMovie = APICallerForMovie()
     private lateinit var adapter: MoviePosterAdapter
 //    private lateinit var progressDialog: ProgressDialog
 
@@ -122,7 +122,7 @@ class MovieDetailsActivity : AppCompatActivity() {
         val url =
             "https://api.themoviedb.org/3/movie/$movieId?api_key=1f443a53a6aabe4de284f9c46a17f64c&language=en-US"
 
-        apiCaller.getMovieStreamingLocationJSON(movieId) { streamingDetails ->
+        apiCallerForMovie.getMovieStreamingLocationJSON(movieId) { streamingDetails ->
             Log.e("StreamingDetails", streamingDetails.toString())
 
             //streamingDetails hold links of locations of the streaming service
@@ -156,6 +156,9 @@ class MovieDetailsActivity : AppCompatActivity() {
             )
 
             Volley.newRequestQueue(this).add(jsonObjectRequest)
+        }
+        apiCallerForMovie.getMovieStreamingLocationJSON(1396) { streamingDetails ->
+            Log.e("StreamingDetailsBBBBBBBB", streamingDetails.toString())
         }
     }
 
@@ -242,7 +245,7 @@ class MovieDetailsActivity : AppCompatActivity() {
         castRecyclerView.adapter = castAdapter
 
         // Fetch and display cast details
-        apiCaller.getCastDetails(movieDetails.getInt("id")) { castList ->
+        apiCallerForMovie.getMovieCastDetails(movieDetails.getInt("id")) { castList ->
             runOnUiThread {
                 castAdapter.updateCastList(castList)
             }

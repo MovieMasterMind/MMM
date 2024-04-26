@@ -4,6 +4,7 @@ import android.os.Looper
 import android.util.Log
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
+import com.example.mmm.TrailerMember
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
@@ -16,12 +17,12 @@ import org.json.JSONException
 import org.json.JSONObject
 import java.io.IOException
 
-class APICaller {
+class APICallerForMovie {
 
     private val client = OkHttpClient()
 
     // Generic fetchData function
-    fun fetchData(apiUrl: String, processJson: (String) -> Triple<List<String>, List<String>, List<String>>, callback: (List<String>, List<String>, List<String>) -> Unit) {
+    fun fetchMovieDataFromAPI(apiUrl: String, processJson: (String) -> Triple<List<String>, List<String>, List<String>>, callback: (List<String>, List<String>, List<String>) -> Unit) {
         val request = Request.Builder().url(apiUrl).build()
 
         client.newCall(request).enqueue(object : Callback {
@@ -42,14 +43,14 @@ class APICaller {
     }
 
     // Adapted existing getData method to use fetchData
-    fun getData(apiUrl: String, textView: TextView, recyclerView: RecyclerView, callback: (List<String>, List<Int>) -> Unit) {
-        fetchData(apiUrl, { response -> parseAndDisplayData(response, textView) }) { posterUrls, movieTitles, _ ->
+    fun getMovieDataFromAPI(apiUrl: String, textView: TextView, recyclerView: RecyclerView, callback: (List<String>, List<Int>) -> Unit) {
+        fetchMovieDataFromAPI(apiUrl, { response -> parseAndDisplayMovieData(response, textView) }) { posterUrls, movieTitles, _ ->
             val movieIds = movieTitles.map { it.toIntOrNull() ?: 0 } // Convert titles to IDs
             callback(posterUrls, movieIds)
         }
     }
 
-    private fun parseAndDisplayData(response: String, textView: TextView): Triple<List<String>, List<String>, List<String>> {
+    private fun parseAndDisplayMovieData(response: String, textView: TextView): Triple<List<String>, List<String>, List<String>> {
         val posterUrls = mutableListOf<String>()
         val movieTitles = mutableListOf<String>() // Used as placeholders for IDs
         val movieYears = mutableListOf<String>() // Not used in this context
@@ -80,7 +81,7 @@ class APICaller {
     }
 
     // Reused the existing specialized methods for other functionality
-    fun getCastDetails(movieId: Int, callback: (List<CastMember>) -> Unit) {
+    fun getMovieCastDetails(movieId: Int, callback: (List<CastMember>) -> Unit) {
         val url = "https://api.themoviedb.org/3/movie/$movieId/credits?api_key=1f443a53a6aabe4de284f9c46a17f64c"
         val request = Request.Builder().url(url).get().build()
 
@@ -115,7 +116,6 @@ class APICaller {
             }
         })
     }
-
     fun getMovieStreamingLocationJSON(tmdbId: Int, callback: (Map<String, String>) -> Unit) {
         GlobalScope.launch(Dispatchers.IO) {
             val url = "https://streaming-availability.p.rapidapi.com/get?output_language=en&tmdb_id=movie%2F$tmdbId"
@@ -130,7 +130,7 @@ class APICaller {
                 val response = client.newCall(request).execute()
                 if (response.isSuccessful) {
                     val responseBody = response.body?.string()
-                    val streamingDetails = parseStreamingInfo(responseBody)
+                    val streamingDetails = parseMovieStreamingInfo(responseBody)
                     callback(streamingDetails)
                 } else {
                     Log.e("APICaller", "Request failed with code: ${response.code}")
@@ -143,7 +143,7 @@ class APICaller {
         }
     }
 
-    private fun parseStreamingInfo(responseBody: String?): Map<String, String> {
+    private fun parseMovieStreamingInfo(responseBody: String?): Map<String, String> {
         val streamingDetails = mutableMapOf<String, String>()
         responseBody?.let {
             val jsonObject = JSONObject(it)
@@ -163,5 +163,53 @@ class APICaller {
             }
         }
         return streamingDetails
+    }
+
+    fun getMovieTrailers(movieId: Int, callback: (List<TrailerMember>) -> Unit) {
+        val url = "https://api.themoviedb.org/3/movie/$movieId/videos?api_key=1f443a53a6aabe4de284f9c46a17f64c"
+        val request = Request.Builder().url(url).get().build()
+
+        client.newCall(request).enqueue(object : Callback {
+            override fun onFailure(call: Call, e: IOException) {
+                Log.e("API Error", "Error fetching cast details: $e")
+            }
+
+            override fun onResponse(call: Call, response: Response) {
+                response.body?.let {
+                    val responseData = it.string()
+                    val trailerList = mutableListOf<TrailerMember>()
+                    try {
+                        val jsonObject = JSONObject(responseData)
+                        val trailerArray = jsonObject.getJSONArray("results")
+
+                        var key = "null"
+                        var YouTubeUrl = "null"
+
+
+                        for (i in 0 until trailerArray.length()) {
+                            val trailerObject = trailerArray.getJSONObject(i)
+                            if(trailerObject.getString("type") == ("Trailer") && trailerObject.getString("site") == ("YouTube"))
+                            {
+                                key = trailerObject.optString("key", "null")
+                                if(key != "null")
+                                {
+                                    YouTubeUrl = "https://www.youtube.com/watch?v=$key"
+
+                                }
+                                //If no trailers are found (add code here)?
+
+
+                                trailerList.add(TrailerMember(key, YouTubeUrl))
+                            }
+                        }
+                        Handler(Looper.getMainLooper()).post {
+                            callback(trailerList)
+                        }
+                    } catch (e: JSONException) {
+                        Log.e("JSON Error", "Error parsing JSON: $e")
+                    }
+                }
+            }
+        })
     }
 }

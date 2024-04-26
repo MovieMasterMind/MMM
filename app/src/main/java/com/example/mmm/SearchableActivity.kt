@@ -1,6 +1,6 @@
 package com.example.mmm
 
-import APICaller
+import APICallerForMovie
 import MoviePoster
 import SearchResultAdapter
 import android.content.Context
@@ -61,7 +61,7 @@ class SearchableActivity : AppCompatActivity() {
             displayHistory()
         } else {
             val apiUrl = "https://api.themoviedb.org/3/search/movie?api_key=$apiKey&query=$query&language=en-US"
-            APICaller().fetchData(apiUrl, this::parseSearchResults) { imageUrls, movieTitles, movieIds ->
+            APICallerForMovie().fetchMovieDataFromAPI(apiUrl, this::parseSearchResults) { imageUrls, movieTitles, movieIds ->
                 val items = mutableListOf<MoviePoster>()
                 for (index in movieTitles.indices) {
                     items.add(MoviePoster(movieTitles[index], imageUrls[index], movieIds[index]))

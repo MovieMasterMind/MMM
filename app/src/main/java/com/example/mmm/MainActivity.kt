@@ -3,13 +3,13 @@ package com.example.mmm
 
 
 import android.content.Intent
-import APICaller
+import APICallerForMovie
 import android.annotation.SuppressLint
 import android.os.Bundle
+import android.util.Log
 import android.view.Menu
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
-import androidx.appcompat.widget.SearchView
 import androidx.drawerlayout.widget.DrawerLayout
 import com.google.android.material.navigation.NavigationView
 import androidx.navigation.findNavController
@@ -20,7 +20,6 @@ import androidx.navigation.ui.setupWithNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.mmm.databinding.ActivityMainBinding
-import android.util.Log
 import android.view.MenuItem
 import android.widget.CheckBox
 import androidx.core.view.GravityCompat
@@ -158,6 +157,42 @@ class MainActivity : AppCompatActivity() {
         setUpRecyclerView(apiUrlsWestern, textViewWestern, recyclerViewWestern)
 
 
+
+
+
+
+
+
+        //TEST CODE FOR OTHERS TO UNDERSTAND HOW TO USE THEM (CAN BE DELETED)
+        val apiCallerForMovie = APICallerForMovie()
+        val apiCallerForTV = APICallerForTV()
+        val movieId = 603
+        val TVID = 1433
+
+        //HOW TO USE getMovieTrailers
+        apiCallerForMovie.getMovieTrailers(movieId) { trailerList ->
+            // Log all YouTube URLs
+            trailerList.forEachIndexed { index, trailerMember ->
+                Log.d("YouTube URL FROM getMovieTrailers$index", trailerMember.YouTubeURL)
+            }
+        }
+
+        //EXAMPLE USE OF TV SHOWS
+        val apiUrlsComedyTV = "https://api.themoviedb.org/3/discover/tv?api_key=1f443a53a6aabe4de284f9c46a17f64c&with_genres=35&sort_by=popularity.desc"
+        val textViewComedyTV = findViewById<TextView>(R.id.movieDetailsTextViewComedyTV)
+        val recyclerViewComedyTV: RecyclerView = findViewById(R.id.recyclerViewComedyTV)
+        setUpRecyclerView(apiUrlsComedyTV, textViewComedyTV, recyclerViewComedyTV)
+
+
+
+        apiCallerForTV.getTVTrailers(TVID) { trailerList ->
+            // Log all YouTube URLs
+            trailerList.forEachIndexed { index, trailerMember ->
+                Log.d("YouTube URL FROM getTVTrailers$index", trailerMember.YouTubeURL)
+            }
+        }
+        //END OF TEST CODE
+
     }
 
     private fun setUpRecyclerView(apiUrl: String, textView: TextView, recyclerView: RecyclerView) {
@@ -168,16 +203,39 @@ class MainActivity : AppCompatActivity() {
         adapter = MoviePosterAdapter(emptyList(), emptyList())
         recyclerView.adapter = adapter
 
-        val apiCaller = APICaller()
+        val apiCallerForMovie = APICallerForMovie()
+        val apiCallerForTV = APICallerForTV()
 
-        // Get data from API and update the adapter
-        apiCaller.getData(apiUrl, textView, recyclerView) { posterUrls, movieIds ->
-            // Run on UI thread since response callback is on a background thread
-            runOnUiThread {
-                // Create a new adapter with the data
-                adapter = MoviePosterAdapter(posterUrls, movieIds)
-                recyclerView.adapter = adapter
+
+        if (apiUrl.contains("movie")) {
+
+            // Get data from API and update the adapter
+            apiCallerForMovie.getMovieDataFromAPI(apiUrl, textView, recyclerView) { posterUrls, movieIds ->
+                // Run on UI thread since response callback is on a background thread
+                runOnUiThread {
+                    // Create a new adapter with the data
+                    adapter = MoviePosterAdapter(posterUrls, movieIds)
+                    recyclerView.adapter = adapter
+                }
             }
+
+
+        } else if (apiUrl.contains("tv")) {
+
+
+            // Get data from API and update the adapter
+            apiCallerForTV.getTVDataFromAPI(apiUrl, textView, recyclerView) { posterUrls, movieIds ->
+                // Run on UI thread since response callback is on a background thread
+                runOnUiThread {
+                    // Create a new adapter with the data
+                    adapter = MoviePosterAdapter(posterUrls, movieIds)
+                    recyclerView.adapter = adapter
+                }
+            }
+
+
+        } else {
+            Log.e("UNKNOWN URL", "UNKNOWN URL")
         }
     }
 
