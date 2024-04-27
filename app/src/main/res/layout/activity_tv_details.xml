@@ -99,29 +99,57 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="8dp"
                 app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/TvVoteAverage"
                 android:layout_marginBottom="8dp" />
 
             <TextView
-                android:id="@+id/TvCast"
-                style="@style/TextAppearance.MaterialComponents.Body1"
-                android:layout_width="0dp"
+                android:id="@+id/titleBeforeStreamingServices"
+                style="@style/TextAppearance.MaterialComponents.Headline6"
+                android:textColor="@android:color/white"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="16dp"
+                android:layout_marginTop="8dp"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/TvOverview"
                 android:layout_marginStart="16dp"
                 android:layout_marginEnd="16dp" />
 
-
-            <androidx.recyclerview.widget.RecyclerView
-                android:id="@+id/castRecyclerView"
+            <LinearLayout
+                android:id="@+id/streamingLayout"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:layout_marginTop="16dp"
+                android:layout_marginStart="16dp"
+                android:layout_marginEnd="16dp"
+                android:layout_marginBottom="16dp"
                 app:layout_constraintTop_toBottomOf="@id/TvOverview"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintEnd_toEndOf="parent" />
+                app:layout_constraintEnd_toEndOf="parent">
+            </LinearLayout>
+
+<!--            <TextView-->
+<!--                android:id="@+id/TvCast"-->
+<!--                style="@style/TextAppearance.MaterialComponents.Body1"-->
+<!--                android:layout_width="0dp"-->
+<!--                android:layout_height="wrap_content"-->
+<!--                android:layout_marginTop="16dp"-->
+<!--                app:layout_constraintStart_toStartOf="parent"-->
+<!--                app:layout_constraintEnd_toEndOf="parent"-->
+<!--                app:layout_constraintTop_toBottomOf="@id/titleBeforeStreamingServices"-->
+<!--                android:layout_marginStart="16dp"-->
+<!--                android:layout_marginEnd="16dp" />-->
+
+
+<!--            <androidx.recyclerview.widget.RecyclerView-->
+<!--                android:id="@+id/castRecyclerView"-->
+<!--                android:layout_width="match_parent"-->
+<!--                android:layout_height="wrap_content"-->
+<!--                app:layout_constraintTop_toBottomOf="@id/titleBeforeStreamingServices"-->
+<!--                app:layout_constraintStart_toStartOf="parent"-->
+<!--                app:layout_constraintEnd_toEndOf="parent" />-->
 
 
         </androidx.constraintlayout.widget.ConstraintLayout>
