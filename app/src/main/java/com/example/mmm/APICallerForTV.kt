@@ -223,6 +223,95 @@ class APICallerForTV {
         })
     }
 
+    fun getTVSeasonsNames(TVId: Int, callback: (List<String>) -> Unit) {
+        val url = "https://api.themoviedb.org/3/tv/$TVId?api_key=1f443a53a6aabe4de284f9c46a17f64c"
+        val request = Request.Builder().url(url).get().build()
+        val seasonsNamesList = mutableListOf<String>()
+
+        client.newCall(request).enqueue(object : Callback {
+            override fun onFailure(call: Call, e: IOException) {
+                Log.e("API Error", "Error fetching cast details: $e")
+            }
+
+            override fun onResponse(call: Call, response: Response) {
+                response.body?.let {
+                    val responseData = it.string()
+                    Log.d("API Response", responseData) // Log the entire JSON response
+                    try {
+                        val jsonObject = JSONObject(responseData)
+                        val seasonArray = jsonObject.getJSONArray("seasons")
+
+                        for (i in 0 until seasonArray.length()) {
+                            val seasonObject = seasonArray.getJSONObject(i)
+
+                            val seasonNames = seasonObject.getString("name")
+                            val seasonNumber = seasonObject.getInt("season_number")
+
+
+                            seasonsNamesList.add(seasonNames)
+                            seasonsNamesList.add(seasonNumber.toString())
+
+                        }
+                        Handler(Looper.getMainLooper()).post {
+                            callback(seasonsNamesList)
+                        }
+                    } catch (e: JSONException) {
+                        Log.e("JSON Error", "Error parsing JSON: $e")
+                    }
+                }
+
+            }
+        })
+
+    }
+
+    fun getTVSeasonsData(TVId: Int, seasonid: String, callback: (List<EpisodeMemeber>) -> Unit) {
+        val url = "https://api.themoviedb.org/3/tv/$TVId/season/$seasonid?api_key=1f443a53a6aabe4de284f9c46a17f64c"
+        val request = Request.Builder().url(url).get().build()
+        val episodeDataList = mutableListOf<EpisodeMemeber>()
+
+        client.newCall(request).enqueue(object : Callback {
+            override fun onFailure(call: Call, e: IOException) {
+                Log.e("API Error", "Error fetching cast details: $e")
+            }
+
+            override fun onResponse(call: Call, response: Response) {
+                response.body?.let {
+                    val responseData = it.string()
+                    Log.d("API Response TV", responseData) // Log the entire JSON response
+                    try {
+                        val jsonObject = JSONObject(responseData)
+                        val episodeArray = jsonObject.getJSONArray("episodes")
+
+                        for (i in 0 until episodeArray.length()) {
+                            val seasonObject = episodeArray.getJSONObject(i)
+
+                            val episodeID = seasonObject.getString("id")
+                            val episodeNames = seasonObject.getString("name")
+                            val episodeOverview = seasonObject.getString("overview")
+                            val episodeNumber = seasonObject.getString("episode_number")
+                            val episodeType = seasonObject.getString("episode_type")
+                            val episodeRuntime = seasonObject.getString("runtime")
+                            val episodeStillPath = seasonObject.getString("still_path")
+                            val seasonVoteAverage = seasonObject.getInt("vote_average")
+
+                            episodeDataList.add(EpisodeMemeber(episodeID, episodeNames, episodeOverview, episodeNumber, episodeType, episodeRuntime, episodeStillPath, seasonVoteAverage))
+                            //episodeDataList.add((id, name, overview, episode_number, episode_type, runtime, still_path, vote_average))
+                        }
+                        Handler(Looper.getMainLooper()).post {
+                            callback(episodeDataList)
+                        }
+                    } catch (e: JSONException) {
+                        Log.e("JSON Error", "Error parsing JSON: $e")
+                    }
+                }
+
+            }
+        })
+
+
+    }
+
 
 
 

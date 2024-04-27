@@ -2,8 +2,6 @@ package com.example.mmm
 
 
 import android.content.Intent
-import com.example.mmm.APICallerForMovie
-import com.example.mmm.APICallerForTV
 import android.annotation.SuppressLint
 import android.os.Bundle
 import android.util.Log
@@ -165,6 +163,7 @@ class MainActivity : AppCompatActivity() {
 
 
         //TEST CODE FOR OTHERS TO UNDERSTAND HOW TO USE THEM (CAN BE DELETED)
+
         val apiCallerForMovie = APICallerForMovie()
         val apiCallerForTV = APICallerForTV()
         val movieId = 603
@@ -175,14 +174,63 @@ class MainActivity : AppCompatActivity() {
             // Log all YouTube URLs
             trailerList.forEachIndexed { index, trailerMember ->
                 Log.d("YouTube URL FROM getMovieTrailers$index", trailerMember.YouTubeURL)
+
             }
         }
+
+
+        //HOW TO USE getTVSeasonsNames
+        var seasonListSaved = mutableListOf<String>()
+        apiCallerForTV.getTVSeasonsNames(TVID) {seasonList ->
+            seasonList.forEachIndexed { index, seasonList: String ->
+                if(index % 2 == 0) {
+                    Log.d("season Name$index", seasonList) //evens are name
+                }
+                else{
+                    Log.d("season Number$index", seasonList) //odds are number
+                    seasonListSaved.add(seasonList)
+                }
+            }
+            Log.d("SeasonListSaved", seasonListSaved.toString())
+
+
+            //HOW TO USE getTVSeasonsData
+
+            seasonListSaved.forEachIndexed { index, seasonNumber ->
+                Log.d("TVID", TVID.toString())
+
+                Log.d("SeasonNumber",seasonNumber)
+
+                apiCallerForTV.getTVSeasonsData(TVID, seasonNumber) { tvSeasonID ->
+                    Log.d("Season Data Label","Season Data")
+
+                    tvSeasonID.forEachIndexed { index, episodeMember ->
+                        Log.d("Episode ID:", episodeMember.id)
+                        Log.d("Episode name:", episodeMember.name)
+                        Log.d("Episode overview:", episodeMember.overview)
+                        Log.d("Episode episode_number:", episodeMember.episode_number)
+                        Log.d("Episode episode_type:", episodeMember.episode_type)
+                        Log.d("Episode runtime:", episodeMember.runtime)
+                        Log.d("Episode still_path:", episodeMember.still_path)
+                        Log.d("Episode vote_average:", episodeMember.vote_average.toString())
+                    }
+
+                }
+            }
+        }
+
+
+
+
+
+
 
         //EXAMPLE USE OF TV SHOWS
         val apiUrlsComedyTV = "https://api.themoviedb.org/3/discover/tv?api_key=1f443a53a6aabe4de284f9c46a17f64c&with_genres=35&sort_by=popularity.desc&language=en-US"
         val textViewComedyTV = findViewById<TextView>(R.id.movieDetailsTextViewComedyTV)
         val recyclerViewComedyTV: RecyclerView = findViewById(R.id.recyclerViewComedyTV)
         setUpRecyclerView(apiUrlsComedyTV, textViewComedyTV, recyclerViewComedyTV)
+        Log.d("apiUrlsComedyTV", apiUrlsComedyTV)
 
 
 

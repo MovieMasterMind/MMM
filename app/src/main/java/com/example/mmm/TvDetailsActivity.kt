@@ -76,7 +76,7 @@ class TvDetailsActivity : AppCompatActivity() {
                     displayTVDetails(response, streamingDetails)
                 },
                 { error ->
-                    Log.e("MovieDetailsActivity", "Error fetching movie details: $error")
+                    Log.e("TVDetailsActivity", "Error fetching movie details: $error")
                 }
             )
 
