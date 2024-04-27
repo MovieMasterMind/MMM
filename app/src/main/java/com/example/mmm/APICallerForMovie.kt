@@ -1,10 +1,11 @@
+package com.example.mmm
 
+import CastMember
 import android.os.Handler
 import android.os.Looper
 import android.util.Log
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
-import com.example.mmm.TrailerMember
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch

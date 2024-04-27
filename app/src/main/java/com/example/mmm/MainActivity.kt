@@ -1,9 +1,9 @@
 package com.example.mmm
 
 
-
 import android.content.Intent
-import APICallerForMovie
+import com.example.mmm.APICallerForMovie
+import com.example.mmm.APICallerForTV
 import android.annotation.SuppressLint
 import android.os.Bundle
 import android.util.Log
@@ -30,7 +30,8 @@ class MainActivity : AppCompatActivity() {
     private lateinit var appBarConfiguration: AppBarConfiguration
     private lateinit var binding: ActivityMainBinding
     private lateinit var recyclerView: RecyclerView
-    private lateinit var adapter: MoviePosterAdapter
+    private lateinit var MovieAdapter: MoviePosterAdapter
+    private lateinit var TvAdapter: TVPosterAdapter
     private var checkboxMap: MutableMap<String, CheckBox?> = mutableMapOf()
 
     @SuppressLint("CutPasteId")
@@ -199,37 +200,41 @@ class MainActivity : AppCompatActivity() {
         val layoutManager = LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false)
         recyclerView.layoutManager = layoutManager
 
-        // Placeholder adapter initialization
-        adapter = MoviePosterAdapter(emptyList(), emptyList())
-        recyclerView.adapter = adapter
-
         val apiCallerForMovie = APICallerForMovie()
         val apiCallerForTV = APICallerForTV()
 
 
-        if (apiUrl.contains("movie")) {
+        if (apiUrl.contains("https://api.themoviedb.org/3/discover/movie")) {
+
+            // Placeholder adapter initialization
+            MovieAdapter = MoviePosterAdapter(emptyList(), emptyList())
+            recyclerView.adapter = MovieAdapter
+
 
             // Get data from API and update the adapter
             apiCallerForMovie.getMovieDataFromAPI(apiUrl, textView, recyclerView) { posterUrls, movieIds ->
                 // Run on UI thread since response callback is on a background thread
                 runOnUiThread {
                     // Create a new adapter with the data
-                    adapter = MoviePosterAdapter(posterUrls, movieIds)
-                    recyclerView.adapter = adapter
+                    MovieAdapter = MoviePosterAdapter(posterUrls, movieIds)
+                    recyclerView.adapter = MovieAdapter
                 }
             }
 
 
-        } else if (apiUrl.contains("tv")) {
+        } else if (apiUrl.contains("https://api.themoviedb.org/3/discover/tv")) {
 
+            // Placeholder adapter initialization
+            TvAdapter = TVPosterAdapter(emptyList(), emptyList())
+            recyclerView.adapter = TvAdapter
 
             // Get data from API and update the adapter
-            apiCallerForTV.getTVDataFromAPI(apiUrl, textView, recyclerView) { posterUrls, movieIds ->
+            apiCallerForTV.getTVDataFromAPI(apiUrl, textView, recyclerView) { posterUrls, TvShowIds ->
                 // Run on UI thread since response callback is on a background thread
                 runOnUiThread {
                     // Create a new adapter with the data
-                    adapter = MoviePosterAdapter(posterUrls, movieIds)
-                    recyclerView.adapter = adapter
+                    TvAdapter = TVPosterAdapter(posterUrls, TvShowIds)
+                    recyclerView.adapter = TvAdapter
                 }
             }
 
@@ -238,6 +243,7 @@ class MainActivity : AppCompatActivity() {
             Log.e("UNKNOWN URL", "UNKNOWN URL")
         }
     }
+
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
         menuInflater.inflate(R.menu.main, menu)
