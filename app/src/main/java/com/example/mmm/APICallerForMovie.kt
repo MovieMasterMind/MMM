@@ -1,6 +1,5 @@
 package com.example.mmm
 
-import CastMember
 import android.os.Handler
 import android.os.Looper
 import android.util.Log
@@ -100,12 +99,13 @@ class APICallerForMovie {
                         val castArray = jsonObject.getJSONArray("cast")
                         for (i in 0 until castArray.length()) {
                             val castObject = castArray.getJSONObject(i)
+                            val id = castObject.getInt("cast_id") // TMDb uses 'cast_id' for the cast's unique identifier
                             val name = castObject.getString("name")
                             val character = castObject.getString("character")
-                            val profilePath = castObject.optString("profile_path", "null")
+                            val profilePath = castObject.optString("profile_path", null)
                             val imageUrl = if (profilePath != "null") "https://image.tmdb.org/t/p/w500$profilePath"
                             else "https://www.nicepng.com/png/full/73-730154_open-default-profile-picture-png.png"
-                            castList.add(CastMember(name, character, imageUrl))
+                            castList.add(CastMember(id, name, character, imageUrl))
                         }
                         Handler(Looper.getMainLooper()).post {
                             callback(castList)

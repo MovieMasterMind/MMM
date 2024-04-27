@@ -12,6 +12,8 @@ import android.widget.LinearLayout
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import com.android.volley.Request
 import com.android.volley.toolbox.JsonObjectRequest
 import com.android.volley.toolbox.Volley
@@ -120,8 +122,21 @@ class TvDetailsActivity : AppCompatActivity() {
             Glide.with(this).load(posterUrl).into(posterImageView)
         }
 
-        Log.e("WHY", streamingDetails.toString())
+        // Set the adapter with an empty list initially
+        val castRecyclerView: RecyclerView = findViewById(R.id.castRecyclerView)
+        val castAdapter = CastAdapter() // No arguments here
+        castRecyclerView.layoutManager = LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false)
+        castRecyclerView.adapter = castAdapter
 
+        // Later, when you have the cast list
+        apiCallerForTV.getTVCastDetails(tvDetails.getInt("id")) { castList ->
+            runOnUiThread {
+                castAdapter.submitList(castList) // Use submitList to update the adapter's data
+            }
+        }
+
+
+        Log.e("WHY", streamingDetails.toString())
 
         val streamingLayout: LinearLayout = findViewById(R.id.streamingLayout)
 

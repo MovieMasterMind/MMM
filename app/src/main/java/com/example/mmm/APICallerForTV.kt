@@ -1,6 +1,5 @@
 package com.example.mmm
 
-import CastMember
 import android.os.Handler
 import android.os.Looper
 import android.util.Log
@@ -17,6 +16,7 @@ import okhttp3.Response
 import org.json.JSONException
 import org.json.JSONObject
 import java.io.IOException
+
 class APICallerForTV {
 
     private val client = OkHttpClient()
@@ -86,29 +86,33 @@ class APICallerForTV {
         return Triple(posterUrls, tvShowTitles, firstAirDate)
     }
     fun getTVCastDetails(tvShowId: Int, callback: (List<CastMember>) -> Unit) {
-        val url = "https://api.themoviedb.org/3/tv/$tvShowId/credits?api_key=1f443a53a6aabe4de284f9c46a17f64c"
+        val url = "https://api.themoviedb.org/3/tv/$tvShowId/aggregate_credits?api_key=1f443a53a6aabe4de284f9c46a17f64c"
+        Log.d("AggregateCreditsLink", "Here's the aggregate credits link: $url")
         val request = Request.Builder().url(url).build()
 
         client.newCall(request).enqueue(object : Callback {
             override fun onFailure(call: Call, e: IOException) {
-                Log.e("API Error", "Error fetching TV show details: $e")
+                Log.e("API Error", "Error fetching aggregate credits: $e")
             }
 
             override fun onResponse(call: Call, response: Response) {
-                response.body?.let {
-                    val responseData = it.string()
+                response.body?.let { responseBody ->
+                    val responseData = responseBody.string()
                     val castList = mutableListOf<CastMember>()
                     try {
                         val jsonObject = JSONObject(responseData)
                         val castArray = jsonObject.getJSONArray("cast")
                         for (i in 0 until castArray.length()) {
                             val castObject = castArray.getJSONObject(i)
+                            val id = castObject.getInt("id") // Get the id of the cast member
                             val name = castObject.getString("name")
-                            val character = castObject.getString("character")
-                            val profilePath = castObject.optString("profile_path", "null")
+                            val character = castObject.getJSONArray("roles")
+                                .getJSONObject(0)
+                                .getString("character")
+                            val profilePath = castObject.optString("profile_path", null)
                             val imageUrl = if (profilePath != "null") "https://image.tmdb.org/t/p/w500$profilePath"
                             else "https://www.nicepng.com/png/full/73-730154_open-default-profile-picture-png.png"
-                            castList.add(CastMember(name, character, imageUrl))
+                            castList.add(CastMember(id, name, character, imageUrl))
                         }
                         Handler(Looper.getMainLooper()).post {
                             callback(castList)
@@ -127,7 +131,7 @@ class APICallerForTV {
             val request = Request.Builder()
                 .url(url)
                 .get()
-                .addHeader("X-RapidAPI-Key", "24562cc0e2msh9d6623953b461fdp18b00ejsna654dc783352")
+                .addHeader("X-RapidAPI-Key", "be00bbfb80mshe1062e1bb48c567p157eb2jsn295597c27f86")
                 .addHeader("X-RapidAPI-Host", "streaming-availability.p.rapidapi.com")
                 .build()
 

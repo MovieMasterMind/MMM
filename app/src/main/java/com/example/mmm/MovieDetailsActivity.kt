@@ -1,6 +1,5 @@
 package com.example.mmm
 
-import CastAdapter
 import android.content.Context
 import android.content.Intent
 import android.graphics.Color
@@ -239,14 +238,14 @@ class MovieDetailsActivity : AppCompatActivity() {
 
         // Initialize RecyclerView and its adapter for cast members
         val castRecyclerView: RecyclerView = findViewById(R.id.castRecyclerView)
-        val castAdapter = CastAdapter(emptyList()) // Initialize with an empty list
+        val castAdapter = CastAdapter() // No arguments here
         castRecyclerView.layoutManager = LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false)
         castRecyclerView.adapter = castAdapter
 
-        // Fetch and display cast details
+        // Later, when you have the cast list
         apiCallerForMovie.getMovieCastDetails(movieDetails.getInt("id")) { castList ->
             runOnUiThread {
-                castAdapter.updateCastList(castList)
+                castAdapter.submitList(castList) // Use submitList to update the adapter's data
             }
         }
 
