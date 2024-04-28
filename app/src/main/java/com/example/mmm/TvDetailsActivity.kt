@@ -38,6 +38,7 @@ class TvDetailsActivity : AppCompatActivity() {
         val tvId = intent.getIntExtra("TV_ID", -1)
         if (tvId != -1) {
             fetchTVDetails(tvId)
+            displaySeasonsList(tvId)
         } else {
             finish() // Close the activity if tv ID wasn't passed correctly
         }
@@ -136,6 +137,8 @@ class TvDetailsActivity : AppCompatActivity() {
         }
 
 
+
+
         Log.e("WHY", streamingDetails.toString())
 
         val streamingLayout: LinearLayout = findViewById(R.id.streamingLayout)
@@ -184,6 +187,42 @@ class TvDetailsActivity : AppCompatActivity() {
 
         // Add more services and colors as needed - "service" to Pair(Color.color, Color.color), -
     )
+
+    private fun displaySeasonsList(tvId: Int) {
+        apiCallerForTV.getTVSeasonsNames(tvId) { seasonsNamesList ->
+            updateSeasonsUI(seasonsNamesList)
+        }
+    }
+
+    private fun updateSeasonsUI(seasons: List<String>) {
+        runOnUiThread {
+            val seasonsContainer: LinearLayout = findViewById(R.id.seasonsContainer)
+            seasonsContainer.removeAllViews() // Clear any existing views
+
+            seasons.filterIndexed { index, _ -> index % 2 != 0 } // Keep only season numbers
+                .forEach { seasonNumber ->
+                    val seasonButton = Button(this).apply {
+                        text = "Season $seasonNumber"
+                        setBackgroundColor(Color.BLACK) // Set the background color to black
+                        setTextColor(Color.WHITE) // Set the text color to white
+
+                        // Optional: If you're using padding, set it here as well
+                        // setPadding(left, top, right, bottom)
+
+                        // Optional: Define layout parameters for button size, margins, etc.
+                        layoutParams = LinearLayout.LayoutParams(
+                            LinearLayout.LayoutParams.WRAP_CONTENT,
+                            LinearLayout.LayoutParams.WRAP_CONTENT
+                        ).apply {
+                            setMargins(8, 8, 8, 8) // Adjust margins as needed
+                        }
+                    }
+                    seasonsContainer.addView(seasonButton)
+                    // Add any onClickListener here if needed
+                }
+        }
+    }
+
 
     private fun getColorForService(service: String): Pair<Int, Int>? {
         return serviceColorsMap[service.lowercase(Locale.ROOT)]
