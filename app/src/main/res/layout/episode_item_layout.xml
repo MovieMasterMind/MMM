@@ -5,6 +5,12 @@
     android:orientation="vertical"
     android:padding="16dp">
 
+    <ImageView
+        android:id="@+id/episodeImage"
+        android:layout_width="match_parent"
+        android:layout_height="200dp"
+        android:scaleType="centerCrop" />
+
     <TextView
         android:id="@+id/episodeNumber"
         android:layout_width="wrap_content"
@@ -26,6 +32,11 @@
         android:textSize="14sp"
         android:layout_marginTop="4dp" />
 
-    <!-- You can add more views here if you need to display additional data like air dates or images -->
+    <TextView
+        android:id="@+id/episodeVoteAverage"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textSize="16sp"
+        android:layout_marginTop="4dp" />
 
 </LinearLayout>

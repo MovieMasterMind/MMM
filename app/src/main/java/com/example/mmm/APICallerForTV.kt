@@ -265,10 +265,10 @@ class APICallerForTV {
 
     }
 
-    fun getTVSeasonsData(TVId: Int, seasonid: String, callback: (List<EpisodeMemeber>) -> Unit) {
+    fun getTVSeasonsData(TVId: Int, seasonid: String, callback: (List<EpisodeMember>) -> Unit) {
         val url = "https://api.themoviedb.org/3/tv/$TVId/season/$seasonid?api_key=1f443a53a6aabe4de284f9c46a17f64c"
         val request = Request.Builder().url(url).get().build()
-        val episodeDataList = mutableListOf<EpisodeMemeber>()
+        val episodeDataList = mutableListOf<EpisodeMember>()
 
         client.newCall(request).enqueue(object : Callback {
             override fun onFailure(call: Call, e: IOException) {
@@ -293,9 +293,9 @@ class APICallerForTV {
                             val episodeType = seasonObject.getString("episode_type")
                             val episodeRuntime = seasonObject.getString("runtime")
                             val episodeStillPath = seasonObject.getString("still_path")
-                            val seasonVoteAverage = seasonObject.getInt("vote_average")
+                            val seasonVoteAverage = seasonObject.getDouble("vote_average")
 
-                            episodeDataList.add(EpisodeMemeber(episodeID, episodeNames, episodeOverview, episodeNumber, episodeType, episodeRuntime, episodeStillPath, seasonVoteAverage))
+                            episodeDataList.add(EpisodeMember(episodeID, episodeNames, episodeOverview, episodeNumber, episodeType, episodeRuntime, episodeStillPath, seasonVoteAverage))
                             //episodeDataList.add((id, name, overview, episode_number, episode_type, runtime, still_path, vote_average))
                         }
                         Handler(Looper.getMainLooper()).post {

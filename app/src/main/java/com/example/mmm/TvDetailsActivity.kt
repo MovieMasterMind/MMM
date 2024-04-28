@@ -245,28 +245,35 @@ class TvDetailsActivity : AppCompatActivity() {
 
     private fun fetchAndDisplaySeasonData(seasonNumber: Int) {
         val tvId = tvShowId
-            apiCallerForTV.getTVSeasonsData(tvId, seasonNumber.toString()) { episodeList ->
-                val episodeDetails = episodeList.map { episode ->
-                    EpisodeDetail(
-                        episodeNumber = episode.episode_number,
-                        episodeName = episode.name,
-                        episodeOverview = episode.overview
-                        // Map other details as necessary
-                    )
-                }
-                updateEpisodesUI(episodeDetails)
+        apiCallerForTV.getTVSeasonsData(tvId, seasonNumber.toString()) { episodeList ->
+            Log.d("TvDetailsActivity", "Episodes fetched: ${episodeList.size}")
+            val episodeDetails = episodeList.map { episode ->
+                EpisodeDetail(
+                    episodeNumber = "Episode ${episode.episode_number}",
+                    episodeName = episode.name,
+                    episodeOverview = episode.overview,
+                    imageUrl = "https://image.tmdb.org/t/p/w500${episode.still_path}",
+                    voteAverage = episode.vote_average
+                )
             }
+            Log.d("TvDetailsActivity", "Mapping done, updating UI with ${episodeDetails.size} items.")
+            updateEpisodesUI(episodeDetails)
+        }
     }
 
     private fun updateEpisodesUI(episodeDetails: List<EpisodeDetail>) {
+        Log.d("TvDetailsActivity", "Updating episodes UI.")
         val episodesRecyclerView: RecyclerView = findViewById(R.id.episodesRecyclerView)
         if (episodesRecyclerView.adapter == null) {
-            episodesRecyclerView.adapter = EpisodesAdapter(episodeDetails)
             episodesRecyclerView.layoutManager = LinearLayoutManager(this)
+            episodesRecyclerView.adapter = EpisodesAdapter(episodeDetails)
+            Log.d("TvDetailsActivity", "Adapter set with new data.")
         } else {
             (episodesRecyclerView.adapter as EpisodesAdapter).updateEpisodes(episodeDetails)
+            Log.d("TvDetailsActivity", "Adapter updated with new data.")
         }
     }
+
 
 
     private fun getColorForService(service: String): Pair<Int, Int>? {

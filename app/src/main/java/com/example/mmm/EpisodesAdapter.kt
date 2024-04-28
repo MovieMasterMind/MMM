@@ -3,17 +3,20 @@ package com.example.mmm
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.ImageView
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
+import com.bumptech.glide.Glide
 
 class EpisodesAdapter(private var episodes: List<EpisodeDetail>) :
     RecyclerView.Adapter<EpisodesAdapter.ViewHolder>() {
 
     class ViewHolder(view: View) : RecyclerView.ViewHolder(view) {
-        // Bind views here, for example:
         val episodeNumberView: TextView = view.findViewById(R.id.episodeNumber)
         val episodeNameView: TextView = view.findViewById(R.id.episodeName)
         val episodeOverviewView: TextView = view.findViewById(R.id.episodeOverview)
+        val episodeImageView: ImageView = view.findViewById(R.id.episodeImage)
+        val episodeVoteAverage: TextView = view.findViewById(R.id.episodeVoteAverage)
         // More bindings if necessary
     }
 
@@ -25,11 +28,13 @@ class EpisodesAdapter(private var episodes: List<EpisodeDetail>) :
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         val episode = episodes[position]
-        // Set the data to the views here
         holder.episodeNumberView.text = episode.episodeNumber
         holder.episodeNameView.text = episode.episodeName
         holder.episodeOverviewView.text = episode.episodeOverview
-        // More data setting if necessary
+        Glide.with(holder.itemView.context)
+            .load(episode.imageUrl)
+            .into(holder.episodeImageView)
+        holder.episodeVoteAverage.text = episode.voteAverage.toString()
     }
 
     override fun getItemCount() = episodes.size
