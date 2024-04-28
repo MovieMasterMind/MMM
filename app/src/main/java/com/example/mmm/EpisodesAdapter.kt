@@ -13,7 +13,7 @@ class EpisodesAdapter(private var episodes: List<EpisodeDetail>) :
 
     class ViewHolder(view: View) : RecyclerView.ViewHolder(view) {
         val episodeNumberView: TextView = view.findViewById(R.id.episodeNumber)
-        val episodeNameView: TextView = view.findViewById(R.id.episodeName)
+//        val episodeNameView: TextView = view.findViewById(R.id.episodeName)
         val episodeOverviewView: TextView = view.findViewById(R.id.episodeOverview)
         val episodeImageView: ImageView = view.findViewById(R.id.episodeImage)
         val episodeVoteAverage: TextView = view.findViewById(R.id.episodeVoteAverage)
@@ -29,7 +29,7 @@ class EpisodesAdapter(private var episodes: List<EpisodeDetail>) :
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         val episode = episodes[position]
         holder.episodeNumberView.text = episode.episodeNumber
-        holder.episodeNameView.text = episode.episodeName
+//        holder.episodeNameView.text = episode.episodeName
         holder.episodeOverviewView.text = episode.episodeOverview
         Glide.with(holder.itemView.context)
             .load(episode.imageUrl)

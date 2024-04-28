@@ -249,7 +249,7 @@ class TvDetailsActivity : AppCompatActivity() {
             Log.d("TvDetailsActivity", "Episodes fetched: ${episodeList.size}")
             val episodeDetails = episodeList.map { episode ->
                 EpisodeDetail(
-                    episodeNumber = "Episode ${episode.episode_number}",
+                    episodeNumber = "${episode.episode_number}. ${episode.name}",
                     episodeName = episode.name,
                     episodeOverview = episode.overview,
                     imageUrl = "https://image.tmdb.org/t/p/w500${episode.still_path}",
