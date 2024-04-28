@@ -26,6 +26,7 @@ class TvDetailsActivity : AppCompatActivity() {
     private lateinit var tvDetailsObj: JSONObject
     private val apiCallerForTV = APICallerForTV()
     private lateinit var adapter: TVPosterAdapter
+    private var tvShowId = 2
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -39,6 +40,7 @@ class TvDetailsActivity : AppCompatActivity() {
         if (tvId != -1) {
             fetchTVDetails(tvId)
             displaySeasonsList(tvId)
+            tvShowId = tvId
         } else {
             finish() // Close the activity if tv ID wasn't passed correctly
         }
@@ -197,31 +199,47 @@ class TvDetailsActivity : AppCompatActivity() {
     private fun updateSeasonsUI(seasons: List<String>) {
         runOnUiThread {
             val seasonsContainer: LinearLayout = findViewById(R.id.seasonsContainer)
-            seasonsContainer.removeAllViews() // Clear any existing views
+            seasonsContainer.removeAllViews()
 
-            seasons.filterIndexed { index, _ -> index % 2 != 0 } // Keep only season numbers
-                .forEach { seasonNumber ->
-                    val seasonButton = Button(this).apply {
-                        text = "Season $seasonNumber"
-                        setBackgroundColor(Color.BLACK) // Set the background color to black
-                        setTextColor(Color.WHITE) // Set the text color to white
+            var firstSeasonButton: Button? = null
+            var firstSeasonFound = false
 
-                        // Optional: If you're using padding, set it here as well
-                        // setPadding(left, top, right, bottom)
+            for (i in 0 until seasons.size step 2) {
+                // Retrieve the name and number of each season
+                val seasonName = seasons[i]
+                val seasonNumber = seasons[i + 1]
 
-                        // Optional: Define layout parameters for button size, margins, etc.
-                        layoutParams = LinearLayout.LayoutParams(
-                            LinearLayout.LayoutParams.WRAP_CONTENT,
-                            LinearLayout.LayoutParams.WRAP_CONTENT
-                        ).apply {
-                            setMargins(8, 8, 8, 8) // Adjust margins as needed
-                        }
+                val buttonText = if (seasonNumber == "0") seasonName else "Season $seasonNumber"
+
+                val seasonButton = Button(this).apply {
+                    text = buttonText
+                    setBackgroundColor(Color.BLACK)
+                    setTextColor(Color.WHITE)
+                    layoutParams = LinearLayout.LayoutParams(
+                        LinearLayout.LayoutParams.WRAP_CONTENT,
+                        LinearLayout.LayoutParams.WRAP_CONTENT
+                    ).apply {
+                        setMargins(0, 8, 16, 8)
                     }
-                    seasonsContainer.addView(seasonButton)
-                    // Add any onClickListener here if needed
+                    setOnClickListener {
+//                        fetchAndDisplaySeasonData(seasonNumber.toInt())
+                    }
                 }
+
+                seasonsContainer.addView(seasonButton)
+
+                // If this is the first actual season (or specials), save a reference to click it later
+                if (!firstSeasonFound) {
+                    firstSeasonButton = seasonButton
+                    firstSeasonFound = true
+                }
+            }
+
+            // Load the first season data by default, which could be specials if present
+            firstSeasonButton?.performClick()
         }
     }
+
 
 
     private fun getColorForService(service: String): Pair<Int, Int>? {
