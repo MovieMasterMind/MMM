@@ -42,6 +42,7 @@ class TvDetailsActivity : AppCompatActivity() {
             fetchTVDetails(tvId)
             displaySeasonsList(tvId)
             tvShowId = tvId
+            fetchStreamingDetails(tvId)
         } else {
             finish() // Close the activity if tv ID wasn't passed correctly
         }
@@ -51,13 +52,29 @@ class TvDetailsActivity : AppCompatActivity() {
         val url =
             "https://api.themoviedb.org/3/tv/$tvId?api_key=1f443a53a6aabe4de284f9c46a17f64c&language=en-US"
 
+
+            val jsonObjectRequest = JsonObjectRequest(Request.Method.GET, url, null,
+                { response ->
+                    // Existing code to display movie details
+                    displayTVDetails(response)
+                },
+                { error ->
+                    Log.e("TVDetailsActivity", "Error fetching movie details: $error")
+                }
+            )
+
+            Volley.newRequestQueue(this).add(jsonObjectRequest)
+    }
+
+    private fun fetchStreamingDetails(tvId: Int) {
+        val url =
+            "https://api.themoviedb.org/3/tv/$tvId?api_key=1f443a53a6aabe4de284f9c46a17f64c&language=en-US"
+
         apiCallerForTV.getTVStreamingLocationJSON(tvId) { streamingDetails ->
             Log.e("StreamingDetails", streamingDetails.toString())
 
-            //streamingDetails hold links of locations of the streaming service
             val streamingDetailsFound = streamingDetails.isNotEmpty()
             val textViewText = if (streamingDetailsFound) {
-                // If details are found, hide the TextView and set text to empty
                 runOnUiThread {
                     findViewById<TextView>(R.id.titleBeforeStreamingServices).apply {
                         text = ""
@@ -77,7 +94,7 @@ class TvDetailsActivity : AppCompatActivity() {
             val jsonObjectRequest = JsonObjectRequest(Request.Method.GET, url, null,
                 { response ->
                     // Existing code to display movie details
-                    displayTVDetails(response, streamingDetails)
+                    displayStreamingLayout(streamingDetails)
                 },
                 { error ->
                     Log.e("TVDetailsActivity", "Error fetching movie details: $error")
@@ -86,11 +103,8 @@ class TvDetailsActivity : AppCompatActivity() {
 
             Volley.newRequestQueue(this).add(jsonObjectRequest)
         }
-        apiCallerForTV.getTVStreamingLocationJSON(1396) { streamingDetails ->
-            Log.e("StreamingDetailsBBBBBBBB", streamingDetails.toString())
-        }
     }
-    private fun displayTVDetails(tvDetails: JSONObject, streamingDetails: Map<String, String>) {
+    private fun displayTVDetails(tvDetails: JSONObject) {
         tvDetailsObj = tvDetails
         val titleTextView: TextView = findViewById(R.id.TvTitle)
         val overviewTextView: TextView = findViewById(R.id.TvOverview)
@@ -102,11 +116,13 @@ class TvDetailsActivity : AppCompatActivity() {
         val drawableStar = ContextCompat.getDrawable(this, R.drawable.ic_star_vector)
 
         titleTextView.text = tvDetails.getString("name")
-        overviewTextView.text = tvDetails.getString("overview")
+        if (tvDetails.getString("overview") != "") {
+        overviewTextView.text = tvDetails.getString("overview")}
 //        airDateTextView.text = tvDetails.getString("first_air_date")
         drawableStar?.setBounds(0, 0, drawableStar.intrinsicWidth, drawableStar.intrinsicHeight)
         voteAverageTextView.setCompoundDrawablesWithIntrinsicBounds(drawableStar, null, null, null)
-        voteAverageTextView.compoundDrawablePadding = resources.getDimensionPixelSize(R.dimen.default_padding)
+        voteAverageTextView.compoundDrawablePadding =
+            resources.getDimensionPixelSize(R.dimen.default_padding)
         voteAverageTextView.text = String.format(Locale.getDefault(), "%.1f", voteAverage)
 
         val genresArray = tvDetails.getJSONArray("genres")
@@ -122,14 +138,16 @@ class TvDetailsActivity : AppCompatActivity() {
             val posterUrl = "https://image.tmdb.org/t/p/w500$posterPath"
             Glide.with(this).load(posterUrl).into(posterImageView)
         } else {
-            val posterUrl =  "https://external-content.duckduckgo.com/iu/?u=https%3A%2F%2Ftse4.mm.bing.net%2Fth%3Fid%3DOIP.IkbcciGb75wX7U5WeANuDQHaLE%26pid%3DApi&f=1&ipt=a36f8b1fdf094f9245bbbfbf6e0d0908dd49b8c2ae8557f5632a06cce2c36cf2&ipo=images"
+            val posterUrl =
+                "https://external-content.duckduckgo.com/iu/?u=https%3A%2F%2Ftse4.mm.bing.net%2Fth%3Fid%3DOIP.IkbcciGb75wX7U5WeANuDQHaLE%26pid%3DApi&f=1&ipt=a36f8b1fdf094f9245bbbfbf6e0d0908dd49b8c2ae8557f5632a06cce2c36cf2&ipo=images"
             Glide.with(this).load(posterUrl).into(posterImageView)
         }
 
         // Set the adapter with an empty list initially
         val castRecyclerView: RecyclerView = findViewById(R.id.castRecyclerView)
         val castAdapter = CastAdapter() // No arguments here
-        castRecyclerView.layoutManager = LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false)
+        castRecyclerView.layoutManager =
+            LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false)
         castRecyclerView.adapter = castAdapter
 
         // Later, when you have the cast list
@@ -138,9 +156,10 @@ class TvDetailsActivity : AppCompatActivity() {
                 castAdapter.submitList(castList) // Use submitList to update the adapter's data
             }
         }
+    }
 
 
-
+        private fun displayStreamingLayout(streamingDetails: Map<String, String>) {
 
         Log.e("WHY", streamingDetails.toString())
 

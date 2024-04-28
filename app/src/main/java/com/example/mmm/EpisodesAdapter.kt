@@ -5,6 +5,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
+import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 
@@ -13,11 +14,23 @@ class EpisodesAdapter(private var episodes: List<EpisodeDetail>) :
 
     class ViewHolder(view: View) : RecyclerView.ViewHolder(view) {
         val episodeNumberView: TextView = view.findViewById(R.id.episodeNumber)
-//        val episodeNameView: TextView = view.findViewById(R.id.episodeName)
         val episodeOverviewView: TextView = view.findViewById(R.id.episodeOverview)
         val episodeImageView: ImageView = view.findViewById(R.id.episodeImage)
         val episodeVoteAverage: TextView = view.findViewById(R.id.episodeVoteAverage)
-        // More bindings if necessary
+
+        init {
+            val drawableStar = ContextCompat.getDrawable(view.context, R.drawable.ic_star_vector)
+            drawableStar?.setBounds(0, 0, drawableStar.intrinsicWidth, drawableStar.intrinsicHeight)
+
+            episodeVoteAverage.setCompoundDrawablesWithIntrinsicBounds(
+                drawableStar,
+                null,
+                null,
+                null
+            )
+            episodeVoteAverage.compoundDrawablePadding =
+                view.resources.getDimensionPixelSize(R.dimen.default_padding)
+        }
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {

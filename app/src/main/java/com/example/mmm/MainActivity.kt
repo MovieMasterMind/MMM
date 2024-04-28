@@ -226,7 +226,7 @@ class MainActivity : AppCompatActivity() {
 
 
         //EXAMPLE USE OF TV SHOWS
-        val apiUrlsComedyTV = "https://api.themoviedb.org/3/discover/tv?api_key=1f443a53a6aabe4de284f9c46a17f64c&with_genres=35&sort_by=popularity.desc&language=en-US"
+        val apiUrlsComedyTV = "https://api.themoviedb.org/3/discover/tv?api_key=1f443a53a6aabe4de284f9c46a17f64c&language=en-US&page=1&sort_by=popularity.desc&with_genres=35&with_origin_country=US"
         val textViewComedyTV = findViewById<TextView>(R.id.movieDetailsTextViewComedyTV)
         val recyclerViewComedyTV: RecyclerView = findViewById(R.id.recyclerViewComedyTV)
         setUpRecyclerView(apiUrlsComedyTV, textViewComedyTV, recyclerViewComedyTV)

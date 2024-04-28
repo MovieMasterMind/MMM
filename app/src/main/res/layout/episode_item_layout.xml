@@ -38,6 +38,7 @@
         android:layout_height="wrap_content"
         android:layout_toEndOf="@id/episodeImage"
         android:layout_below="@id/episodeNumber"
+        android:drawableStart="@drawable/ic_star_vector"
         android:layout_marginStart="16dp"
         android:textSize="16sp"
         android:text="Vote Average" />
