@@ -169,6 +169,13 @@
                     android:padding="0dp" />
             </HorizontalScrollView>
 
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/episodesRecyclerView"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:layout_constraintTop_toBottomOf="@id/horizontalScrollView"
+                android:layout_below="@id/horizontalScrollView" />
+
 
 
         </androidx.constraintlayout.widget.ConstraintLayout>

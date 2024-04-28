@@ -22,6 +22,7 @@ import org.json.JSONObject
 import java.util.Locale
 
 
+
 class TvDetailsActivity : AppCompatActivity() {
     private lateinit var tvDetailsObj: JSONObject
     private val apiCallerForTV = APICallerForTV()
@@ -201,14 +202,19 @@ class TvDetailsActivity : AppCompatActivity() {
             val seasonsContainer: LinearLayout = findViewById(R.id.seasonsContainer)
             seasonsContainer.removeAllViews()
 
+            // Split the seasons into pairs of (name, number).
+            val seasonPairs = seasons.windowed(size = 2, step = 2, partialWindows = false)
+
+            // Separate "Season 0" which is usually specials.
+            val (specials, regularSeasons) = seasonPairs.partition { it[1] == "0" }
+
+            // Sort the regular seasons by their number and then add the specials at the end.
+            val sortedSeasons = regularSeasons.sortedBy { it[1].toInt() } + specials
+
             var firstSeasonButton: Button? = null
-            var firstSeasonFound = false
 
-            for (i in 0 until seasons.size step 2) {
-                // Retrieve the name and number of each season
-                val seasonName = seasons[i]
-                val seasonNumber = seasons[i + 1]
-
+            sortedSeasons.forEachIndexed { index, pair ->
+                val (seasonName, seasonNumber) = pair
                 val buttonText = if (seasonNumber == "0") seasonName else "Season $seasonNumber"
 
                 val seasonButton = Button(this).apply {
@@ -219,27 +225,48 @@ class TvDetailsActivity : AppCompatActivity() {
                         LinearLayout.LayoutParams.WRAP_CONTENT,
                         LinearLayout.LayoutParams.WRAP_CONTENT
                     ).apply {
-                        setMargins(0, 8, 16, 8)
+                        setMargins(8, 8, 8, 8)
                     }
                     setOnClickListener {
-//                        fetchAndDisplaySeasonData(seasonNumber.toInt())
+                        fetchAndDisplaySeasonData(seasonNumber.toInt())
                     }
                 }
 
                 seasonsContainer.addView(seasonButton)
 
-                // If this is the first actual season (or specials), save a reference to click it later
-                if (!firstSeasonFound) {
-                    firstSeasonButton = seasonButton
-                    firstSeasonFound = true
-                }
+                // Save a reference to the first season button to click it later.
+                if (index == 0) firstSeasonButton = seasonButton
             }
 
-            // Load the first season data by default, which could be specials if present
+            // Programmatically click the first season button to load data by default.
             firstSeasonButton?.performClick()
         }
     }
 
+    private fun fetchAndDisplaySeasonData(seasonNumber: Int) {
+        val tvId = tvShowId
+            apiCallerForTV.getTVSeasonsData(tvId, seasonNumber.toString()) { episodeList ->
+                val episodeDetails = episodeList.map { episode ->
+                    EpisodeDetail(
+                        episodeNumber = episode.episode_number,
+                        episodeName = episode.name,
+                        episodeOverview = episode.overview
+                        // Map other details as necessary
+                    )
+                }
+                updateEpisodesUI(episodeDetails)
+            }
+    }
+
+    private fun updateEpisodesUI(episodeDetails: List<EpisodeDetail>) {
+        val episodesRecyclerView: RecyclerView = findViewById(R.id.episodesRecyclerView)
+        if (episodesRecyclerView.adapter == null) {
+            episodesRecyclerView.adapter = EpisodesAdapter(episodeDetails)
+            episodesRecyclerView.layoutManager = LinearLayoutManager(this)
+        } else {
+            (episodesRecyclerView.adapter as EpisodesAdapter).updateEpisodes(episodeDetails)
+        }
+    }
 
 
     private fun getColorForService(service: String): Pair<Int, Int>? {
