@@ -169,21 +169,14 @@
                     android:padding="0dp" />
             </HorizontalScrollView>
 
-            <androidx.core.widget.NestedScrollView
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                app:layout_constraintTop_toBottomOf="@id/horizontalScrollView"
-                android:fillViewport="true">
-
                 <androidx.recyclerview.widget.RecyclerView
                     android:id="@+id/episodesRecyclerView"
+                    app:layout_constraintTop_toBottomOf="@id/horizontalScrollView"
                     android:layout_width="match_parent"
-                    android:layout_height="300dp"
-                    android:nestedScrollingEnabled="false"
+                    android:layout_height="600dp"
+                    app:layout_constrainedHeight="true"
+                    android:nestedScrollingEnabled="true"
                     android:scrollbars="vertical" />
-
-            </androidx.core.widget.NestedScrollView>
-
 
         </androidx.constraintlayout.widget.ConstraintLayout>
 
