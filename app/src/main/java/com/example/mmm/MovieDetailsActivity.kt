@@ -269,6 +269,17 @@ class MovieDetailsActivity : AppCompatActivity() {
                 val intent = Intent(Intent.ACTION_VIEW)
                 intent.data = Uri.parse(link)
                 startActivity(intent)
+
+
+
+
+
+
+
+
+
+
+                
             }
             val params = LinearLayout.LayoutParams(
                 LinearLayout.LayoutParams.MATCH_PARENT,
