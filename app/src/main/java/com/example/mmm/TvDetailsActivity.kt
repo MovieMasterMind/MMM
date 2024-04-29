@@ -272,7 +272,9 @@ class TvDetailsActivity : AppCompatActivity() {
                     episodeName = episode.name,
                     episodeOverview = episode.overview,
                     imageUrl = "https://image.tmdb.org/t/p/w500${episode.still_path}",
-                    voteAverage = episode.vote_average
+                    voteAverage = episode.vote_average,
+                    IdForTVShow = tvId,
+                    SeasonNum = seasonNumber
                 )
             }
             Log.d("TvDetailsActivity", "Mapping done, updating UI with ${episodeDetails.size} items.")
@@ -292,7 +294,6 @@ class TvDetailsActivity : AppCompatActivity() {
             Log.d("TvDetailsActivity", "Adapter updated with new data.")
         }
     }
-
 
 
     private fun getColorForService(service: String): Pair<Int, Int>? {

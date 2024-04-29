@@ -5,6 +5,8 @@ data class EpisodeDetail(
     val episodeName: String,
     val episodeOverview: String,
     val imageUrl: String,
-    val voteAverage: Double
+    val voteAverage: Double,
+    val IdForTVShow: Int,
+    val SeasonNum: Int,
     // Add other properties as necessary
 )

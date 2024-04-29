@@ -32,6 +32,11 @@
             android:exported="true"
             android:label="@string/app_name"
             android:theme="@style/Theme.MMM.NoActionBar" />
+        <activity
+            android:name=".EpisodeDetailActivity"
+            android:exported="true"
+            android:label="@string/app_name"
+            android:theme="@style/Theme.MMM.NoActionBar" />
         <activity android:name=".SearchableActivity"
             android:exported="true"
             android:label="@string/app_name"

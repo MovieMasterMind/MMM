@@ -166,7 +166,7 @@ class MovieDetailsActivity : AppCompatActivity() {
 //        val textViewSuggested = findViewById<TextView>(R.id.movieDetailsTextViewSuggested)
 //        setUpRecyclerView(apiUrlsSuggested, textViewSuggested, recyclerViewSuggested)
 //    }
-
+//
 //    private fun setUpRecyclerView(apiUrl: String, textView: TextView, recyclerView: RecyclerView) {
 //        val layoutManager = LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false)
 //        recyclerView.layoutManager = layoutManager
@@ -175,10 +175,10 @@ class MovieDetailsActivity : AppCompatActivity() {
 //        adapter = MoviePosterAdapter(emptyList(), emptyList())
 //        recyclerView.adapter = adapter
 //
-//        val apiCaller = APICaller()
+//        val apiCaller = APICallerForMovie()
 //
 //        // Get data from API and update the adapter
-//        apiCaller.getData(apiUrl, textView, recyclerView) { posterUrls, movieIds ->
+//        apiCaller.getMovieDataFromAPI(apiUrl, textView, recyclerView) { posterUrls, movieIds ->
 //            // Run on UI thread since response callback is on a background thread
 //            runOnUiThread {
 //                // Create a new adapter with the data
