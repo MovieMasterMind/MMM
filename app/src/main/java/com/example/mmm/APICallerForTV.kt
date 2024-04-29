@@ -311,6 +311,47 @@ class APICallerForTV {
 
 
     }
+    fun getTVEpisodeData(TVId: Int, seasonid: String, episodeid: String, callback: (List<EpisodeGuestStars>) -> Unit) {
+        val url = "https://api.themoviedb.org/3/tv/$TVId/season/$seasonid/episode/$episodeid?api_key=1f443a53a6aabe4de284f9c46a17f64c"
+        val request = Request.Builder().url(url).get().build()
+        val episodeDataList = mutableListOf<EpisodeGuestStars>()
+
+        client.newCall(request).enqueue(object : Callback {
+            override fun onFailure(call: Call, e: IOException) {
+                Log.e("API Error", "Error fetching cast details: $e")
+            }
+
+            override fun onResponse(call: Call, response: Response) {
+                response.body?.let {
+                    val responseData = it.string()
+                    Log.d("API Response TV", responseData) // Log the entire JSON response
+                    try {
+                        val jsonObject = JSONObject(responseData)
+                        val episodeArray = jsonObject.getJSONArray("guest_stars")
+
+                        for (i in 0 until episodeArray.length()) {
+                            val episodeObject = episodeArray.getJSONObject(i)
+
+
+                            val character: String = episodeObject.getString("character")
+                            val name: String = episodeObject.getString("name")
+                            val profilePath: String = episodeObject.getString("profile_path")
+
+                            episodeDataList.add(EpisodeGuestStars(character, name, profilePath))
+                        }
+                        Handler(Looper.getMainLooper()).post {
+                            callback(episodeDataList)
+                        }
+                    } catch (e: JSONException) {
+                        Log.e("JSON Error", "Error parsing JSON: $e")
+                    }
+                }
+
+            }
+        })
+
+    }
+
 
 
 

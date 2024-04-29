@@ -196,23 +196,44 @@ class MainActivity : AppCompatActivity() {
 
             //HOW TO USE getTVSeasonsData
 
+            //Loops through seaons
             seasonListSaved.forEachIndexed { index, seasonNumber ->
                 Log.d("TVID", TVID.toString())
 
                 Log.d("SeasonNumber",seasonNumber)
 
+                //get the seasons data
                 apiCallerForTV.getTVSeasonsData(TVID, seasonNumber) { tvSeasonID ->
                     Log.d("Season Data Label","Season Data")
 
+                    //loop through episodes for each season
                     tvSeasonID.forEachIndexed { index, episodeMember ->
-                        Log.d("Episode ID:", episodeMember.id)
-                        Log.d("Episode name:", episodeMember.name)
-                        Log.d("Episode overview:", episodeMember.overview)
-                        Log.d("Episode episode_number:", episodeMember.episode_number)
-                        Log.d("Episode episode_type:", episodeMember.episode_type)
-                        Log.d("Episode runtime:", episodeMember.runtime)
-                        Log.d("Episode still_path:", episodeMember.still_path)
-                        Log.d("Episode vote_average:", episodeMember.vote_average.toString())
+//                        Log.d("Episode ID:", episodeMember.id)
+//                        Log.d("Episode name:", episodeMember.name)
+//                        Log.d("Episode overview:", episodeMember.overview)
+//                        Log.d("Episode episode_number:", episodeMember.episode_number)
+//                        Log.d("Episode episode_type:", episodeMember.episode_type)
+//                        Log.d("Episode runtime:", episodeMember.runtime)
+//                        Log.d("Episode still_path:", episodeMember.still_path)
+//                        Log.d("Episode vote_average:", episodeMember.vote_average.toString())
+
+                        //get episode guestStars
+                        apiCallerForTV.getTVEpisodeData(TVID, seasonNumber, episodeMember.episode_number) { episodeGuestStars ->
+
+                            //loop through cast
+                            // for each episode
+                            // for each season
+                            //BE WARNED THIS RUTURNS A LOT OF DATA FROM API
+                            episodeGuestStars.forEachIndexed { indexs, episodeGuestStarsReturned ->
+                                Log.d("character", episodeGuestStarsReturned.character)
+                                Log.d("name", episodeGuestStarsReturned.name)
+                                Log.d("profile_path", episodeGuestStarsReturned.profile_path)
+
+
+                            }
+                        }
+
+
                     }
 
                 }
