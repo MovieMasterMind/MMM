@@ -43,6 +43,7 @@ class EpisodesAdapter(
                         putExtra("TV_SHOW_ID", episode.IdForTVShow)
                         putExtra("SEASON_ID", episode.SeasonNum)
                         putExtra("EPISODE_NUMBER", episode.episodeNumber)
+
                     }
                     context.startActivity(intent)
                 }

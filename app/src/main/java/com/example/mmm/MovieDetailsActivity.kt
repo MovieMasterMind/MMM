@@ -48,7 +48,7 @@ class MovieDetailsActivity : AppCompatActivity() {
 //            progressDialog.show()
             fetchMovieDetails(movieId)
             initializeWatchlistButton(movieId)
-//            displaySuggested(movieId)
+            displaySuggested(movieId)
         } else {
             finish() // Close the activity if movie ID wasn't passed correctly
         }
@@ -160,33 +160,33 @@ class MovieDetailsActivity : AppCompatActivity() {
         }
     }
 
-//    private fun displaySuggested(movieId: Int) {
-//        val apiUrlsSuggested = "https://api.themoviedb.org/3/movie/$movieId/recommendations?api_key=1f443a53a6aabe4de284f9c46a17f64c&language=en-US"
-//        val recyclerViewSuggested: RecyclerView = findViewById(R.id.recyclerViewSuggested)
-//        val textViewSuggested = findViewById<TextView>(R.id.movieDetailsTextViewSuggested)
-//        setUpRecyclerView(apiUrlsSuggested, textViewSuggested, recyclerViewSuggested)
-//    }
-//
-//    private fun setUpRecyclerView(apiUrl: String, textView: TextView, recyclerView: RecyclerView) {
-//        val layoutManager = LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false)
-//        recyclerView.layoutManager = layoutManager
-//
-//        // Placeholder adapter initialization
-//        adapter = MoviePosterAdapter(emptyList(), emptyList())
-//        recyclerView.adapter = adapter
-//
-//        val apiCaller = APICallerForMovie()
-//
-//        // Get data from API and update the adapter
-//        apiCaller.getMovieDataFromAPI(apiUrl, textView, recyclerView) { posterUrls, movieIds ->
-//            // Run on UI thread since response callback is on a background thread
-//            runOnUiThread {
-//                // Create a new adapter with the data
-//                adapter = MoviePosterAdapter(posterUrls, movieIds)
-//                recyclerView.adapter = adapter
-//            }
-//        }
-//    }
+    private fun displaySuggested(movieId: Int) {
+        val apiUrlsSuggested = "https://api.themoviedb.org/3/movie/$movieId/recommendations?api_key=1f443a53a6aabe4de284f9c46a17f64c&language=en-US"
+        val recyclerViewSuggested: RecyclerView = findViewById(R.id.recyclerViewSuggested)
+        val textViewSuggested = findViewById<TextView>(R.id.movieDetailsTextViewSuggested)
+        setUpRecyclerView(apiUrlsSuggested, textViewSuggested, recyclerViewSuggested)
+    }
+
+    private fun setUpRecyclerView(apiUrl: String, textView: TextView, recyclerView: RecyclerView) {
+        val layoutManager = LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false)
+        recyclerView.layoutManager = layoutManager
+
+        // Placeholder adapter initialization
+        adapter = MoviePosterAdapter(emptyList(), emptyList())
+        recyclerView.adapter = adapter
+
+        val apiCaller = APICallerForMovie()
+
+        // Get data from API and update the adapter
+        apiCaller.getMovieDataFromAPI(apiUrl, textView, recyclerView) { posterUrls, movieIds ->
+            // Run on UI thread since response callback is on a background thread
+            runOnUiThread {
+                // Create a new adapter with the data
+                adapter = MoviePosterAdapter(posterUrls, movieIds)
+                recyclerView.adapter = adapter
+            }
+        }
+    }
 
     private fun displayMovieDetails(movieDetails: JSONObject, streamingDetails: Map<String, String>) {
 //        progressDialog.dismiss()

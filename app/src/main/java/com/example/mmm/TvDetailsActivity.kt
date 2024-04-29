@@ -39,10 +39,10 @@ class TvDetailsActivity : AppCompatActivity() {
         supportActionBar?.setDisplayShowHomeEnabled(true)
         val tvId = intent.getIntExtra("TV_ID", -1)
         if (tvId != -1) {
+            fetchStreamingDetails(tvId)
             fetchTVDetails(tvId)
             displaySeasonsList(tvId)
             tvShowId = tvId
-            fetchStreamingDetails(tvId)
         } else {
             finish() // Close the activity if tv ID wasn't passed correctly
         }
