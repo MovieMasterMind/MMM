@@ -47,7 +47,7 @@ android {
 
 dependencies {
 
-    implementation("androidx.core:core-ktx:1.12.0")
+    implementation("androidx.core:core-ktx:1.13.0")
     implementation("androidx.appcompat:appcompat:1.6.1")
     implementation("com.google.android.material:material:1.11.0")
     implementation("androidx.constraintlayout:constraintlayout:2.1.4")
@@ -61,11 +61,14 @@ dependencies {
 
     implementation ("com.github.kittinunf.fuel:fuel-android:2.3.1")
     implementation ("com.github.kittinunf.fuel:fuel-gson:2.3.1")
-    implementation ("org.jetbrains.kotlinx:kotlinx-coroutines-android:1.7.1")
+    implementation ("org.jetbrains.kotlinx:kotlinx-coroutines-android:1.8.0")
 
     implementation("com.android.volley:volley:1.2.1")
 
     implementation("com.google.code.gson:gson:2.10.1")
+
+    implementation ("com.github.bumptech.glide:glide:4.12.0")
+    annotationProcessor ("com.github.bumptech.glide:compiler:4.12.0")
 
     // START OF JETPACK COMPOSE
     val composeBom = platform("androidx.compose:compose-bom:2024.02.02")
@@ -101,7 +104,7 @@ dependencies {
     implementation("androidx.compose.material3:material3-window-size-class")
 
     // Optional - Integration with activities
-    implementation("androidx.activity:activity-compose:1.8.2")
+    implementation("androidx.activity:activity-compose:1.9.0")
     // Optional - Integration with ViewModels
     implementation("androidx.lifecycle:lifecycle-viewmodel-compose:2.7.0")
     // Optional - Integration with LiveData

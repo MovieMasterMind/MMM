@@ -1,6 +1,5 @@
 package com.example.mmm
 
-import com.example.mmm.APICallerForMovie
 import MoviePoster
 import SearchResultAdapter
 import android.content.Context
