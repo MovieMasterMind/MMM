@@ -58,23 +58,14 @@ dependencies {
     testImplementation("junit:junit:4.13.2")
     androidTestImplementation("androidx.test.ext:junit:1.1.5")
     androidTestImplementation("androidx.test.espresso:espresso-core:3.5.1")
-    implementation("com.squareup.okhttp3:okhttp:4.11.0")
-    implementation("com.squareup.okio:okio:3.3.0")
-    implementation("com.github.bumptech.glide:glide:4.12.0")
-    annotationProcessor("com.github.bumptech.glide:compiler:4.12.0")
-
-
 
     implementation ("com.github.kittinunf.fuel:fuel-android:2.3.1")
     implementation ("com.github.kittinunf.fuel:fuel-gson:2.3.1")
-    implementation ("org.jetbrains.kotlinx:kotlinx-coroutines-android:1.8.0")
+    implementation ("org.jetbrains.kotlinx:kotlinx-coroutines-android:1.7.1")
 
     implementation("com.android.volley:volley:1.2.1")
 
     implementation("com.google.code.gson:gson:2.10.1")
-
-    implementation("androidx.lifecycle:lifecycle-runtime-ktx:VERSION")
-
 
     // START OF JETPACK COMPOSE
     val composeBom = platform("androidx.compose:compose-bom:2024.02.02")
@@ -119,10 +110,5 @@ dependencies {
     implementation("androidx.compose.runtime:runtime-rxjava2")
     implementation("io.coil-kt:coil-compose:2.4.0")
     // END OF JETPACK COMPOSE
-
-    implementation("com.squareup.retrofit2:retrofit:2.9.0")
-    implementation("com.squareup.retrofit2:converter-gson:2.9.0")
-    implementation("androidx.appcompat:appcompat:1.6.1")
-    implementation("com.android.volley:volley:1.2.1")
 
 }

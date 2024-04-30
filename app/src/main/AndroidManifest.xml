@@ -2,6 +2,9 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools">
     <uses-permission android:name="android.permission.INTERNET" />
+
+    <uses-permission android:name="android.permission.INTERNET" />
+
     <application
         android:allowBackup="true"
         android:dataExtractionRules="@xml/data_extraction_rules"
@@ -10,7 +13,7 @@
         android:label="@string/app_name"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
-        android:theme="@style/AppTheme"
+        android:theme="@style/Theme.MMM"
         tools:targetApi="31">
         <activity
             android:name=".MainActivity"
@@ -22,23 +25,7 @@
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
-            <meta-data
-                android:name="android.app.searchable"
-                android:resource="@xml/searchable" />
         </activity>
-        <activity
-            android:name=".MovieDetailsActivity"
-            android:exported="true"
-            android:label="@string/app_name"
-            android:theme="@style/Theme.MMM.NoActionBar" />
-        <activity android:name=".SearchableActivity"
-            android:exported="true"
-            android:label="@string/app_name"
-            android:theme="@style/Theme.MMM.NoActionBar"/>
-        <activity
-            android:name=".WatchlistActivity"
-            android:exported="true"
-            android:label="@string/app_name"
-            android:theme="@style/Theme.MMM.NoActionBar" />
     </application>
+
 </manifest>
