@@ -47,6 +47,8 @@
     <string name="movie_poster">Movie poster</string>
     <string name="cast_format">Cast: %s</string>
     <string name="vote_average_format">Rating: %1$.1f/10</string>
+    <string name="runtime">%dh %dm</string>
+    <string name="runtime_nohrs">%dm</string>
     <string name="add_to_watchlist">Add to Watchlist</string>
     <string name="cast_member_image">Cast member image</string>
     <string name="remove_from_watchlist">Remove from Watchlist</string>
@@ -54,5 +56,21 @@
     <string name="search_history" />
     <string name="search_title" />
     <string name="no_history_found">You don\'t currently have a search history, movies will be added here as you browse.</string>
-    <string name="search_history_title">Search History:</string>
+    <string name="search_history_title">Recently viewed</string>
+    <string name="suggested">Similar films</string>
+    <string name="TvOverviewPlaceholder">Overview Placeholder</string>
+
+
+    <string name="filter">Filter</string>
+    <string name="adventure">Adventure</string>
+    <string name="action">Action</string>
+    <string name="comedy">Comedy</string>
+    <string name="drama">Drama</string>
+    <string name="thriller">Thriller</string>
+    <string name="horror">Horror</string>
+    <string name="romantic_comedy">Romantic Comedy</string>
+    <string name="musical">Musical</string>
+    <string name="documentary">Documentary</string>
+    <string name="romance">Romance</string>
+    <string name="trending_comedy_tv_shows">Trending Comedy TV Shows</string>
 </resources>

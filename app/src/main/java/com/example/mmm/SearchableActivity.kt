@@ -1,13 +1,11 @@
 package com.example.mmm
 
-import APICaller
+import com.example.mmm.APICallerForMovie
 import MoviePoster
 import SearchResultAdapter
 import android.content.Context
 import android.graphics.Color
 import android.os.Bundle
-import android.os.Handler
-import android.os.Looper
 import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
@@ -32,12 +30,6 @@ class SearchableActivity : AppCompatActivity() {
     private lateinit var adapter: SearchResultAdapter
     private lateinit var searchView: SearchView
     private val apiKey = "1f443a53a6aabe4de284f9c46a17f64c"
-    private val handler = Handler(Looper.getMainLooper())
-    private val updateRunnable = Runnable {
-        val currentText = searchView.query.toString()
-        queryTextView.text = getString(R.string.search_results, currentText)
-        fetchMovieInfo(currentText)
-    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -68,22 +60,22 @@ class SearchableActivity : AppCompatActivity() {
         if (query.isEmpty()) {
             displayHistory()
         } else {
-            val apiUrl = "https://api.themoviedb.org/3/search/movie?api_key=$apiKey&query=$query&sort_by=popularity.desc"
-            APICaller().fetchData(apiUrl, this::parseSearchResults) { imageUrls, movieTitles, movieIds ->
+            val apiUrl = "https://api.themoviedb.org/3/search/movie?api_key=$apiKey&query=$query&language=en-US"
+            APICallerForMovie().fetchMovieDataFromAPI(apiUrl, this::parseSearchResults) { imageUrls, movieTitles, movieIds ->
                 val items = mutableListOf<MoviePoster>()
                 for (index in movieTitles.indices) {
                     items.add(MoviePoster(movieTitles[index], imageUrls[index], movieIds[index]))
                 }
                 runOnUiThread {
                     if (items.isNotEmpty()) {
-                        findViewById<TextView>(R.id.emptyHistoryView).visibility = View.GONE
-                        findViewById<TextView>(R.id.historyTextViewTitle).visibility = View.GONE
+                        findViewById<TextView>(R.id.noSearchHistoryTextView).visibility = View.GONE
+                        findViewById<TextView>(R.id.searchHistoryTitleTextView).visibility = View.GONE
                         recyclerViewResults.visibility = View.VISIBLE
 
                         adapter.updateData(items)
                     } else {
-                        findViewById<TextView>(R.id.emptyHistoryView).visibility = View.VISIBLE
-                        findViewById<TextView>(R.id.historyTextViewTitle).visibility = View.VISIBLE
+                        findViewById<TextView>(R.id.noSearchHistoryTextView).visibility = View.VISIBLE
+                        findViewById<TextView>(R.id.searchHistoryTitleTextView).visibility = View.VISIBLE
                         recyclerViewResults.visibility = View.GONE
                     }
                 }
@@ -99,12 +91,12 @@ class SearchableActivity : AppCompatActivity() {
         val history = gson.fromJson<MutableList<MoviePoster>>(historyJson, type) ?: mutableListOf()
 
         if (history.isEmpty() && searchView.query.toString().isEmpty()) {
-            findViewById<TextView>(R.id.emptyHistoryView).visibility = View.VISIBLE
-            findViewById<TextView>(R.id.historyTextViewTitle).visibility = View.VISIBLE
+            findViewById<TextView>(R.id.noSearchHistoryTextView).visibility = View.VISIBLE
+            findViewById<TextView>(R.id.searchHistoryTitleTextView).visibility = View.GONE
             recyclerViewResults.visibility = View.GONE
         } else {
-            findViewById<TextView>(R.id.emptyHistoryView).visibility = View.GONE
-            findViewById<TextView>(R.id.historyTextViewTitle).visibility = View.VISIBLE
+            findViewById<TextView>(R.id.noSearchHistoryTextView).visibility = View.GONE
+            findViewById<TextView>(R.id.searchHistoryTitleTextView).visibility = View.VISIBLE
             recyclerViewResults.visibility = View.VISIBLE
             adapter.updateData(history)
         }

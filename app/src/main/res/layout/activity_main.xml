@@ -5,7 +5,6 @@
     android:id="@+id/drawer_layout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:fitsSystemWindows="true"
     tools:openDrawer="start">
 
     <include
@@ -14,10 +13,11 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent" />
 
-
     <ScrollView
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        android:layout_marginTop="?attr/actionBarSize"
+        android:fitsSystemWindows="true">
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -25,38 +25,708 @@
             android:orientation="vertical"
             android:gravity="center">
 
-            <!-- Your other views -->
 
+
+
+            <!-- Title For Comedy TVShows -->
             <TextView
-                android:id="@+id/movieDetailsTextView"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Movie Details"
+                android:text="@string/trending_comedy_tv_shows"
+                android:textSize="20sp"
+                android:textStyle="bold"
+                android:layout_marginBottom="8dp"
+                android:paddingTop="16dp"
+                android:paddingBottom="8dp"
+                android:paddingStart="8dp"
+                android:paddingEnd="8dp"/>
+            <!-- Detail text For Comedy TVShows -->
+            <TextView
+                android:id="@+id/movieDetailsTextViewComedyTV"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/movie_details"
+                android:textSize="16sp"
+                android:gravity="center"
+                android:paddingTop="16dp"
+                android:paddingBottom="8dp"
+                android:paddingStart="8dp"
+                android:paddingEnd="8dp"
+                android:visibility="gone"/>
+            <!-- Horizontal ScrollView For Images -->
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/recyclerViewComedyTV"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent" />
+
+
+
+            <!-- Title For Horror Movies -->
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/trending_horror_movies"
+                android:textSize="20sp"
+                android:textStyle="bold"
+                android:layout_marginBottom="8dp"
+                android:paddingTop="16dp"
+                android:paddingBottom="8dp"
+                android:paddingStart="8dp"
+                android:paddingEnd="8dp"/>
+            <!-- Detail text For Horror Movies -->
+            <TextView
+                android:id="@+id/movieDetailsTextViewHorror"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/movie_details"
                 android:textSize="16sp"
                 android:gravity="center"
 
-                android:paddingTop="64dp"
+                android:paddingTop="16dp"
+                android:paddingBottom="8dp"
+                android:paddingStart="8dp"
+                android:paddingEnd="8dp"
+                android:visibility="gone"/>
+            <!-- Horizontal ScrollView For Images -->
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/recyclerViewHorror"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent" />
+
+
+            <!-- Title For Drama Movies -->
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/trending_drama_movies"
+                android:textSize="20sp"
+                android:textStyle="bold"
+                android:layout_marginBottom="8dp"
+                android:paddingTop="16dp"
+                android:paddingBottom="8dp"
+                android:paddingStart="8dp"
+                android:paddingEnd="8dp"/>
+            <!-- Detail text For Drama Movies -->
+            <TextView
+                android:id="@+id/movieDetailsTextViewDrama"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/movie_details"
+                android:textSize="16sp"
+                android:gravity="center"
+                android:paddingTop="16dp"
+                android:paddingBottom="8dp"
+                android:paddingStart="8dp"
+                android:paddingEnd="8dp"
+                android:visibility="gone"/>
+            <!-- Horizontal ScrollView For Images -->
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/recyclerViewDrama"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent" />
+
+
+            <!-- Title For Action Movies -->
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/trending_action_movies"
+                android:textSize="20sp"
+                android:textStyle="bold"
+                android:layout_marginBottom="8dp"
+                android:paddingTop="16dp"
+                android:paddingBottom="8dp"
+                android:paddingStart="8dp"
+                android:paddingEnd="8dp"/>
+            <!-- Detail text For Action Movies -->
+            <TextView
+                android:id="@+id/movieDetailsTextViewAction"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/movie_details"
+                android:textSize="16sp"
+                android:gravity="center"
+                android:paddingTop="16dp"
+                android:paddingBottom="8dp"
+                android:paddingStart="8dp"
+                android:paddingEnd="8dp"
+                android:visibility="gone"/>
+            <!-- Horizontal ScrollView For Images -->
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/recyclerViewAction"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent" />
+
+
+
+            <!-- Title For Comedy Movies -->
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/trending_comedy_movies"
+                android:textSize="20sp"
+                android:textStyle="bold"
+                android:layout_marginBottom="8dp"
+                android:paddingTop="16dp"
+                android:paddingBottom="8dp"
+                android:paddingStart="8dp"
+                android:paddingEnd="8dp"/>
+            <!-- Detail text For Comedy Movies -->
+            <TextView
+                android:id="@+id/movieDetailsTextViewComedy"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/movie_details"
+                android:textSize="16sp"
+                android:gravity="center"
+                android:paddingTop="16dp"
+                android:paddingBottom="8dp"
+                android:paddingStart="8dp"
+                android:paddingEnd="8dp"
+                android:visibility="gone"/>
+            <!-- Horizontal ScrollView For Images -->
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/recyclerViewComedy"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent" />
+
+
+            <!-- Title For Award Winning Movies -->
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/trending_award_winning_movies"
+                android:textSize="20sp"
+                android:textStyle="bold"
+                android:layout_marginBottom="8dp"
+                android:paddingTop="14dp"
+                android:paddingBottom="8dp"
+                android:paddingStart="8dp"
+                android:paddingEnd="8dp"/>
+            <!-- Detail text For Award Winning Movies -->
+            <TextView
+                android:id="@+id/movieDetailsTextViewAwards"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/movie_details"
+                android:textSize="16sp"
+                android:gravity="center"
+
+                android:paddingTop="16dp"
+                android:paddingBottom="8dp"
+                android:paddingStart="8dp"
+                android:paddingEnd="8dp"
+                android:visibility="gone"/>
+            <!-- Horizontal ScrollView For Images -->
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/recyclerViewAward"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent" />
+
+
+            <!-- Detail text For Adventure Movies -->
+            <TextView
+                android:id="@+id/movieDetailsTextViewAdventure"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/movie_details"
+                android:textSize="16sp"
+                android:gravity="center"
+
+                android:paddingTop="16dp"
+                android:paddingBottom="8dp"
+                android:paddingStart="8dp"
+                android:paddingEnd="8dp"
+                android:visibility="gone"/>
+            <!-- Horizontal ScrollView For Images -->
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/recyclerViewAdventure"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent" />
+
+            <!-- Title For Animation Movies -->
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/trending_animation_movies"
+                android:textSize="20sp"
+                android:textStyle="bold"
+                android:layout_marginBottom="8dp"
+                android:paddingTop="14dp"
+                android:paddingBottom="8dp"
+                android:paddingStart="8dp"
+                android:paddingEnd="8dp"/>
+            <!-- Detail text For Animation Movies -->
+            <TextView
+                android:id="@+id/movieDetailsTextViewAnimation"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/movie_details"
+                android:textSize="16sp"
+                android:gravity="center"
+
+                android:paddingTop="16dp"
+                android:paddingBottom="8dp"
+                android:paddingStart="8dp"
+                android:paddingEnd="8dp"
+                android:visibility="gone"/>
+            <!-- Horizontal ScrollView For Images -->
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/recyclerViewAnimation"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent" />
+
+            <!-- Title For Crime Movies -->
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/trending_crime_movies"
+                android:textSize="20sp"
+                android:textStyle="bold"
+                android:layout_marginBottom="8dp"
+                android:paddingTop="14dp"
+                android:paddingBottom="8dp"
+                android:paddingStart="8dp"
+                android:paddingEnd="8dp"/>
+            <!-- Detail text For Crime Movies -->
+            <TextView
+                android:id="@+id/movieDetailsTextViewCrime"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/movie_details"
+                android:textSize="16sp"
+                android:gravity="center"
+
+                android:paddingTop="16dp"
+                android:paddingBottom="8dp"
+                android:paddingStart="8dp"
+                android:paddingEnd="8dp"
+                android:visibility="gone"/>
+            <!-- Horizontal ScrollView For Images -->
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/recyclerViewCrime"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent" />
+
+            <!-- Title For Documentary Movies -->
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/trending_documentary_movies"
+                android:textSize="20sp"
+                android:textStyle="bold"
+                android:layout_marginBottom="8dp"
+                android:paddingTop="14dp"
+                android:paddingBottom="8dp"
+                android:paddingStart="8dp"
+                android:paddingEnd="8dp"/>
+            <!-- Detail text For Documentary Movies -->
+            <TextView
+                android:id="@+id/movieDetailsTextViewDocumentary"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/movie_details"
+                android:textSize="16sp"
+                android:gravity="center"
+
+                android:paddingTop="16dp"
+                android:paddingBottom="8dp"
+                android:paddingStart="8dp"
+                android:paddingEnd="8dp"
+                android:visibility="gone"/>
+            <!-- Horizontal ScrollView For Images -->
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/recyclerViewDocumentary"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent" />
+
+            <!-- Title For Family Movies -->
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/trending_family_movies"
+                android:textSize="20sp"
+                android:textStyle="bold"
+                android:layout_marginBottom="8dp"
+                android:paddingTop="14dp"
+                android:paddingBottom="8dp"
+                android:paddingStart="8dp"
+                android:paddingEnd="8dp"/>
+            <!-- Detail text For Family Movies -->
+            <TextView
+                android:id="@+id/movieDetailsTextViewFamily"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/movie_details"
+                android:textSize="16sp"
+                android:gravity="center"
+
+                android:paddingTop="16dp"
+                android:paddingBottom="8dp"
+                android:paddingStart="8dp"
+                android:paddingEnd="8dp"
+                android:visibility="gone"/>
+            <!-- Horizontal ScrollView For Images -->
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/recyclerViewFamily"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent" />
+
+            <!-- Title For Fantasy Movies -->
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/trending_fantasy_movies"
+                android:textSize="20sp"
+                android:textStyle="bold"
+                android:layout_marginBottom="8dp"
+                android:paddingTop="14dp"
+                android:paddingBottom="8dp"
+                android:paddingStart="8dp"
+                android:paddingEnd="8dp"/>
+            <!-- Detail text For Fantasy Movies -->
+            <TextView
+                android:id="@+id/movieDetailsTextViewFantasy"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/movie_details"
+                android:textSize="16sp"
+                android:gravity="center"
+
+                android:paddingTop="16dp"
+                android:paddingBottom="8dp"
+                android:paddingStart="8dp"
+                android:paddingEnd="8dp"
+                android:visibility="gone"/>
+            <!-- Horizontal ScrollView For Images -->
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/recyclerViewFantasy"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent" />
+
+            <!-- Title For History Movies -->
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/trending_history_movies"
+                android:textSize="20sp"
+                android:textStyle="bold"
+                android:layout_marginBottom="8dp"
+                android:paddingTop="14dp"
+                android:paddingBottom="8dp"
+                android:paddingStart="8dp"
+                android:paddingEnd="8dp"/>
+            <!-- Detail text For History Movies -->
+            <TextView
+                android:id="@+id/movieDetailsTextViewHistory"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/movie_details"
+                android:textSize="16sp"
+                android:gravity="center"
+
+                android:paddingTop="16dp"
+                android:paddingBottom="8dp"
+                android:paddingStart="8dp"
+                android:paddingEnd="8dp"
+                android:visibility="gone"/>
+            <!-- Horizontal ScrollView For Images -->
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/recyclerViewHistory"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent" />
+
+            <!-- Title For Music Movies -->
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/trending_music_movies"
+                android:textSize="20sp"
+                android:textStyle="bold"
+                android:layout_marginBottom="8dp"
+                android:paddingTop="14dp"
+                android:paddingBottom="8dp"
+                android:paddingStart="8dp"
+                android:paddingEnd="8dp"/>
+            <!-- Detail text For Music Movies -->
+            <TextView
+                android:id="@+id/movieDetailsTextViewMusic"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/movie_details"
+                android:textSize="16sp"
+                android:gravity="center"
+
+                android:paddingTop="16dp"
+                android:paddingBottom="8dp"
+                android:paddingStart="8dp"
+                android:paddingEnd="8dp"
+                android:visibility="gone"/>
+            <!-- Horizontal ScrollView For Images -->
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/recyclerViewMusic"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent" />
+
+            <!-- Title For Mystery Movies -->
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/trending_mystery_movies"
+                android:textSize="20sp"
+                android:textStyle="bold"
+                android:layout_marginBottom="8dp"
+                android:paddingTop="14dp"
                 android:paddingBottom="8dp"
                 android:paddingStart="8dp"
                 android:paddingEnd="8dp"/>
 
-            <!-- add other views -->
+
+            <!-- Detail text For Mystery Movies -->
+            <TextView
+                android:id="@+id/movieDetailsTextViewMystery"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/movie_details"
+                android:textSize="16sp"
+                android:gravity="center"
+
+                android:paddingTop="16dp"
+                android:paddingBottom="8dp"
+                android:paddingStart="8dp"
+                android:paddingEnd="8dp"
+                android:visibility="gone"/>
+            <!-- Horizontal ScrollView For Images -->
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/recyclerViewMystery"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent" />
+
+            <!-- Title For Romance Movies -->
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/trending_romance_movies"
+                android:textSize="20sp"
+                android:textStyle="bold"
+                android:layout_marginBottom="8dp"
+                android:paddingTop="14dp"
+                android:paddingBottom="8dp"
+                android:paddingStart="8dp"
+                android:paddingEnd="8dp"/>
+            <!-- Detail text For Romance Movies -->
+            <TextView
+                android:id="@+id/movieDetailsTextViewRomance"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/movie_details"
+                android:textSize="16sp"
+                android:gravity="center"
+
+                android:paddingTop="16dp"
+                android:paddingBottom="8dp"
+                android:paddingStart="8dp"
+                android:paddingEnd="8dp"
+                android:visibility="gone"/>
+            <!-- Horizontal ScrollView For Images -->
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/recyclerViewRomance"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent" />
+
+            <!-- Title For ScienceFiction Movies -->
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/trending_science_fiction_movies"
+                android:textSize="20sp"
+                android:textStyle="bold"
+                android:layout_marginBottom="8dp"
+                android:paddingTop="14dp"
+                android:paddingBottom="8dp"
+                android:paddingStart="8dp"
+                android:paddingEnd="8dp"/>
+            <!-- Detail text For ScienceFiction Movies -->
+            <TextView
+                android:id="@+id/movieDetailsTextViewScienceFiction"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/movie_details"
+                android:textSize="16sp"
+                android:gravity="center"
+
+                android:paddingTop="16dp"
+                android:paddingBottom="8dp"
+                android:paddingStart="8dp"
+                android:paddingEnd="8dp"
+                android:visibility="gone"/>
+            <!-- Horizontal ScrollView For Images -->
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/recyclerViewScienceFiction"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent" />
+
+            <!-- Title For TVMovie Movies -->
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/trending_tv_movies"
+                android:textSize="20sp"
+                android:textStyle="bold"
+                android:layout_marginBottom="8dp"
+                android:paddingTop="14dp"
+                android:paddingBottom="8dp"
+                android:paddingStart="8dp"
+                android:paddingEnd="8dp"/>
+            <!-- Detail text For TVMovie Movies -->
+            <TextView
+                android:id="@+id/movieDetailsTextViewTVMovie"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/movie_details"
+                android:textSize="16sp"
+                android:gravity="center"
+
+                android:paddingTop="16dp"
+                android:paddingBottom="8dp"
+                android:paddingStart="8dp"
+                android:paddingEnd="8dp"
+                android:visibility="gone"/>
+            <!-- Horizontal ScrollView For Images -->
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/recyclerViewTVMovie"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent" />
+
+            <!-- Title For Thriller Movies -->
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/trending_thriller_movies"
+                android:textSize="20sp"
+                android:textStyle="bold"
+                android:layout_marginBottom="8dp"
+                android:paddingTop="14dp"
+                android:paddingBottom="8dp"
+                android:paddingStart="8dp"
+                android:paddingEnd="8dp"/>
+            <!-- Detail text For Thriller Movies -->
+            <TextView
+                android:id="@+id/movieDetailsTextViewThriller"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/movie_details"
+                android:textSize="16sp"
+                android:gravity="center"
+
+                android:paddingTop="16dp"
+                android:paddingBottom="8dp"
+                android:paddingStart="8dp"
+                android:paddingEnd="8dp"
+                android:visibility="gone"/>
+            <!-- Horizontal ScrollView For Images -->
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/recyclerViewThriller"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent" />
+
+            <!-- Title For War Movies -->
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/trending_war_movies"
+                android:textSize="20sp"
+                android:textStyle="bold"
+                android:layout_marginBottom="8dp"
+                android:paddingTop="14dp"
+                android:paddingBottom="8dp"
+                android:paddingStart="8dp"
+                android:paddingEnd="8dp"/>
+            <!-- Detail text For War Movies -->
+            <TextView
+                android:id="@+id/movieDetailsTextViewWar"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/movie_details"
+                android:textSize="16sp"
+                android:gravity="center"
+
+                android:paddingTop="16dp"
+                android:paddingBottom="8dp"
+                android:paddingStart="8dp"
+                android:paddingEnd="8dp"
+                android:visibility="gone"/>
+            <!-- Horizontal ScrollView For Images -->
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/recyclerViewWar"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent" />
+
+            <!-- Title For Western Movies -->
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/trending_western_movies"
+                android:textSize="20sp"
+                android:textStyle="bold"
+                android:layout_marginBottom="8dp"
+                android:paddingTop="14dp"
+                android:paddingBottom="8dp"
+                android:paddingStart="8dp"
+                android:paddingEnd="8dp"/>
+            <!-- Detail text For Western Movies -->
+            <TextView
+                android:id="@+id/movieDetailsTextViewWestern"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/movie_details"
+                android:textSize="16sp"
+                android:gravity="center"
+
+                android:paddingTop="16dp"
+                android:paddingBottom="8dp"
+                android:paddingStart="8dp"
+                android:paddingEnd="8dp"
+                android:visibility="gone"/>
+            <!-- Horizontal ScrollView For Images -->
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/recyclerViewWestern"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent" />
+
+
+
+            <TextView
+                android:id="@+id/queryTextView"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/search_query"
+                android:textSize="16sp"
+                android:gravity="center"
+                android:paddingTop="16dp"
+                android:paddingBottom="16dp"
+                app:layout_constraintTop_toBottomOf="@id/query_search_results"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintBottom_toBottomOf="parent"
+                android:visibility="gone"/>
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/recyclerViewResults"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                app:layout_constraintTop_toBottomOf="@id/query_search_results"
+                app:layout_constraintBottom_toBottomOf="parent"/>
 
         </LinearLayout>
     </ScrollView>
-
-    <!--    <ImageView-->
-    <!--        android:id="@+id/imageView"-->
-    <!--        android:layout_width="wrap_content"-->
-    <!--        android:layout_height="wrap_content"-->
-    <!--        android:layout_centerInParent="true"-->
-    <!--        android:src="@drawable/placeholder_image" />-->
 
     <androidx.compose.ui.platform.ComposeView
         android:id="@+id/compose_view"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_margin="16dp" />
+        android:layout_margin="16dp"
+        tools:ignore="MissingClass" />
 
 
     <com.google.android.material.navigation.NavigationView
@@ -65,9 +735,8 @@
         android:layout_height="match_parent"
         android:layout_gravity="start"
         android:fitsSystemWindows="true"
+        style="@style/NavigationViewStyle"
         app:headerLayout="@layout/nav_header_main"
         app:menu="@menu/activity_main_drawer" />
-
-
 
 </androidx.drawerlayout.widget.DrawerLayout>
