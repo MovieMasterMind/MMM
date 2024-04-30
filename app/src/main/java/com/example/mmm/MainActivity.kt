@@ -20,6 +20,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.mmm.databinding.ActivityMainBinding
 import android.util.Log
+import android.view.MenuItem
 import androidx.core.view.GravityCompat
 
 class MainActivity : AppCompatActivity() {
@@ -67,38 +68,90 @@ class MainActivity : AppCompatActivity() {
 
 
         //template API calls
-        val apiUrlsHorror =
-            "https://api.themoviedb.org/3/discover/movie?api_key=1f443a53a6aabe4de284f9c46a17f64c&with_genres=27&sort_by=popularity.desc"
-        val apiUrlsDrama =
-            "https://api.themoviedb.org/3/discover/movie?api_key=1f443a53a6aabe4de284f9c46a17f64c&with_genres=28&sort_by=popularity.desc"
-        val apiUrlsAction =
-            "https://api.themoviedb.org/3/discover/movie?api_key=1f443a53a6aabe4de284f9c46a17f64c&with_genres=18&sort_by=popularity.desc"
-        val apiUrlsComedy =
-            "https://api.themoviedb.org/3/discover/movie?api_key=1f443a53a6aabe4de284f9c46a17f64c&with_genres=35&sort_by=popularity.desc"
-        val apiUrlsAward =
-            "https://api.themoviedb.org/3/discover/movie?api_key=1f443a53a6aabe4de284f9c46a17f64c&sort_by=vote_average.desc&vote_count.gte=1000"
+        val apiUrlsHorror = "https://api.themoviedb.org/3/discover/movie?api_key=1f443a53a6aabe4de284f9c46a17f64c&with_genres=27&sort_by=popularity.desc"
+        val apiUrlsDrama = "https://api.themoviedb.org/3/discover/movie?api_key=1f443a53a6aabe4de284f9c46a17f64c&with_genres=28&sort_by=popularity.desc"
+        val apiUrlsAction = "https://api.themoviedb.org/3/discover/movie?api_key=1f443a53a6aabe4de284f9c46a17f64c&with_genres=18&sort_by=popularity.desc"
+        val apiUrlsComedy = "https://api.themoviedb.org/3/discover/movie?api_key=1f443a53a6aabe4de284f9c46a17f64c&with_genres=35&sort_by=popularity.desc"
+        val apiUrlsAward = "https://api.themoviedb.org/3/discover/movie?api_key=1f443a53a6aabe4de284f9c46a17f64c&sort_by=vote_average.desc&vote_count.gte=1000"
+        val apiUrlsAdventure = "https://api.themoviedb.org/3/discover/movie?api_key=1f443a53a6aabe4de284f9c46a17f64c&with_genres=12&sort_by=popularity.desc"
+        val apiUrlsAnimation = "https://api.themoviedb.org/3/discover/movie?api_key=1f443a53a6aabe4de284f9c46a17f64c&with_genres=16&sort_by=popularity.desc"
+        val apiUrlsCrime = "https://api.themoviedb.org/3/discover/movie?api_key=1f443a53a6aabe4de284f9c46a17f64c&with_genres=80&sort_by=popularity.desc"
+        val apiUrlsDocumentary = "https://api.themoviedb.org/3/discover/movie?api_key=1f443a53a6aabe4de284f9c46a17f64c&with_genres=99&sort_by=popularity.desc"
+        val apiUrlsFamily = "https://api.themoviedb.org/3/discover/movie?api_key=1f443a53a6aabe4de284f9c46a17f64c&with_genres=10751&sort_by=popularity.desc"
+        val apiUrlsFantasy = "https://api.themoviedb.org/3/discover/movie?api_key=1f443a53a6aabe4de284f9c46a17f64c&with_genres=14&sort_by=popularity.desc"
+        val apiUrlsHistory = "https://api.themoviedb.org/3/discover/movie?api_key=1f443a53a6aabe4de284f9c46a17f64c&with_genres=36&sort_by=popularity.desc"
+        val apiUrlsMusic = "https://api.themoviedb.org/3/discover/movie?api_key=1f443a53a6aabe4de284f9c46a17f64c&with_genres=10402&sort_by=popularity.desc"
+        val apiUrlsMystery = "https://api.themoviedb.org/3/discover/movie?api_key=1f443a53a6aabe4de284f9c46a17f64c&with_genres=9648&sort_by=popularity.desc"
+        val apiUrlsRomance = "https://api.themoviedb.org/3/discover/movie?api_key=1f443a53a6aabe4de284f9c46a17f64c&with_genres=10749&sort_by=popularity.desc"
+        val apiUrlsScienceFiction = "https://api.themoviedb.org/3/discover/movie?api_key=1f443a53a6aabe4de284f9c46a17f64c&with_genres=878&sort_by=popularity.desc"
+        val apiUrlsTVMovie = "https://api.themoviedb.org/3/discover/movie?api_key=1f443a53a6aabe4de284f9c46a17f64c&with_genres=10770&sort_by=popularity.desc"
+        val apiUrlsThriller = "https://api.themoviedb.org/3/discover/movie?api_key=1f443a53a6aabe4de284f9c46a17f64c&with_genres=53&sort_by=popularity.desc"
+        val apiUrlsWar = "https://api.themoviedb.org/3/discover/movie?api_key=1f443a53a6aabe4de284f9c46a17f64c&with_genres=10752&sort_by=popularity.desc"
+        val apiUrlsWestern = "https://api.themoviedb.org/3/discover/movie?api_key=1f443a53a6aabe4de284f9c46a17f64c&with_genres=37&sort_by=popularity.desc"
 
-        //template textViews
-        val textViewHorror = findViewById<TextView>(R.id.movieDetailsTextViewHorror)
-        val textViewDrama = findViewById<TextView>(R.id.movieDetailsTextViewDrama)
+
+        // Declare variables for TextViews
         val textViewAction = findViewById<TextView>(R.id.movieDetailsTextViewAction)
+        val textViewAdventure = findViewById<TextView>(R.id.movieDetailsTextViewAdventure)
+        val textViewAnimation = findViewById<TextView>(R.id.movieDetailsTextViewAnimation)
         val textViewComedy = findViewById<TextView>(R.id.movieDetailsTextViewComedy)
-        val textViewAward = findViewById<TextView>(R.id.movieDetailsTextViewAwards)
+        val textViewCrime = findViewById<TextView>(R.id.movieDetailsTextViewCrime)
+        val textViewDocumentary = findViewById<TextView>(R.id.movieDetailsTextViewDocumentary)
+        val textViewDrama = findViewById<TextView>(R.id.movieDetailsTextViewDrama)
+        val textViewFamily = findViewById<TextView>(R.id.movieDetailsTextViewFamily)
+        val textViewFantasy = findViewById<TextView>(R.id.movieDetailsTextViewFantasy)
+        val textViewHistory = findViewById<TextView>(R.id.movieDetailsTextViewHistory)
+        val textViewHorror = findViewById<TextView>(R.id.movieDetailsTextViewHorror)
+        val textViewMusic = findViewById<TextView>(R.id.movieDetailsTextViewMusic)
+        val textViewMystery = findViewById<TextView>(R.id.movieDetailsTextViewMystery)
+        val textViewRomance = findViewById<TextView>(R.id.movieDetailsTextViewRomance)
+        val textViewScienceFiction = findViewById<TextView>(R.id.movieDetailsTextViewScienceFiction)
+        val textViewTVMovie = findViewById<TextView>(R.id.movieDetailsTextViewTVMovie)
+        val textViewThriller = findViewById<TextView>(R.id.movieDetailsTextViewThriller)
+        val textViewWar = findViewById<TextView>(R.id.movieDetailsTextViewWar)
+        val textViewWestern = findViewById<TextView>(R.id.movieDetailsTextViewWestern)
 
-
-        //template recycleViews
-        val recyclerViewHorror: RecyclerView = findViewById(R.id.recyclerViewHorror)
-        val recyclerViewDrama: RecyclerView = findViewById(R.id.recyclerViewDrama)
+        // Declare variables for RecyclerViews
         val recyclerViewAction: RecyclerView = findViewById(R.id.recyclerViewAction)
+        val recyclerViewAdventure: RecyclerView = findViewById(R.id.recyclerViewAdventure)
+        val recyclerViewAnimation: RecyclerView = findViewById(R.id.recyclerViewAnimation)
         val recyclerViewComedy: RecyclerView = findViewById(R.id.recyclerViewComedy)
-        val recyclerViewAward: RecyclerView = findViewById(R.id.recyclerViewAward)
+        val recyclerViewCrime: RecyclerView = findViewById(R.id.recyclerViewCrime)
+        val recyclerViewDocumentary: RecyclerView = findViewById(R.id.recyclerViewDocumentary)
+        val recyclerViewDrama: RecyclerView = findViewById(R.id.recyclerViewDrama)
+        val recyclerViewFamily: RecyclerView = findViewById(R.id.recyclerViewFamily)
+        val recyclerViewFantasy: RecyclerView = findViewById(R.id.recyclerViewFantasy)
+        val recyclerViewHistory: RecyclerView = findViewById(R.id.recyclerViewHistory)
+        val recyclerViewHorror: RecyclerView = findViewById(R.id.recyclerViewHorror)
+        val recyclerViewMusic: RecyclerView = findViewById(R.id.recyclerViewMusic)
+        val recyclerViewMystery: RecyclerView = findViewById(R.id.recyclerViewMystery)
+        val recyclerViewRomance: RecyclerView = findViewById(R.id.recyclerViewRomance)
+        val recyclerViewScienceFiction: RecyclerView = findViewById(R.id.recyclerViewScienceFiction)
+        val recyclerViewTVMovie: RecyclerView = findViewById(R.id.recyclerViewTVMovie)
+        val recyclerViewThriller: RecyclerView = findViewById(R.id.recyclerViewThriller)
+        val recyclerViewWar: RecyclerView = findViewById(R.id.recyclerViewWar)
+        val recyclerViewWestern: RecyclerView = findViewById(R.id.recyclerViewWestern)
 
-        //Call setUpRecyclerView for each url textview and recyclerview
-        setUpRecyclerView(apiUrlsHorror, textViewHorror, recyclerViewHorror)
-        setUpRecyclerView(apiUrlsDrama, textViewDrama, recyclerViewDrama)
+        // Function calls
         setUpRecyclerView(apiUrlsAction, textViewAction, recyclerViewAction)
+        setUpRecyclerView(apiUrlsAdventure, textViewAdventure, recyclerViewAdventure)
+        setUpRecyclerView(apiUrlsAnimation, textViewAnimation, recyclerViewAnimation)
         setUpRecyclerView(apiUrlsComedy, textViewComedy, recyclerViewComedy)
-        setUpRecyclerView(apiUrlsAward, textViewAward, recyclerViewAward)
+        setUpRecyclerView(apiUrlsCrime, textViewCrime, recyclerViewCrime)
+        setUpRecyclerView(apiUrlsDocumentary, textViewDocumentary, recyclerViewDocumentary)
+        setUpRecyclerView(apiUrlsDrama, textViewDrama, recyclerViewDrama)
+        setUpRecyclerView(apiUrlsFamily, textViewFamily, recyclerViewFamily)
+        setUpRecyclerView(apiUrlsFantasy, textViewFantasy, recyclerViewFantasy)
+        setUpRecyclerView(apiUrlsHistory, textViewHistory, recyclerViewHistory)
+        setUpRecyclerView(apiUrlsHorror, textViewHorror, recyclerViewHorror)
+        setUpRecyclerView(apiUrlsMusic, textViewMusic, recyclerViewMusic)
+        setUpRecyclerView(apiUrlsMystery, textViewMystery, recyclerViewMystery)
+        setUpRecyclerView(apiUrlsRomance, textViewRomance, recyclerViewRomance)
+        setUpRecyclerView(apiUrlsScienceFiction, textViewScienceFiction, recyclerViewScienceFiction)
+        setUpRecyclerView(apiUrlsTVMovie, textViewTVMovie, recyclerViewTVMovie)
+        setUpRecyclerView(apiUrlsThriller, textViewThriller, recyclerViewThriller)
+        setUpRecyclerView(apiUrlsWar, textViewWar, recyclerViewWar)
+        setUpRecyclerView(apiUrlsWestern, textViewWestern, recyclerViewWestern)
 
 
     }
@@ -112,15 +165,7 @@ class MainActivity : AppCompatActivity() {
         recyclerView.adapter = adapter
 
         val apiCaller = APICaller()
-//        apiCaller.getMovieStreamingLocationJSON(597) { details ->
-//            // Log or display the streaming details
-//            Log.e("StreamingDetails", details.toString())
-//        }
 
-
-
-        //apiCaller.getMovieStreamingLocationJSON(597
-        //println("This is print onces")
         // Get data from API and update the adapter
         apiCaller.getData(apiUrl, textView, recyclerView) { posterUrls, movieIds ->
             // Run on UI thread since response callback is on a background thread
@@ -134,39 +179,20 @@ class MainActivity : AppCompatActivity() {
 
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
-        // Inflate the main menu and options menu
         menuInflater.inflate(R.menu.main, menu)
-        menuInflater.inflate(R.menu.options_menu, menu)
-
-        // Find the search item in the menu
         val searchItem = menu.findItem(R.id.search)
-        // Extract the SearchView from the search item
-        val searchView = searchItem.actionView as SearchView
-
-        // Set an empty query and a hint for the search view
-        searchView.setQuery("", false)
-
-        searchView.queryHint = "Search for movies"
-
-        // Set up a listener for query text changes
-        searchView.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
-            // Called when the user submits final query
-            override fun onQueryTextSubmit(query: String?): Boolean {
-                // Navigate to the SearchableActivity with the query
-                val intent = Intent(applicationContext, SearchableActivity::class.java)
-                intent.putExtra("QUERY", query)
-                intent.flags = Intent.FLAG_ACTIVITY_SINGLE_TOP
-                startActivity(intent)
-                return true
+        searchItem.setOnActionExpandListener(object : MenuItem.OnActionExpandListener {
+            override fun onMenuItemActionExpand(item: MenuItem): Boolean {
+                // Immediately start SearchableActivity without waiting for user input
+                startActivity(Intent(this@MainActivity, SearchableActivity::class.java))
+                return false // Prevents the SearchView from expanding
             }
 
-            // Called when the query text is changed by the user
-            override fun onQueryTextChange(newText: String?): Boolean {
-                // You can perform actions based on text changes here if needed
+            override fun onMenuItemActionCollapse(item: MenuItem): Boolean {
+                // Handle any cleanup if needed when search view is collapsed
                 return true
             }
         })
-
         return true
     }
 

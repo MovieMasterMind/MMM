@@ -13,7 +13,7 @@
             android:id="@+id/toolbar_movie_details"
             android:layout_width="match_parent"
             android:layout_height="?attr/actionBarSize"
-            android:background="?attr/colorPrimary"
+            app:theme="@style/ToolbarTheme"
             app:layout_scrollFlags="scroll|enterAlways"
             app:titleTextColor="@android:color/white" />
     </com.google.android.material.appbar.AppBarLayout>
@@ -48,6 +48,7 @@
             <TextView
                 android:id="@+id/movieTitle"
                 style="@style/TextAppearance.MaterialComponents.Headline6"
+                android:textColor="@android:color/white"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:textStyle="bold"
@@ -55,11 +56,14 @@
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/cardView"
+                android:layout_marginTop="10dp"
                 android:layout_marginBottom="8dp" />
+
 
             <TextView
                 android:id="@+id/movieGenre"
                 style="@style/TextAppearance.MaterialComponents.Body1"
+                android:textColor="@android:color/white"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 app:layout_constraintStart_toStartOf="parent"
@@ -70,6 +74,7 @@
             <TextView
                 android:id="@+id/movieReleaseDate"
                 style="@style/TextAppearance.MaterialComponents.Body1"
+                android:textColor="@android:color/white"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 app:layout_constraintStart_toStartOf="parent"
@@ -82,7 +87,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="16dp"
-                android:text="Add to Watchlist"
+                android:maxWidth="240dp"
                 app:layout_constraintStart_toEndOf="@id/movieReleaseDate"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintTop_toTopOf="@id/movieReleaseDate"
@@ -91,6 +96,7 @@
             <TextView
                 android:id="@+id/movieVoteAverage"
                 style="@style/TextAppearance.MaterialComponents.Body1"
+                android:textColor="@android:color/white"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 app:layout_constraintStart_toStartOf="parent"
@@ -100,6 +106,7 @@
             <TextView
                 android:id="@+id/movieOverview"
                 style="@style/TextAppearance.MaterialComponents.Body1"
+                android:textColor="@android:color/white"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="8dp"
@@ -111,9 +118,9 @@
             <TextView
                 android:id="@+id/titleBeforeStreamingServices"
                 style="@style/TextAppearance.MaterialComponents.Headline6"
+                android:textColor="@android:color/white"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Can be found on these following platforms"
                 android:layout_marginTop="8dp"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"

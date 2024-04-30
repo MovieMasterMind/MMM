@@ -1,108 +1,231 @@
 package com.example.mmm
 
 import APICaller
+import MoviePoster
+import SearchResultAdapter
+import android.content.Context
+import android.graphics.Color
 import android.os.Bundle
+import android.os.Handler
+import android.os.Looper
+import android.util.Log
 import android.view.Menu
+import android.view.MenuItem
+import android.view.View
+import android.view.inputmethod.InputMethodManager
 import android.widget.TextView
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.SearchView
 import androidx.appcompat.widget.Toolbar
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.google.gson.Gson
+import com.google.gson.reflect.TypeToken
+import org.json.JSONException
+import org.json.JSONObject
+
 
 class SearchableActivity : AppCompatActivity() {
-
     private lateinit var queryTextView: TextView
     private lateinit var recyclerViewResults: RecyclerView
-    private lateinit var adapter: MoviePosterAdapter
-
+    private lateinit var adapter: SearchResultAdapter
+    private lateinit var searchView: SearchView
     private val apiKey = "1f443a53a6aabe4de284f9c46a17f64c"
+    private val handler = Handler(Looper.getMainLooper())
+    private val updateRunnable = Runnable {
+        val currentText = searchView.query.toString()
+        queryTextView.text = getString(R.string.search_results, currentText)
+        fetchMovieInfo(currentText)
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.search_results)
 
-        val toolbar: Toolbar = findViewById(R.id.toolbar_search_results) // Make sure this ID matches your layout
+        val toolbar: Toolbar = findViewById(R.id.toolbar_search_results)
         setSupportActionBar(toolbar)
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
 
-        val searchQueryName = findViewById<TextView>(R.id.query_search_results)
-        val query = intent.getStringExtra("QUERY")
+        queryTextView = findViewById(R.id.queryTextView)
+        recyclerViewResults = findViewById(R.id.recyclerViewResults)
+        recyclerViewResults.layoutManager = LinearLayoutManager(this)
 
-        if (query != null) {
-            // Pass movie name to dynamic string and print query
-            searchQueryName.text = getString(R.string.search_results, query)
+        adapter = SearchResultAdapter(mutableListOf())
+        recyclerViewResults.adapter = adapter
 
-            fetchMovieInfo(query)
+        recyclerViewResults.addOnScrollListener(object : RecyclerView.OnScrollListener() {
+            override fun onScrollStateChanged(recyclerView: RecyclerView, newState: Int) {
+                if (newState == RecyclerView.SCROLL_STATE_DRAGGING) {
+                    hideKeyboard()
+                }
+            }
+        })
+
+    }
+
+    private fun fetchMovieInfo(query: String) {
+        if (query.isEmpty()) {
+            displayHistory()
+        } else {
+            val apiUrl = "https://api.themoviedb.org/3/search/movie?api_key=$apiKey&query=$query&sort_by=popularity.desc"
+            APICaller().fetchData(apiUrl, this::parseSearchResults) { imageUrls, movieTitles, movieIds ->
+                val items = mutableListOf<MoviePoster>()
+                for (index in movieTitles.indices) {
+                    items.add(MoviePoster(movieTitles[index], imageUrls[index], movieIds[index]))
+                }
+                runOnUiThread {
+                    if (items.isNotEmpty()) {
+                        findViewById<TextView>(R.id.emptyHistoryView).visibility = View.GONE
+                        findViewById<TextView>(R.id.historyTextViewTitle).visibility = View.GONE
+                        recyclerViewResults.visibility = View.VISIBLE
+
+                        adapter.updateData(items)
+                    } else {
+                        findViewById<TextView>(R.id.emptyHistoryView).visibility = View.VISIBLE
+                        findViewById<TextView>(R.id.historyTextViewTitle).visibility = View.VISIBLE
+                        recyclerViewResults.visibility = View.GONE
+                    }
+                }
+            }
         }
     }
 
-    override fun onSupportNavigateUp(): Boolean {
-        onBackPressed()
+    private fun displayHistory() {
+        val sharedPreferences = getSharedPreferences("SearchHistoryPrefs", Context.MODE_PRIVATE)
+        val gson = Gson()
+        val type = object : TypeToken<MutableList<MoviePoster>>() {}.type
+        val historyJson = sharedPreferences.getString("historyJson", "[]")
+        val history = gson.fromJson<MutableList<MoviePoster>>(historyJson, type) ?: mutableListOf()
+
+        if (history.isEmpty() && searchView.query.toString().isEmpty()) {
+            findViewById<TextView>(R.id.emptyHistoryView).visibility = View.VISIBLE
+            findViewById<TextView>(R.id.historyTextViewTitle).visibility = View.VISIBLE
+            recyclerViewResults.visibility = View.GONE
+        } else {
+            findViewById<TextView>(R.id.emptyHistoryView).visibility = View.GONE
+            findViewById<TextView>(R.id.historyTextViewTitle).visibility = View.VISIBLE
+            recyclerViewResults.visibility = View.VISIBLE
+            adapter.updateData(history)
+        }
+    }
+
+
+    private fun performSearch(query: String) {
+        // API call to fetch data based on the query
+        fetchMovieInfo(query)
+    }
+
+    private fun parseSearchResults(response: String): Triple<List<String>, List<String>, List<String>> {
+        val posterUrls = mutableListOf<String>()
+        val movieTitles = mutableListOf<String>()
+        val movieIds = mutableListOf<String>()
+
+        try {
+            val jsonObject = JSONObject(response)
+            val resultsArray = jsonObject.getJSONArray("results")
+            for (i in 0 until resultsArray.length()) {
+                val movieObject = resultsArray.getJSONObject(i)
+                val title = movieObject.getString("title")
+                val releaseDate = movieObject.optString("release_date", "") // Get release_date or empty string if null
+                val releaseYear = if (releaseDate.isNotEmpty() && releaseDate.length >= 4) releaseDate.substring(0, 4) else "" // Extract year from release_date
+                val id = movieObject.getInt("id").toString()
+                val formattedTitle = if (releaseYear.isNotEmpty()) "$title ($releaseYear)" else title // Append year to title if available
+                val posterPath = movieObject.optString("poster_path", "")
+                val posterUrl = if (posterPath != "null") "https://image.tmdb.org/t/p/w500$posterPath"
+                else "https://external-content.duckduckgo.com/iu/?u=https%3A%2F%2Ftse4.mm.bing.net%2Fth%3Fid%3DOIP.IkbcciGb75wX7U5WeANuDQHaLE%26pid%3DApi&f=1&ipt=a36f8b1fdf094f9245bbbfbf6e0d0908dd49b8c2ae8557f5632a06cce2c36cf2&ipo=images"  // Fallback for no image
+
+                posterUrls.add(posterUrl)
+                movieTitles.add(formattedTitle)
+                movieIds.add(id)
+            }
+        } catch (e: JSONException) {
+            Log.e("Search JSON Parsing", "Error parsing JSON: $e")
+        }
+
+        return Triple(posterUrls, movieTitles, movieIds)
+    }
+
+
+
+    override fun onCreateOptionsMenu(menu: Menu): Boolean {
+        menuInflater.inflate(R.menu.main, menu)
+
+        // Configure the SearchView
+        val searchItem = menu.findItem(R.id.search)
+        searchView = searchItem.actionView as SearchView
+        setupSearchView()
+
+        // Add a clear history menu item programmatically
+        menu.add(0, Menu.FIRST, Menu.NONE, "Clear History").setShowAsAction(MenuItem.SHOW_AS_ACTION_NEVER)
+
+        // Now that searchView has been initialized, displayHistory() can be safely called
+        displayHistory()
+
         return true
     }
 
-    // Pass search query to setUpRecyclerView
-    private fun fetchMovieInfo(query: String) {
-        val apiUrl = "https://api.themoviedb.org/3/search/movie?api_key=$apiKey&query=$query"
-        queryTextView = findViewById(R.id.queryTextView)
-        recyclerViewResults = findViewById(R.id.recyclerViewResults)
-
-        setUpRecyclerView(apiUrl, queryTextView, recyclerViewResults)
-    }
-
-    // Do the search and display results
-    private fun setUpRecyclerView(apiUrl: String, textView: TextView, recyclerView: RecyclerView) {
-        // Set up layout manager
-        val layoutManager = LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false)
-        recyclerView.layoutManager = layoutManager
-        // Create an instance of the adapter with layout params
-        adapter = MoviePosterAdapter(emptyList(), emptyList())
-        // Set the adapter to the RecyclerView
-        recyclerView.adapter = adapter
-
-        val apiCaller = APICaller() // Create an instance of APICaller
-
-        // Get data from API and update the adapter
-        apiCaller.getData(apiUrl, textView, recyclerView) { posterUrls, movieIds ->
-            // Run on UI thread since response callback is on a background thread
-            runOnUiThread {
-                // Create a new adapter with the data
-                adapter = MoviePosterAdapter(posterUrls, movieIds)
-                recyclerView.adapter = adapter
+    private fun setupSearchView() {
+        searchView.apply {
+            findViewById<TextView>(androidx.appcompat.R.id.search_src_text).apply {
+                setTextColor(Color.WHITE)
+                setHintTextColor(Color.GRAY)
             }
-        }
-
-    }
-
-
-    // Add search functionality in search result page
-    override fun onCreateOptionsMenu(menu: Menu): Boolean {
-        menuInflater.inflate(R.menu.main, menu)
-        menuInflater.inflate(R.menu.options_menu, menu)
-
-        // Display search bar
-        val searchItem = menu.findItem(R.id.search)
-        val searchView = searchItem.actionView as SearchView
-
-        searchView.queryHint = "Search for movies"
-
-        searchView.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
-            // Called when the user submits final query
-            override fun onQueryTextSubmit(query: String?): Boolean {
-                // Navigate to the search_results activity
-                query?.let {
-                    fetchMovieInfo(it)
+            queryHint = "Search for movies"
+            setOnQueryTextListener(object : SearchView.OnQueryTextListener {
+                override fun onQueryTextSubmit(query: String?): Boolean {
+                    hideKeyboard()
+                    query?.let {
+                        performSearch(it)
+                    }
+                    return true  // Return true to indicate that the action was handled
                 }
-                return true
-            }
-
-            // Called everytime a character is changed in the query
-            override fun onQueryTextChange(newText: String?): Boolean {
-                // Not needed for this case
-                return false
-            }
-        })
-        return super.onCreateOptionsMenu(menu)
+                override fun onQueryTextChange(newText: String?): Boolean {
+                    if (newText.isNullOrEmpty()) {
+                        displayHistory()
+                    } else {
+                        performSearch(newText)
+                    }
+                    return true
+                }
+            })
+        }
     }
+
+    private fun hideKeyboard() {
+        val imm = getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
+        val view = currentFocus ?: View(this)
+        imm.hideSoftInputFromWindow(view.windowToken, 0)
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        // Handle action bar item clicks here.
+        return when (item.itemId) {
+            Menu.FIRST -> {
+                clearSearchHistory()
+                true
+            }
+            else -> super.onOptionsItemSelected(item)
+        }
+    }
+
+    private fun clearSearchHistory() {
+        val sharedPreferences = getSharedPreferences("SearchHistoryPrefs", Context.MODE_PRIVATE)
+        sharedPreferences.edit().remove("historyJson").apply()
+        displayHistory()  // Refresh the display, showing the empty state if necessary
+        Toast.makeText(this, "History cleared", Toast.LENGTH_SHORT).show()
+    }
+
+    override fun onSupportNavigateUp(): Boolean {
+        finish() // Close this activity and return to the previous one
+        return true
+    }
+
+    override fun onResume() {
+        super.onResume()
+        if (::searchView.isInitialized && searchView.query.toString().isEmpty()) {
+            displayHistory()  // Call this only if searchView has been initialized and the query is empty
+        }
+    }
+
 }
