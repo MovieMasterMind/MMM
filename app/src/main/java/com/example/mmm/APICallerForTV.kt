@@ -86,6 +86,44 @@ class APICallerForTV {
         return Triple(posterUrls, tvShowTitles, firstAirDate)
     }
     fun getTVCastDetails(tvShowId: Int, callback: (List<CastMember>) -> Unit) {
+        val url = "https://api.themoviedb.org/3/tv/$tvShowId/credits?api_key=1f443a53a6aabe4de284f9c46a17f64c"
+        Log.d("CreditsLink", "Here's the credits link: $url")
+        val request = Request.Builder().url(url).build()
+
+        client.newCall(request).enqueue(object : Callback {
+            override fun onFailure(call: Call, e: IOException) {
+                Log.e("API Error", "Error fetching aggregate credits: $e")
+            }
+
+            override fun onResponse(call: Call, response: Response) {
+                response.body?.let { responseBody ->
+                    val responseData = responseBody.string()
+                    val castList = mutableListOf<CastMember>()
+                    try {
+                        val jsonObject = JSONObject(responseData)
+                        val castArray = jsonObject.getJSONArray("cast")
+                        for (i in 0 until castArray.length()) {
+                            val castObject = castArray.getJSONObject(i)
+                            val id = castObject.getInt("id") // Get the id of the cast member
+                            val name = castObject.getString("name")
+                            val character = castObject.getString("character")
+                            val profilePath = castObject.optString("profile_path", null)
+                            val imageUrl = if (profilePath != "null") "https://image.tmdb.org/t/p/w500$profilePath"
+                            else "https://www.nicepng.com/png/full/73-730154_open-default-profile-picture-png.png"
+                            castList.add(CastMember(id, name, character, imageUrl))
+                        }
+                        Handler(Looper.getMainLooper()).post {
+                            callback(castList)
+                        }
+                    } catch (e: JSONException) {
+                        Log.e("JSON Error", "Error parsing JSON: $e")
+                    }
+                }
+            }
+        })
+    }
+
+    fun getAggregateTVCastDetails(tvShowId: Int, callback: (List<CastMember>) -> Unit) {
         val url = "https://api.themoviedb.org/3/tv/$tvShowId/aggregate_credits?api_key=1f443a53a6aabe4de284f9c46a17f64c"
         Log.d("AggregateCreditsLink", "Here's the aggregate credits link: $url")
         val request = Request.Builder().url(url).build()
@@ -311,10 +349,10 @@ class APICallerForTV {
 
 
     }
-    fun getTVEpisodeData(TVId: Int, seasonid: String, episodeid: String, callback: (List<EpisodeGuestStars>) -> Unit) {
+    fun getTVEpisodeCast(TVId: Int, seasonid: String, episodeid: String, callback: (List<CastMember>) -> Unit) {
         val url = "https://api.themoviedb.org/3/tv/$TVId/season/$seasonid/episode/$episodeid?api_key=1f443a53a6aabe4de284f9c46a17f64c"
         val request = Request.Builder().url(url).get().build()
-        val episodeDataList = mutableListOf<EpisodeGuestStars>()
+        val episodeDataList = mutableListOf<CastMember>()
 
         client.newCall(request).enqueue(object : Callback {
             override fun onFailure(call: Call, e: IOException) {
@@ -332,12 +370,14 @@ class APICallerForTV {
                         for (i in 0 until episodeArray.length()) {
                             val episodeObject = episodeArray.getJSONObject(i)
 
-
+                            val id: Int = episodeObject.getInt("id")
                             val character: String = episodeObject.getString("character")
                             val name: String = episodeObject.getString("name")
                             val profilePath: String = episodeObject.getString("profile_path")
+                            val imageUrl = if (profilePath != "null") "https://image.tmdb.org/t/p/w500$profilePath"
+                            else "https://www.nicepng.com/png/full/73-730154_open-default-profile-picture-png.png"
 
-                            episodeDataList.add(EpisodeGuestStars(character, name, profilePath))
+                            episodeDataList.add(CastMember(id, character, name, imageUrl))
                         }
                         Handler(Looper.getMainLooper()).post {
                             callback(episodeDataList)

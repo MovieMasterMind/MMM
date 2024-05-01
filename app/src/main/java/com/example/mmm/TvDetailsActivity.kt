@@ -151,7 +151,7 @@ class TvDetailsActivity : AppCompatActivity() {
         castRecyclerView.adapter = castAdapter
 
         // Later, when you have the cast list
-        apiCallerForTV.getTVCastDetails(tvDetails.getInt("id")) { castList ->
+        apiCallerForTV.getAggregateTVCastDetails(tvDetails.getInt("id")) { castList ->
             runOnUiThread {
                 castAdapter.submitList(castList) // Use submitList to update the adapter's data
             }
@@ -274,7 +274,8 @@ class TvDetailsActivity : AppCompatActivity() {
                     imageUrl = "https://image.tmdb.org/t/p/w500${episode.still_path}",
                     voteAverage = episode.vote_average,
                     IdForTVShow = tvId,
-                    SeasonNum = seasonNumber
+                    SeasonNum = seasonNumber,
+                    runTime = episode.runtime,
                 )
             }
             Log.d("TvDetailsActivity", "Mapping done, updating UI with ${episodeDetails.size} items.")

@@ -8,5 +8,6 @@ data class EpisodeDetail(
     val voteAverage: Double,
     val IdForTVShow: Int,
     val SeasonNum: Int,
+    val runTime: String,
     // Add other properties as necessary
 )

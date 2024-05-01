@@ -218,19 +218,19 @@ class MainActivity : AppCompatActivity() {
 //                        Log.d("Episode vote_average:", episodeMember.vote_average.toString())
 
                         //get episode guestStars
-                        apiCallerForTV.getTVEpisodeData(TVID, seasonNumber, episodeMember.episode_number) { episodeGuestStars ->
+                        apiCallerForTV.getTVEpisodeCast(TVID, seasonNumber, episodeMember.episode_number) { episodeGuestStars ->
 
                             //loop through cast
                             // for each episode
                             // for each season
                             //BE WARNED THIS RUTURNS A LOT OF DATA FROM API
-                            episodeGuestStars.forEachIndexed { indexs, episodeGuestStarsReturned ->
-                                Log.d("character", episodeGuestStarsReturned.character)
-                                Log.d("name", episodeGuestStarsReturned.name)
-                                Log.d("profile_path", episodeGuestStarsReturned.profile_path)
-
-
-                            }
+//                            episodeGuestStars.forEachIndexed { indexs, episodeGuestStarsReturned ->
+//                                Log.d("character", episodeGuestStarsReturned.character)
+//                                Log.d("name", episodeGuestStarsReturned.name)
+//                                Log.d("profile_path", episodeGuestStarsReturned.profile_path)
+//
+//
+//                            }
                         }
 
 

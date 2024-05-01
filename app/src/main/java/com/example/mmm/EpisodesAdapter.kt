@@ -40,10 +40,14 @@ class EpisodesAdapter(
                     val episode = episodes[position]
                     val context = itemView.context
                     val intent = Intent(context, EpisodeDetailActivity::class.java).apply {
-                        putExtra("TV_SHOW_ID", episode.IdForTVShow)
-                        putExtra("SEASON_ID", episode.SeasonNum)
-                        putExtra("EPISODE_NUMBER", episode.episodeNumber)
-
+                        putExtra("tvID", episode.IdForTVShow)
+                        putExtra("seasonNum", episode.SeasonNum)
+                        putExtra("episode_num", episode.episodeNumber)
+                        putExtra("imageURL", episode.imageUrl)
+                        putExtra("overview", episode.episodeOverview)
+                        putExtra("voteAverage", episode.voteAverage)
+                        putExtra("name", episode.episodeName)
+                        putExtra("runtime", episode.runTime)
                     }
                     context.startActivity(intent)
                 }
