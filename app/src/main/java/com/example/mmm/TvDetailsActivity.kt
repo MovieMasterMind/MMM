@@ -1,6 +1,5 @@
 package com.example.mmm
 
-import android.annotation.SuppressLint
 import android.content.Intent
 import android.graphics.Color
 import android.net.Uri
@@ -8,6 +7,7 @@ import android.os.Bundle
 import android.util.Log
 import android.view.View
 import android.webkit.WebView
+import android.webkit.WebViewClient
 import android.widget.Button
 import android.widget.ImageView
 import android.widget.LinearLayout
@@ -52,9 +52,7 @@ class TvDetailsActivity : AppCompatActivity() {
         }
     }
 
-    @SuppressLint("SetJavaScriptEnabled")
     private fun fetchAndDisplayTrailers(tvId: Int) {
-        println("fetchAndDisplayTrailers started...")
         val trailersContainer = findViewById<LinearLayout>(R.id.trailersContainer)
         val apiCallerForTV = APICallerForTV()
 
@@ -62,9 +60,7 @@ class TvDetailsActivity : AppCompatActivity() {
             if (trailers.isEmpty()) {
                 Log.d("fetchAndDisplayTrailers", "No trailers found for TV show with ID: $tvId")
             } else {
-                for ((index, trailer) in trailers.withIndex()) {
-                    println("fetchAndDisplayTrailers URL #$index: ${trailer.YouTubeURL}")
-
+                for (trailer in trailers) {
                     val webView = WebView(this)
                     val layoutParams = LinearLayout.LayoutParams(
                         LinearLayout.LayoutParams.WRAP_CONTENT,
@@ -72,12 +68,20 @@ class TvDetailsActivity : AppCompatActivity() {
                     )
                     webView.layoutParams = layoutParams
                     webView.settings.javaScriptEnabled = true
+                    webView.webViewClient = object : WebViewClient() {
+                        @Deprecated("Deprecated in Java")
+                        override fun shouldOverrideUrlLoading(view: WebView?, url: String?): Boolean {
+                            return false
+                        }
+                    }
                     webView.loadUrl(trailer.YouTubeURL)
                     trailersContainer.addView(webView)
                 }
             }
         }
     }
+
+
 
     private fun fetchTVDetails(tvId: Int) {
         val url =
