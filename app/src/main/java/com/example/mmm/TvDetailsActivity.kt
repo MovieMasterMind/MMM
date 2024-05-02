@@ -1,11 +1,13 @@
 package com.example.mmm
 
+import android.annotation.SuppressLint
 import android.content.Intent
 import android.graphics.Color
 import android.net.Uri
 import android.os.Bundle
 import android.util.Log
 import android.view.View
+import android.webkit.WebResourceRequest
 import android.webkit.WebView
 import android.webkit.WebViewClient
 import android.widget.Button
@@ -52,11 +54,16 @@ class TvDetailsActivity : AppCompatActivity() {
         }
     }
 
+    @SuppressLint("SetJavaScriptEnabled")
     private fun fetchAndDisplayTrailers(tvId: Int) {
         val trailersContainer = findViewById<LinearLayout>(R.id.trailersContainer)
         val apiCallerForTV = APICallerForTV()
 
         apiCallerForTV.getTVTrailers(tvId) { trailers ->
+            trailers.forEachIndexed { index, trailerMember ->
+                Log.d("YouTube URL $index", trailerMember.YouTubeURL)
+
+            }
             if (trailers.isEmpty()) {
                 Log.d("fetchAndDisplayTrailers", "No trailers found for TV show with ID: $tvId")
             } else {
@@ -68,10 +75,19 @@ class TvDetailsActivity : AppCompatActivity() {
                     )
                     webView.layoutParams = layoutParams
                     webView.settings.javaScriptEnabled = true
+                    webView.settings.loadWithOverviewMode = true
+                    webView.settings.useWideViewPort = true
                     webView.webViewClient = object : WebViewClient() {
-                        @Deprecated("Deprecated in Java")
-                        override fun shouldOverrideUrlLoading(view: WebView?, url: String?): Boolean {
-                            return false
+                        override fun shouldOverrideUrlLoading(view: WebView?, request: WebResourceRequest?): Boolean {
+                            val url = request?.url?.toString()
+                            return if (url != null && url.startsWith("https://www.youtube.com/")) {
+                                // Load YouTube URLs in the WebView itself
+                                false
+                            } else {
+                                // Load other URLs in a browser
+                                view?.context?.startActivity(Intent(Intent.ACTION_VIEW, Uri.parse(url)))
+                                true
+                            }
                         }
                     }
                     webView.loadUrl(trailer.YouTubeURL)
@@ -80,8 +96,6 @@ class TvDetailsActivity : AppCompatActivity() {
             }
         }
     }
-
-
 
     private fun fetchTVDetails(tvId: Int) {
         val url =
