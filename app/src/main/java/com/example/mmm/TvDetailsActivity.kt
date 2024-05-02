@@ -81,10 +81,8 @@ class TvDetailsActivity : AppCompatActivity() {
                         override fun shouldOverrideUrlLoading(view: WebView?, request: WebResourceRequest?): Boolean {
                             val url = request?.url?.toString()
                             return if (url != null && url.startsWith("https://www.youtube.com/")) {
-                                // Load YouTube URLs in the WebView itself
                                 false
                             } else {
-                                // Load other URLs in a browser
                                 view?.context?.startActivity(Intent(Intent.ACTION_VIEW, Uri.parse(url)))
                                 true
                             }
