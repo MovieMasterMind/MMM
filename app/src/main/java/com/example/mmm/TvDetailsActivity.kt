@@ -1,11 +1,13 @@
 package com.example.mmm
 
+import android.annotation.SuppressLint
 import android.content.Intent
 import android.graphics.Color
 import android.net.Uri
 import android.os.Bundle
 import android.util.Log
 import android.view.View
+import android.webkit.WebView
 import android.widget.Button
 import android.widget.ImageView
 import android.widget.LinearLayout
@@ -22,12 +24,12 @@ import org.json.JSONObject
 import java.util.Locale
 
 
-
 class TvDetailsActivity : AppCompatActivity() {
     private lateinit var tvDetailsObj: JSONObject
     private val apiCallerForTV = APICallerForTV()
     private lateinit var adapter: TVPosterAdapter
     private var tvShowId = 2
+    private lateinit var trailerContainer: LinearLayout
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -37,14 +39,43 @@ class TvDetailsActivity : AppCompatActivity() {
         setSupportActionBar(toolbar)
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
         supportActionBar?.setDisplayShowHomeEnabled(true)
+        trailerContainer = findViewById(R.id.trailersContainer)
         val tvId = intent.getIntExtra("TV_ID", -1)
         if (tvId != -1) {
             fetchStreamingDetails(tvId)
             fetchTVDetails(tvId)
+            fetchAndDisplayTrailers(tvId)
             displaySeasonsList(tvId)
             tvShowId = tvId
         } else {
             finish() // Close the activity if tv ID wasn't passed correctly
+        }
+    }
+
+    @SuppressLint("SetJavaScriptEnabled")
+    private fun fetchAndDisplayTrailers(tvId: Int) {
+        println("fetchAndDisplayTrailers started...")
+        val trailersContainer = findViewById<LinearLayout>(R.id.trailersContainer)
+        val apiCallerForTV = APICallerForTV()
+
+        apiCallerForTV.getTVTrailers(tvId) { trailers ->
+            if (trailers.isEmpty()) {
+                Log.d("fetchAndDisplayTrailers", "No trailers found for TV show with ID: $tvId")
+            } else {
+                for ((index, trailer) in trailers.withIndex()) {
+                    println("fetchAndDisplayTrailers URL #$index: ${trailer.YouTubeURL}")
+
+                    val webView = WebView(this)
+                    val layoutParams = LinearLayout.LayoutParams(
+                        LinearLayout.LayoutParams.WRAP_CONTENT,
+                        LinearLayout.LayoutParams.WRAP_CONTENT
+                    )
+                    webView.layoutParams = layoutParams
+                    webView.settings.javaScriptEnabled = true
+                    webView.loadUrl(trailer.YouTubeURL)
+                    trailersContainer.addView(webView)
+                }
+            }
         }
     }
 
