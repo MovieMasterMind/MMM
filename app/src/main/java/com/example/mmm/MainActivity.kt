@@ -172,7 +172,7 @@ class MainActivity : AppCompatActivity() {
         apiCallerForMovie.getMovieTrailers(movieId) { trailerList ->
             // Log all YouTube URLs
             trailerList.forEachIndexed { index, trailerMember ->
-                Log.d("YouTube URL FROM getMovieTrailers$index", trailerMember.YouTubeURL)
+                //Log.d("YouTube URL FROM getMovieTrailers$index", trailerMember.YouTubeURL)
 
             }
         }

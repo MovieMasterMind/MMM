@@ -7,9 +7,7 @@ import android.net.Uri
 import android.os.Bundle
 import android.util.Log
 import android.view.View
-import android.webkit.WebResourceRequest
 import android.webkit.WebView
-import android.webkit.WebViewClient
 import android.widget.Button
 import android.widget.ImageView
 import android.widget.LinearLayout
@@ -70,25 +68,44 @@ class TvDetailsActivity : AppCompatActivity() {
                 for (trailer in trailers) {
                     val webView = WebView(this)
                     val layoutParams = LinearLayout.LayoutParams(
-                        LinearLayout.LayoutParams.WRAP_CONTENT,
+                        LinearLayout.LayoutParams.MATCH_PARENT,
                         LinearLayout.LayoutParams.WRAP_CONTENT
                     )
                     webView.layoutParams = layoutParams
-                    webView.settings.javaScriptEnabled = true
-                    webView.settings.loadWithOverviewMode = true
-                    webView.settings.useWideViewPort = true
-                    webView.webViewClient = object : WebViewClient() {
-                        override fun shouldOverrideUrlLoading(view: WebView?, request: WebResourceRequest?): Boolean {
-                            val url = request?.url?.toString()
-                            return if (url != null && url.startsWith("https://www.youtube.com/")) {
-                                false
-                            } else {
-                                view?.context?.startActivity(Intent(Intent.ACTION_VIEW, Uri.parse(url)))
-                                true
+
+                    webView.loadDataWithBaseURL(
+                    null,
+                    """
+                    <!DOCTYPE html>
+                    <html lang="en">
+                    <head>
+                        <meta charset="UTF-8">
+                        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+                        <title>Embedded YouTube Video</title>
+                        <style>
+                            body {
+                                margin: 0;
+                                padding: 0;
+                                display: flex;
+                                justify-content: center;
+                                align-items: center;
+                                height: 100vh;
                             }
-                        }
-                    }
-                    webView.loadUrl(trailer.YouTubeURL)
+                            iframe {
+                                width: 100%;
+                                height: 100%; /* Adjust height as needed */
+                            }
+                        </style>
+                    </head>
+                    <body>
+                        <iframe src="${trailer.YouTubeURL}" frameborder="0" allowfullscreen></iframe>
+                    </body>
+                    </html>
+                    """,
+                    "text/html",
+                    "UTF-8",
+                    null
+                    )
                     trailersContainer.addView(webView)
                 }
             }
