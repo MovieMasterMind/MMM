@@ -30,6 +30,7 @@ class TvDetailsActivity : AppCompatActivity() {
     private var tvShowId = 2
 
     override fun onCreate(savedInstanceState: Bundle?) {
+        Log.d("CREATING TV DETAILS", "CREATING TV DETAILS")
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_tv_details)
 
@@ -37,8 +38,12 @@ class TvDetailsActivity : AppCompatActivity() {
         setSupportActionBar(toolbar)
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
         supportActionBar?.setDisplayShowHomeEnabled(true)
+
+        Log.d("GETTING TV ID", "GETTING TV ID")
+
         val tvId = intent.getIntExtra("TV_ID", -1)
         if (tvId != -1) {
+            Log.d("fetchStreamingDetails CALLED", "fetchStreamingDetails CALLED")
             fetchStreamingDetails(tvId)
             fetchTVDetails(tvId)
             displaySeasonsList(tvId)
@@ -71,7 +76,7 @@ class TvDetailsActivity : AppCompatActivity() {
             "https://api.themoviedb.org/3/tv/$tvId?api_key=1f443a53a6aabe4de284f9c46a17f64c&language=en-US"
 
         apiCallerForTV.getTVStreamingLocationJSON(tvId) { streamingDetails ->
-            Log.e("StreamingDetails", streamingDetails.toString())
+            Log.e("StreamingDetailsForTV", streamingDetails.toString())
 
             val streamingDetailsFound = streamingDetails.isNotEmpty()
             val textViewText = if (streamingDetailsFound) {

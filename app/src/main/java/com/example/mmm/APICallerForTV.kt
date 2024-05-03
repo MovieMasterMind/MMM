@@ -131,15 +131,21 @@ class APICallerForTV {
             val request = Request.Builder()
                 .url(url)
                 .get()
-                .addHeader("X-RapidAPI-Key", "be00bbfb80mshe1062e1bb48c567p157eb2jsn295597c27f86")
+                .addHeader("X-RapidAPI-Key", "be00bbfb80mshe1062e1bb48c567p157eb2jsn295597c27f86") //be00bbfb80mshe1062e1bb48c567p157eb2jsn295597c27f86
                 .addHeader("X-RapidAPI-Host", "streaming-availability.p.rapidapi.com")
                 .build()
 
             try {
+                Log.i("SEARHCING FOR TV STREAMING LOCATIONS", "SEARHCING FOR TV STREAMING LOCATIONS")
                 val response = client.newCall(request).execute()
+
                 if (response.isSuccessful) {
+                    Log.i("STREAMING LOCATIONS FOUND", "STREAMING LOCATIONS FOUND")
+
                     val responseBody = response.body?.string()
+
                     val streamingDetails = parseTVStreamingInfo(responseBody)
+                    Log.i("STREAMING LOCATIONS parsesed", "STREAMING LOCATIONS parsesed")
                     callback(streamingDetails)
                 } else {
                     Log.e("APICallerFORTV", "Request failed with code: ${response.code}")
@@ -153,27 +159,48 @@ class APICallerForTV {
     }
 
 
+
     private fun parseTVStreamingInfo(responseBody: String?): Map<String, String> {
         val streamingDetails = mutableMapOf<String, String>()
+
+        val startTime = System.currentTimeMillis()
+
         responseBody?.let {
+            val jsonParsingStartTime = System.currentTimeMillis()
+
             val jsonObject = JSONObject(it)
+
+            val jsonParsingEndTime = System.currentTimeMillis()
+            println("JSON Parsing Time: ${jsonParsingEndTime - jsonParsingStartTime} ms")
+
             val resultObject = jsonObject.optJSONObject("result")
             val streamingInfoObject = resultObject?.optJSONObject("streamingInfo")
+
             streamingInfoObject?.let {
                 val usStreamingArray = streamingInfoObject.optJSONArray("us")
+
                 usStreamingArray?.let {
+                    val streamingLoopStartTime = System.currentTimeMillis()
+
                     for (i in 0 until usStreamingArray.length()) {
                         val usStreamingDetail = usStreamingArray.getJSONObject(i)
                         val service = usStreamingDetail.getString("service")
-                        val streamingType = usStreamingDetail.getString("streamingType")
                         val link = usStreamingDetail.getString("link")
                         streamingDetails[service] = link
                     }
+
+                    val streamingLoopEndTime = System.currentTimeMillis()
+                    println("Streaming Loop Time: ${streamingLoopEndTime - streamingLoopStartTime} ms")
                 }
             }
         }
+
+        val endTime = System.currentTimeMillis()
+        println("Total Function Time: ${endTime - startTime} ms")
+
         return streamingDetails
     }
+
 
     fun getTVTrailers(TVId: Int, callback: (List<TrailerMember>) -> Unit) {
         val url = "https://api.themoviedb.org/3/tv/$TVId/videos?api_key=1f443a53a6aabe4de284f9c46a17f64c"
@@ -278,7 +305,7 @@ class APICallerForTV {
             override fun onResponse(call: Call, response: Response) {
                 response.body?.let {
                     val responseData = it.string()
-                    Log.d("API Response TV", responseData) // Log the entire JSON response
+                    //Log.d("API Response TV", responseData) // Log the entire JSON response
                     try {
                         val jsonObject = JSONObject(responseData)
                         val episodeArray = jsonObject.getJSONArray("episodes")
@@ -324,7 +351,7 @@ class APICallerForTV {
             override fun onResponse(call: Call, response: Response) {
                 response.body?.let {
                     val responseData = it.string()
-                    Log.d("API Response TV", responseData) // Log the entire JSON response
+                    //Log.d("API Response TV", responseData) // Log the entire JSON response
                     try {
                         val jsonObject = JSONObject(responseData)
                         val episodeArray = jsonObject.getJSONArray("guest_stars")
