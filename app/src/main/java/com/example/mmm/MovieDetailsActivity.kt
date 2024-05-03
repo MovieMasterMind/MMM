@@ -121,7 +121,6 @@ class MovieDetailsActivity : AppCompatActivity() {
             "https://api.themoviedb.org/3/movie/$movieId?api_key=1f443a53a6aabe4de284f9c46a17f64c&language=en-US"
 
         apiCallerForMovie.getMovieStreamingLocationJSON(movieId) { streamingDetails ->
-            Log.e("StreamingDetails", streamingDetails.toString())
 
             //streamingDetails hold links of locations of the streaming service
             val streamingDetailsFound = streamingDetails.isNotEmpty()
@@ -154,8 +153,6 @@ class MovieDetailsActivity : AppCompatActivity() {
             )
 
             Volley.newRequestQueue(this).add(jsonObjectRequest)
-        }
-        apiCallerForMovie.getMovieStreamingLocationJSON(1396) { streamingDetails ->
             Log.e("StreamingDetailsBBBBBBBB", streamingDetails.toString())
         }
     }

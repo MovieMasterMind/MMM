@@ -1,15 +1,17 @@
 package com.example.mmm
 
 
-import android.content.Intent
 import android.annotation.SuppressLint
+import android.content.Intent
 import android.os.Bundle
 import android.util.Log
 import android.view.Menu
+import android.view.MenuItem
+import android.widget.CheckBox
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.view.GravityCompat
 import androidx.drawerlayout.widget.DrawerLayout
-import com.google.android.material.navigation.NavigationView
 import androidx.navigation.findNavController
 import androidx.navigation.ui.AppBarConfiguration
 import androidx.navigation.ui.navigateUp
@@ -218,19 +220,19 @@ class MainActivity : AppCompatActivity() {
 //                        Log.d("Episode vote_average:", episodeMember.vote_average.toString())
 
                         //get episode guestStars
-                        apiCallerForTV.getTVEpisodeCast(TVID, seasonNumber, episodeMember.episode_number) { episodeGuestStars ->
+                        apiCallerForTV.getTVEpisodeData(TVID, seasonNumber, episodeMember.episode_number) { episodeGuestStars ->
 
                             //loop through cast
                             // for each episode
                             // for each season
                             //BE WARNED THIS RUTURNS A LOT OF DATA FROM API
-//                            episodeGuestStars.forEachIndexed { indexs, episodeGuestStarsReturned ->
-//                                Log.d("character", episodeGuestStarsReturned.character)
-//                                Log.d("name", episodeGuestStarsReturned.name)
-//                                Log.d("profile_path", episodeGuestStarsReturned.profile_path)
-//
-//
-//                            }
+                            episodeGuestStars.forEachIndexed { indexs, episodeGuestStarsReturned ->
+                                Log.d("character", episodeGuestStarsReturned.character)
+                                Log.d("name", episodeGuestStarsReturned.name)
+                                Log.d("profile_path", episodeGuestStarsReturned.profile_path)
+
+
+                            }
                         }
 
 
