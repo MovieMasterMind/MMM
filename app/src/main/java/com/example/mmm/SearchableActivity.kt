@@ -201,7 +201,7 @@ class SearchableActivity : AppCompatActivity() {
             for (i in 0 until resultsArray.length()) {
                 val movieObject = resultsArray.getJSONObject(i)
                 val title = movieObject.getString("name")
-                val releaseDate = movieObject.optString("release_date", "") // Get release_date or empty string if null
+                val releaseDate = movieObject.optString("first_air_date", "") // Get release_date or empty string if null
                 val releaseYear = if (releaseDate.isNotEmpty() && releaseDate.length >= 4) releaseDate.substring(0, 4) else "" // Extract year from release_date
                 val id = movieObject.getInt("id").toString()
                 val formattedTitle = if (releaseYear.isNotEmpty()) "$title ($releaseYear)" else title // Append year to title if available
@@ -319,14 +319,6 @@ class SearchableActivity : AppCompatActivity() {
 
         Log.d("switchValue", switchValue.toString())
     }
-
-
-
-
-
-
-
-
 
 
     override fun onSupportNavigateUp(): Boolean {
