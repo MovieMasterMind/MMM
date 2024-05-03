@@ -28,6 +28,7 @@ class TvDetailsActivity : AppCompatActivity() {
     private val apiCallerForTV = APICallerForTV()
     private lateinit var adapter: TVPosterAdapter
     private var tvShowId = 2
+    private var selectedSeasonButton: Button? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         Log.d("CREATING TV DETAILS", "CREATING TV DETAILS")
@@ -226,16 +227,9 @@ class TvDetailsActivity : AppCompatActivity() {
             val seasonsContainer: LinearLayout = findViewById(R.id.seasonsContainer)
             seasonsContainer.removeAllViews()
 
-            // Split the seasons into pairs of (name, number).
             val seasonPairs = seasons.windowed(size = 2, step = 2, partialWindows = false)
-
-            // Separate "Season 0" which is usually specials.
             val (specials, regularSeasons) = seasonPairs.partition { it[1] == "0" }
-
-            // Sort the regular seasons by their number and then add the specials at the end.
             val sortedSeasons = regularSeasons.sortedBy { it[1].toInt() } + specials
-
-            var firstSeasonButton: Button? = null
 
             sortedSeasons.forEachIndexed { index, pair ->
                 val (seasonName, seasonNumber) = pair
@@ -252,18 +246,23 @@ class TvDetailsActivity : AppCompatActivity() {
                         setMargins(8, 8, 8, 8)
                     }
                     setOnClickListener {
+                        selectedSeasonButton?.let {
+                            it.setBackgroundColor(Color.BLACK)  // Reset the old selected button
+                            it.setTextColor(Color.WHITE)
+                        }
+                        setBackgroundColor(Color.WHITE)  // Highlight the new selected button
+                        setTextColor(Color.BLACK)
+                        selectedSeasonButton = this  // Update the reference to the new button
                         fetchAndDisplaySeasonData(seasonNumber.toInt())
                     }
                 }
 
                 seasonsContainer.addView(seasonButton)
-
-                // Save a reference to the first season button to click it later.
-                if (index == 0) firstSeasonButton = seasonButton
+                if (index == 0 && selectedSeasonButton == null) {
+                    selectedSeasonButton = seasonButton
+                    seasonButton.performClick()  // Automatically click the first season button
+                }
             }
-
-            // Programmatically click the first season button to load data by default.
-            firstSeasonButton?.performClick()
         }
     }
 
