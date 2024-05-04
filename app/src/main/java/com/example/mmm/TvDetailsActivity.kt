@@ -1,6 +1,5 @@
 package com.example.mmm
 
-import android.annotation.SuppressLint
 import android.content.Intent
 import android.graphics.Color
 import android.net.Uri
@@ -52,7 +51,6 @@ class TvDetailsActivity : AppCompatActivity() {
         }
     }
 
-    @SuppressLint("SetJavaScriptEnabled")
     private fun fetchAndDisplayTrailers(tvId: Int) {
         val trailersContainer = findViewById<LinearLayout>(R.id.trailersContainer)
         val apiCallerForTV = APICallerForTV()
@@ -61,56 +59,27 @@ class TvDetailsActivity : AppCompatActivity() {
             trailers.forEachIndexed { index, trailerMember ->
                 Log.d("YouTube URL $index", trailerMember.YouTubeURL)
 
+                val webView = WebView(this)
+                val layoutParams = LinearLayout.LayoutParams(
+                    LinearLayout.LayoutParams.WRAP_CONTENT,
+                    LinearLayout.LayoutParams.WRAP_CONTENT
+                )
+                webView.layoutParams = layoutParams
+                //webView.loadDataWithBaseURL(null,"<html><body style='margin:0;padding:0;'><iframe width=\"100%\" height=\"100%\" src=\"https://www.youtube.com/embed/V2KCAfHjySQ?si=LL_5j8XM-X5xhYuv\" frameborder=\"0\" allow=\"accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture\" allowfullscreen></iframe></body></html>", "text/html", "utf-8", null)
+                webView.loadDataWithBaseURL(null, getYouTubeHTML(trailerMember.YouTubeURL), "text/html", "utf-8", null)
+                trailersContainer.addView(webView)
             }
             if (trailers.isEmpty()) {
                 Log.d("fetchAndDisplayTrailers", "No trailers found for TV show with ID: $tvId")
-            } else {
-                for (trailer in trailers) {
-                    val webView = WebView(this)
-                    val layoutParams = LinearLayout.LayoutParams(
-                        LinearLayout.LayoutParams.MATCH_PARENT,
-                        LinearLayout.LayoutParams.WRAP_CONTENT
-                    )
-                    webView.layoutParams = layoutParams
-
-                    webView.loadDataWithBaseURL(
-                    null,
-                    """
-                    <!DOCTYPE html>
-                    <html lang="en">
-                    <head>
-                        <meta charset="UTF-8">
-                        <meta name="viewport" content="width=device-width, initial-scale=1.0">
-                        <title>Embedded YouTube Video</title>
-                        <style>
-                            body {
-                                margin: 0;
-                                padding: 0;
-                                display: flex;
-                                justify-content: center;
-                                align-items: center;
-                                height: 100vh;
-                            }
-                            iframe {
-                                width: 100%;
-                                height: 100%; /* Adjust height as needed */
-                            }
-                        </style>
-                    </head>
-                    <body>
-                        <iframe src="${trailer.YouTubeURL}" frameborder="0" allowfullscreen></iframe>
-                    </body>
-                    </html>
-                    """,
-                    "text/html",
-                    "UTF-8",
-                    null
-                    )
-                    trailersContainer.addView(webView)
-                }
             }
         }
     }
+
+    private fun getYouTubeHTML(embedURL: String): String {
+        return "<html><body style='margin:0;padding:0;'><iframe width=\"100%\" height=\"100%\" src=\"$embedURL\" frameborder=\"0\" allow=\"accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture\" allowfullscreen></iframe></body></html>"
+    }
+
+
 
     private fun fetchTVDetails(tvId: Int) {
         val url =
