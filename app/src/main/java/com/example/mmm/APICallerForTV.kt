@@ -203,7 +203,7 @@ class APICallerForTV {
                                 key = trailerObject.optString("key", "null")
                                 if(key != "null")
                                 {
-                                    YouTubeUrl = "https://www.youtube.com/watch?v=$key"
+                                    YouTubeUrl = "https://www.youtube.com/embed/$key"
 
                                 }
                                 //If no trailers are found (add code here)?

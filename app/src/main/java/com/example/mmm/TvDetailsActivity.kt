@@ -28,7 +28,7 @@ class TvDetailsActivity : AppCompatActivity() {
     private val apiCallerForTV = APICallerForTV()
     private lateinit var adapter: TVPosterAdapter
     private var tvShowId = 2
-    private lateinit var trailerContainer: LinearLayout
+    private lateinit var trailerContainer: WebView
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -38,13 +38,13 @@ class TvDetailsActivity : AppCompatActivity() {
         setSupportActionBar(toolbar)
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
         supportActionBar?.setDisplayShowHomeEnabled(true)
-        trailerContainer = findViewById(R.id.trailersContainer)
+//        trailerContainer = findViewById(R.id.trailersContainer)
         val tvId = intent.getIntExtra("TV_ID", -1)
         if (tvId != -1) {
             fetchStreamingDetails(tvId)
             fetchTVDetails(tvId)
-            fetchAndDisplayTrailers(tvId)
             displaySeasonsList(tvId)
+            fetchAndDisplayTrailers(tvId)
             tvShowId = tvId
         } else {
             finish() // Close the activity if tv ID wasn't passed correctly
@@ -52,33 +52,26 @@ class TvDetailsActivity : AppCompatActivity() {
     }
 
     private fun fetchAndDisplayTrailers(tvId: Int) {
-        val trailersContainer = findViewById<LinearLayout>(R.id.trailersContainer)
-        val apiCallerForTV = APICallerForTV()
-
         apiCallerForTV.getTVTrailers(tvId) { trailers ->
-            trailers.forEachIndexed { index, trailerMember ->
-                Log.d("YouTube URL $index", trailerMember.YouTubeURL)
-
-                val webView = WebView(this)
-                val layoutParams = LinearLayout.LayoutParams(
-                    LinearLayout.LayoutParams.WRAP_CONTENT,
-                    LinearLayout.LayoutParams.WRAP_CONTENT
-                )
-                webView.layoutParams = layoutParams
-                //webView.loadDataWithBaseURL(null,"<html><body style='margin:0;padding:0;'><iframe width=\"100%\" height=\"100%\" src=\"https://www.youtube.com/embed/V2KCAfHjySQ?si=LL_5j8XM-X5xhYuv\" frameborder=\"0\" allow=\"accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture\" allowfullscreen></iframe></body></html>", "text/html", "utf-8", null)
-                webView.loadDataWithBaseURL(null, getYouTubeHTML(trailerMember.YouTubeURL), "text/html", "utf-8", null)
-                trailersContainer.addView(webView)
-            }
-            if (trailers.isEmpty()) {
-                Log.d("fetchAndDisplayTrailers", "No trailers found for TV show with ID: $tvId")
+            val layout = findViewById<LinearLayout>(R.id.trailerButtonContainer) // Ensure this container is in your layout
+            trailers.forEach { trailer ->
+                val button = Button(this)
+                button.text = "View Trailer"
+                button.setOnClickListener {
+                    val intent = Intent(this@TvDetailsActivity, TrailerActivity::class.java)
+                    intent.putExtra("trailerUrl", trailer.YouTubeURL)
+                    startActivity(intent)
+                }
+                layout.addView(button)
             }
         }
     }
 
-    private fun getYouTubeHTML(embedURL: String): String {
-        return "<html><body style='margin:0;padding:0;'><iframe width=\"100%\" height=\"100%\" src=\"$embedURL\" frameborder=\"0\" allow=\"accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture\" allowfullscreen></iframe></body></html>"
-    }
 
+    private fun getYouTubeHTML(embedURL: String): String {
+        Log.d("got embed", embedURL)
+        return "<iframe width=\"100%\" height=\"100%\" src=\"$embedURL\" frameborder=\"0\" allow=\"accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture\" allowfullscreen></iframe>"
+    }
 
 
     private fun fetchTVDetails(tvId: Int) {

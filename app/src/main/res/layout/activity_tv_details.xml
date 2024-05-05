@@ -35,9 +35,8 @@
                 android:layout_height="wrap_content"
                 app:cardCornerRadius="8dp"
                 app:cardElevation="4dp"
-                android:layout_marginBottom="16dp"
-                app:layout_constraintTop_toBottomOf="@id/toolbar_tv_details"
-                tools:ignore="NotSibling">
+                app:layout_constraintTop_toTopOf="parent"
+                android:layout_marginBottom="16dp">
 
                 <ImageView
                     android:id="@+id/TvPoster"
@@ -47,6 +46,8 @@
                     android:scaleType="fitCenter" />
             </androidx.cardview.widget.CardView>
 
+            <!-- Ensure all TextViews and other views have proper constraints -->
+            <!-- Constraint to cardView -->
             <TextView
                 android:id="@+id/TvTitle"
                 style="@style/TextAppearance.MaterialComponents.Headline6"
@@ -61,6 +62,7 @@
                 android:layout_marginTop="10dp"
                 android:layout_marginBottom="8dp" />
 
+            <!-- Constraint to TvTitle -->
             <TextView
                 android:id="@+id/TvGenre"
                 style="@style/TextAppearance.MaterialComponents.Body1"
@@ -72,17 +74,7 @@
                 app:layout_constraintTop_toBottomOf="@id/TvTitle"
                 android:layout_marginBottom="8dp" />
 
-<!--            <TextView-->
-<!--                android:id="@+id/TvReleaseDate"-->
-<!--                style="@style/TextAppearance.MaterialComponents.Body1"-->
-<!--                android:textColor="@android:color/white"-->
-<!--                android:layout_width="0dp"-->
-<!--                android:layout_height="wrap_content"-->
-<!--                app:layout_constraintStart_toStartOf="parent"-->
-<!--                app:layout_constraintEnd_toStartOf="parent"-->
-<!--                app:layout_constraintTop_toBottomOf="@id/TvGenre"-->
-<!--                android:layout_marginTop="8dp" />-->
-
+            <!-- Constraint to TvGenre -->
             <TextView
                 android:id="@+id/TvVoteAverage"
                 style="@style/TextAppearance.MaterialComponents.Body1"
@@ -93,6 +85,7 @@
                 app:layout_constraintTop_toBottomOf="@id/TvGenre"
                 app:drawableStartCompat="@drawable/ic_star_vector" />
 
+            <!-- Constraint to TvVoteAverage -->
             <TextView
                 android:id="@+id/TvOverview"
                 style="@style/TextAppearance.MaterialComponents.Body1"
@@ -100,19 +93,17 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="8dp"
-                android:text="@string/no_overview_string"
                 app:layout_constraintStart_toStartOf="parent"
-                android:maxLines="4"
-                android:ellipsize="end"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/TvVoteAverage"
                 android:layout_marginBottom="8dp" />
 
+            <!-- Constraint to TvOverview -->
             <TextView
                 android:id="@+id/titleBeforeStreamingServices"
                 style="@style/TextAppearance.MaterialComponents.Headline6"
                 android:textColor="@android:color/white"
-                android:layout_width="wrap_content"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="8dp"
                 app:layout_constraintStart_toStartOf="parent"
@@ -121,6 +112,7 @@
                 android:layout_marginStart="16dp"
                 android:layout_marginEnd="16dp" />
 
+            <!-- Constraint to titleBeforeStreamingServices -->
             <LinearLayout
                 android:id="@+id/streamingLayout"
                 android:layout_width="match_parent"
@@ -131,24 +123,12 @@
                 android:layout_marginEnd="16dp"
                 android:layout_marginBottom="16dp"
                 app:layout_constraintTop_toBottomOf="@id/titleBeforeStreamingServices"
-                app:layout_constraintBottom_toTopOf="@+id/movieCast"
+                app:layout_constraintBottom_toTopOf="@id/movieCast"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintEnd_toEndOf="parent">
             </LinearLayout>
 
-            <TextView
-                android:id="@+id/movieCast"
-                style="@style/TextAppearance.MaterialComponents.Body1"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="16dp"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/streamingLayout"
-                android:layout_marginStart="16dp"
-                android:layout_marginEnd="16dp" />
-
-
+            <!-- Constraint to streamingLayout -->
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/castRecyclerView"
                 android:layout_width="match_parent"
@@ -157,29 +137,13 @@
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintEnd_toEndOf="parent" />
 
-            <HorizontalScrollView
-                android:id="@+id/trailersHorizontalScrollView"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layoutDirection="ltr"
-                app:layout_constraintTop_toBottomOf="@id/castRecyclerView"
-                android:fillViewport="true">
-
-                <LinearLayout
-                    android:id="@+id/trailersContainer"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:orientation="horizontal"
-                    android:padding="0dp">
-                </LinearLayout>
-            </HorizontalScrollView>
-
+            <!-- Constraint to castRecyclerView -->
             <HorizontalScrollView
                 android:id="@+id/horizontalScrollView"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layoutDirection="ltr"
-                app:layout_constraintTop_toBottomOf="@id/trailersHorizontalScrollView"
+                app:layout_constraintTop_toBottomOf="@id/castRecyclerView"
                 android:fillViewport="true">
 
                 <LinearLayout
@@ -190,16 +154,27 @@
                     android:padding="0dp" />
             </HorizontalScrollView>
 
-                <androidx.recyclerview.widget.RecyclerView
-                    android:id="@+id/episodesRecyclerView"
-                    app:layout_constraintTop_toBottomOf="@id/horizontalScrollView"
-                    android:layout_width="match_parent"
-                    android:layout_height="600dp"
-                    app:layout_constrainedHeight="true"
-                    android:nestedScrollingEnabled="true"
-                    android:scrollbars="vertical" />
+            <!-- Constraint to horizontalScrollView -->
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/episodesRecyclerView"
+                app:layout_constraintTop_toBottomOf="@id/horizontalScrollView"
+                android:layout_width="match_parent"
+                android:layout_height="600dp"
+                app:layout_constrainedHeight="true"
+                android:nestedScrollingEnabled="true"
+                android:scrollbars="vertical" />
+
+            <!-- Constraint to episodesRecyclerView -->
+            <LinearLayout
+                android:id="@+id/trailerButtonContainer"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:padding="16dp"
+                app:layout_constraintTop_toBottomOf="@id/episodesRecyclerView"
+                android:layout_marginTop="8dp">
+            </LinearLayout>
 
         </androidx.constraintlayout.widget.ConstraintLayout>
-
     </androidx.core.widget.NestedScrollView>
 </androidx.coordinatorlayout.widget.CoordinatorLayout>
