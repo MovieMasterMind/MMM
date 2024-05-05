@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:paddingTop="16dp">
+
+    <ImageView
+        android:id="@+id/episodeImage"
+        android:layout_width="75dp"
+        android:layout_height="112.5dp"
+        android:scaleType="centerCrop"
+        android:src="@mipmap/ic_launcher" /> <!-- Replace with your image source -->
+
+    <TextView
+        android:id="@+id/episodeNumber"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_toEndOf="@id/episodeImage"
+        android:layout_alignParentTop="true"
+        android:layout_marginStart="16dp"
+        android:textSize="18sp"
+        android:textStyle="bold"
+        android:text="Episode Number. Episode Name" />
+
+<!--    <TextView-->
+<!--        android:id="@+id/episodeName"-->
+<!--        android:layout_width="wrap_content"-->
+<!--        android:layout_height="wrap_content"-->
+<!--        android:layout_toEndOf="@id/episodeImage"-->
+<!--        android:layout_below="@id/episodeNumber"-->
+<!--        android:layout_marginStart="16dp"-->
+<!--        android:textSize="16sp"-->
+<!--        android:text="Episode Name" />-->
+
+    <TextView
+        android:id="@+id/episodeVoteAverage"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_toEndOf="@id/episodeImage"
+        android:layout_below="@id/episodeNumber"
+        android:drawableStart="@drawable/ic_star_vector"
+        android:layout_marginStart="16dp"
+        android:textSize="16sp"
+        android:text="Vote Average" />
+
+    <TextView
+        android:id="@+id/episodeOverview"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_toEndOf="@id/episodeImage"
+        android:layout_below="@id/episodeVoteAverage"
+        android:layout_marginStart="16dp"
+        android:textSize="14sp"
+        android:maxLines="4"
+        android:ellipsize="end"
+        android:text="Overview" />
+
+</RelativeLayout>

@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.coordinatorlayout.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
@@ -10,7 +11,7 @@
         android:theme="@style/ThemeOverlay.AppCompat.ActionBar">
 
         <androidx.appcompat.widget.Toolbar
-            android:id="@+id/toolbar_movie_details"
+            android:id="@+id/toolbar_tv_details"
             android:layout_width="match_parent"
             android:layout_height="?attr/actionBarSize"
             app:theme="@style/ToolbarTheme"
@@ -34,19 +35,21 @@
                 android:layout_height="wrap_content"
                 app:cardCornerRadius="8dp"
                 app:cardElevation="4dp"
-                android:layout_marginBottom="16dp"
-                app:layout_constraintTop_toBottomOf="@id/toolbar_movie_details">
+                app:layout_constraintTop_toTopOf="parent"
+                android:layout_marginBottom="16dp">
 
                 <ImageView
-                    android:id="@+id/moviePoster"
+                    android:id="@+id/TvPoster"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:adjustViewBounds="true"
                     android:scaleType="fitCenter" />
             </androidx.cardview.widget.CardView>
 
+            <!-- Ensure all TextViews and other views have proper constraints -->
+            <!-- Constraint to cardView -->
             <TextView
-                android:id="@+id/movieTitle"
+                android:id="@+id/TvTitle"
                 style="@style/TextAppearance.MaterialComponents.Headline6"
                 android:textColor="@android:color/white"
                 android:layout_width="0dp"
@@ -59,64 +62,32 @@
                 android:layout_marginTop="10dp"
                 android:layout_marginBottom="8dp" />
 
-
+            <!-- Constraint to TvTitle -->
             <TextView
-                android:id="@+id/movieGenre"
+                android:id="@+id/TvGenre"
                 style="@style/TextAppearance.MaterialComponents.Body1"
                 android:textColor="@android:color/white"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/movieTitle"
+                app:layout_constraintTop_toBottomOf="@id/TvTitle"
                 android:layout_marginBottom="8dp" />
 
+            <!-- Constraint to TvGenre -->
             <TextView
-                android:id="@+id/movieReleaseDate"
+                android:id="@+id/TvVoteAverage"
                 style="@style/TextAppearance.MaterialComponents.Body1"
                 android:textColor="@android:color/white"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintEnd_toStartOf="@id/addToWatchlistButton"
-                app:layout_constraintTop_toBottomOf="@id/movieGenre"
-                android:layout_marginTop="8dp" />
+                app:layout_constraintTop_toBottomOf="@id/TvGenre"
+                app:drawableStartCompat="@drawable/ic_star_vector" />
 
-            <Button
-                android:id="@+id/addToWatchlistButton"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_marginRight="30dp"
-                app:layout_constraintStart_toEndOf="@id/movieReleaseDate"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/movieReleaseDate"
-                app:layout_constraintBottom_toTopOf="@id/movieRuntime"
-                app:layout_constraintHorizontal_bias="0.5"
-                app:layout_constraintVertical_bias="0.5"/>
-
+            <!-- Constraint to TvVoteAverage -->
             <TextView
-                android:id="@+id/movieVoteAverage"
-                style="@style/TextAppearance.MaterialComponents.Body1"
-                android:textColor="@android:color/white"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:drawableStart="@drawable/ic_star_vector"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/movieReleaseDate"
-                app:layout_constraintEnd_toEndOf="parent" />
-
-            <TextView
-                android:id="@+id/movieRuntime"
-                style="@style/TextAppearance.MaterialComponents.Body1"
-                android:textColor="@android:color/white"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/movieVoteAverage"
-                app:layout_constraintEnd_toEndOf="parent" />
-
-            <TextView
-                android:id="@+id/movieOverview"
+                android:id="@+id/TvOverview"
                 style="@style/TextAppearance.MaterialComponents.Body1"
                 android:textColor="@android:color/white"
                 android:layout_width="0dp"
@@ -124,22 +95,24 @@
                 android:layout_marginTop="8dp"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/movieRuntime"
+                app:layout_constraintTop_toBottomOf="@id/TvVoteAverage"
                 android:layout_marginBottom="8dp" />
 
+            <!-- Constraint to TvOverview -->
             <TextView
                 android:id="@+id/titleBeforeStreamingServices"
                 style="@style/TextAppearance.MaterialComponents.Headline6"
                 android:textColor="@android:color/white"
-                android:layout_width="wrap_content"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="8dp"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/movieOverview"
+                app:layout_constraintTop_toBottomOf="@id/TvOverview"
                 android:layout_marginStart="16dp"
                 android:layout_marginEnd="16dp" />
 
+            <!-- Constraint to titleBeforeStreamingServices -->
             <LinearLayout
                 android:id="@+id/streamingLayout"
                 android:layout_width="match_parent"
@@ -150,24 +123,12 @@
                 android:layout_marginEnd="16dp"
                 android:layout_marginBottom="16dp"
                 app:layout_constraintTop_toBottomOf="@id/titleBeforeStreamingServices"
-                app:layout_constraintBottom_toTopOf="@+id/movieCast"
+                app:layout_constraintBottom_toTopOf="@id/movieCast"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintEnd_toEndOf="parent">
             </LinearLayout>
 
-            <TextView
-                android:id="@+id/movieCast"
-                style="@style/TextAppearance.MaterialComponents.Body1"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="16dp"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/streamingLayout"
-                android:layout_marginStart="16dp"
-                android:layout_marginEnd="16dp" />
-
-
+            <!-- Constraint to streamingLayout -->
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/castRecyclerView"
                 android:layout_width="match_parent"
@@ -176,32 +137,44 @@
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintEnd_toEndOf="parent" />
 
-            <TextView
-                android:id="@+id/movieDetailsTextViewSuggested"
-                android:textColor="@android:color/white"
+            <!-- Constraint to castRecyclerView -->
+            <HorizontalScrollView
+                android:id="@+id/horizontalScrollView"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="@string/suggested"
-                android:paddingTop="16dp"
-                android:paddingStart="8dp"
-                android:textSize="24sp"
-                android:textStyle="bold"
-                android:gravity="start"
+                android:layoutDirection="ltr"
                 app:layout_constraintTop_toBottomOf="@id/castRecyclerView"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"/>
+                android:fillViewport="true">
 
+                <LinearLayout
+                    android:id="@+id/seasonsContainer"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:padding="0dp" />
+            </HorizontalScrollView>
 
+            <!-- Constraint to horizontalScrollView -->
             <androidx.recyclerview.widget.RecyclerView
-                android:id="@+id/recyclerViewSuggested"
+                android:id="@+id/episodesRecyclerView"
+                app:layout_constraintTop_toBottomOf="@id/horizontalScrollView"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                app:layout_constraintTop_toBottomOf="@id/movieDetailsTextViewSuggested"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"/>
+                android:layout_height="600dp"
+                app:layout_constrainedHeight="true"
+                android:nestedScrollingEnabled="true"
+                android:scrollbars="vertical" />
 
+            <!-- Constraint to episodesRecyclerView -->
+            <LinearLayout
+                android:id="@+id/trailerButtonContainer"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:padding="16dp"
+                app:layout_constraintTop_toBottomOf="@id/episodesRecyclerView"
+                android:layout_marginTop="8dp">
+            </LinearLayout>
 
         </androidx.constraintlayout.widget.ConstraintLayout>
-
     </androidx.core.widget.NestedScrollView>
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

@@ -7,6 +7,7 @@ import android.widget.ImageView
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 
+
 class MoviePosterAdapter(private val posterUrls: List<String>, private val movieIds: List<Int>) :
     //This is a subclass of RecyclerView.Adapter, called PosterViewHolder
     RecyclerView.Adapter<MoviePosterAdapter.PosterViewHolder>() {
