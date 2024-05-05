@@ -74,4 +74,5 @@
     <string name="romance">Romance</string>
     <string name="trending_comedy_tv_shows">Trending Comedy TV Shows</string>
     <string name="no_overview_string">There is no overview for this series currently!</string>
+    <string name="filter_icon_description">filter_icon_description</string>
 </resources>

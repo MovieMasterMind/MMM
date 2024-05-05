@@ -49,6 +49,7 @@ class MovieDetailsActivity : AppCompatActivity() {
             fetchMovieDetails(movieId)
             initializeWatchlistButton(movieId)
             displaySuggested(movieId)
+            fetchAndDisplayTrailers(movieId)
         } else {
             finish() // Close the activity if movie ID wasn't passed correctly
         }
@@ -64,6 +65,21 @@ class MovieDetailsActivity : AppCompatActivity() {
 
         val addToWatchlistButton: Button = findViewById(R.id.addToWatchlistButton)
         updateButtonAppearanceAndAction(isMovieInWatchlist, addToWatchlistButton, movieId)
+    }
+
+    private fun fetchAndDisplayTrailers(movieId: Int) {
+        apiCallerForMovie.getMovieTrailers(movieId) { trailers ->
+            val layout = findViewById<LinearLayout>(R.id.trailerButtonContainer)
+            trailers.forEachIndexed { index, trailer ->                val button = Button(this)
+                button.text = "View Trailer ${index+1}"
+                button.setOnClickListener {
+                    val intent = Intent(this@MovieDetailsActivity, TrailerActivity::class.java)
+                    intent.putExtra("trailerUrl", trailer.YouTubeURL)
+                    startActivity(intent)
+                }
+                layout.addView(button)
+            }
+        }
     }
 
     private fun updateButtonAppearanceAndAction(isInWatchlist: Boolean, button: Button, movieId: Int) {

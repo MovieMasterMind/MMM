@@ -53,7 +53,7 @@ class TvDetailsActivity : AppCompatActivity() {
 
     private fun fetchAndDisplayTrailers(tvId: Int) {
         apiCallerForTV.getTVTrailers(tvId) { trailers ->
-            val layout = findViewById<LinearLayout>(R.id.trailerButtonContainer) // Ensure this container is in your layout
+            val layout = findViewById<LinearLayout>(R.id.trailerButtonContainer)
             trailers.forEach { trailer ->
                 val button = Button(this)
                 button.text = "View Trailer"

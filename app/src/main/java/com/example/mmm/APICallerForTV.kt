@@ -17,7 +17,8 @@ import org.json.JSONException
 import org.json.JSONObject
 import java.io.IOException
 
-class APICallerForTV {
+class
+APICallerForTV {
 
     private val client = OkHttpClient()
 
