@@ -49,6 +49,7 @@ class MovieDetailsActivity : AppCompatActivity() {
             fetchMovieDetails(movieId)
             initializeWatchlistButton(movieId)
             displaySuggested(movieId)
+            fetchAndDisplayTrailers(movieId)
         } else {
             finish() // Close the activity if movie ID wasn't passed correctly
         }
@@ -108,6 +109,14 @@ class MovieDetailsActivity : AppCompatActivity() {
 
         // Save the updated watchlist back to SharedPreferences
         sharedPrefs.edit().putString("watchlistJson", gson.toJson(watchlist, type)).apply()
+    }
+
+    private fun fetchAndDisplayTrailers(tvId: Int) {
+        apiCallerForMovie.getMovieTrailers(tvId) { trailers ->
+            val recyclerView: RecyclerView = findViewById(R.id.trailerRecyclerView)
+            recyclerView.layoutManager = LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false)
+            recyclerView.adapter = TrailerAdapter(trailers)
+        }
     }
 
 //    private fun initProgressDialog() {

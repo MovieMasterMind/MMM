@@ -53,17 +53,9 @@ class TvDetailsActivity : AppCompatActivity() {
 
     private fun fetchAndDisplayTrailers(tvId: Int) {
         apiCallerForTV.getTVTrailers(tvId) { trailers ->
-            val layout = findViewById<LinearLayout>(R.id.trailerButtonContainer) // Ensure this container is in your layout
-            trailers.forEach { trailer ->
-                val button = Button(this)
-                button.text = "View Trailer"
-                button.setOnClickListener {
-                    val intent = Intent(this@TvDetailsActivity, TrailerActivity::class.java)
-                    intent.putExtra("trailerUrl", trailer.YouTubeURL)
-                    startActivity(intent)
-                }
-                layout.addView(button)
-            }
+            val recyclerView: RecyclerView = findViewById(R.id.trailerRecyclerView)
+            recyclerView.layoutManager = LinearLayoutManager(this)
+            recyclerView.adapter = TrailerAdapter(trailers)
         }
     }
 
