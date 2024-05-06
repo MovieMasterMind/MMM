@@ -419,8 +419,40 @@ class APICallerForTV {
 
     }
 
+    fun getContentRatings(TVId: Int, callback: (String) -> Unit) {
+        val url = "https://api.themoviedb.org/3/tv/$TVId/content_ratings?api_key=1f443a53a6aabe4de284f9c46a17f64c"
+        val request = Request.Builder().url(url).get().build()
 
+        client.newCall(request).enqueue(object : Callback {
+            override fun onFailure(call: Call, e: IOException) {
+                // Handle failure
+                e.printStackTrace()
+                callback("") // Pass empty string to callback on failure
+            }
 
+            override fun onResponse(call: Call, response: Response) {
+                val responseBody = response.body?.string()
+                responseBody?.let {
+                    val jsonObject = JSONObject(it)
+                    val resultsArray = jsonObject.getJSONArray("results")
 
+                    // Find the content rating for the US
+                    var usRating = ""
+                    for (i in 0 until resultsArray.length()) {
+                        val ratingObject = resultsArray.getJSONObject(i)
+                        val countryCode = ratingObject.optString("iso_3166_1", "")
+                        if (countryCode.equals("US", ignoreCase = true)) {
+                            usRating = ratingObject.optString("rating", "")
+                            break
+                        }
+                    }
+
+                    callback(usRating) // Pass the US rating to the callback
+                } ?: run {
+                    callback("") // Pass empty string to callback if response body is null
+                }
+            }
+        })
+    }
 
 }

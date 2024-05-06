@@ -22,7 +22,6 @@ import org.json.JSONObject
 import java.util.Locale
 
 
-
 class TvDetailsActivity : AppCompatActivity() {
     private lateinit var tvDetailsObj: JSONObject
     private val apiCallerForTV = APICallerForTV()
@@ -121,7 +120,30 @@ class TvDetailsActivity : AppCompatActivity() {
         val voteAverage = tvDetails.getDouble("vote_average")
         val drawableStar = ContextCompat.getDrawable(this, R.drawable.ic_star_vector)
 
-        titleTextView.text = tvDetails.getString("name")
+        overviewTextView.setOnClickListener {
+            if (overviewTextView.maxLines == 4) {
+                overviewTextView.maxLines = Int.MAX_VALUE // Expand the TextView
+            } else {
+                overviewTextView.maxLines = 4 // Collapse the TextView
+            }
+        }
+
+        // Display year range
+        val firstAirDate = tvDetails.getString("first_air_date")
+        val lastAirDate = tvDetails.getString("last_air_date")
+        val status = tvDetails.getString("status")
+
+        val yearRange = if (status.equals("Returning Series", ignoreCase = true)) {
+            // Show "Present" if the show is a returning series
+            "${firstAirDate.substring(0, 4)} - Present"
+        } else {
+            // Calculate year range if the show has ended
+            val endYear = if (lastAirDate != "null") lastAirDate.substring(0, 4) else "Present"
+            "${firstAirDate.substring(0, 4)} - $endYear"
+        }
+        Log.d("year range", yearRange)
+        val title = tvDetails.getString("name")
+        titleTextView.text = "$title ($yearRange)"
         if (tvDetails.getString("overview") != "") {
         overviewTextView.text = tvDetails.getString("overview")}
 //        airDateTextView.text = tvDetails.getString("first_air_date")
@@ -160,6 +182,13 @@ class TvDetailsActivity : AppCompatActivity() {
         apiCallerForTV.getAggregateTVCastDetails(tvDetails.getInt("id")) { castList ->
             runOnUiThread {
                 castAdapter.submitList(castList) // Use submitList to update the adapter's data
+            }
+        }
+        apiCallerForTV.getContentRatings(tvDetails.getInt("id")) { rating ->
+            runOnUiThread {
+                // Update the UI with the content rating
+                val contentRatingTextView: TextView = findViewById(R.id.TvContentRating)
+                contentRatingTextView.text = rating
             }
         }
     }

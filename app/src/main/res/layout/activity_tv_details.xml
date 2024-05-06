@@ -59,6 +59,7 @@
                 android:layout_marginTop="10dp"
                 android:layout_marginBottom="8dp" />
 
+
             <TextView
                 android:id="@+id/TvGenre"
                 style="@style/TextAppearance.MaterialComponents.Body1"
@@ -85,11 +86,24 @@
                 android:id="@+id/TvVoteAverage"
                 style="@style/TextAppearance.MaterialComponents.Body1"
                 android:textColor="@android:color/white"
+                android:layout_marginTop="8dp"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:drawableStart="@drawable/ic_star_vector"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/TvGenre" />
+
+            <TextView
+                android:id="@+id/TvContentRating"
+                style="@style/TextAppearance.MaterialComponents.Body1"
+                android:textColor="@android:color/white"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/TvVoteAverage"
+                android:layout_marginBottom="8dp"
+                android:text="Unrated" />
 
             <TextView
                 android:id="@+id/TvOverview"
@@ -100,11 +114,14 @@
                 android:layout_marginTop="8dp"
                 android:text="There is no overview for this series currently!"
                 app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/TvContentRating"
+                android:layout_marginBottom="8dp"
                 android:maxLines="4"
                 android:ellipsize="end"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/TvVoteAverage"
-                android:layout_marginBottom="8dp" />
+                android:clickable="true"
+                android:focusable="true"
+                android:onClick="onOverviewClick" />
 
             <TextView
                 android:id="@+id/titleBeforeStreamingServices"
