@@ -49,6 +49,7 @@ class TvDetailsActivity : AppCompatActivity() {
             fetchStreamingDetails(tvId)
             fetchTVDetails(tvId)
             displaySeasonsList(tvId)
+            fetchAndDisplayTrailers(tvId)
             tvShowId = tvId
         } else {
             finish() // Close the activity if tv ID wasn't passed correctly
@@ -58,7 +59,7 @@ class TvDetailsActivity : AppCompatActivity() {
     private fun fetchAndDisplayTrailers(tvId: Int) {
         apiCallerForTV.getTVTrailers(tvId) { trailers ->
             val recyclerView: RecyclerView = findViewById(R.id.trailerRecyclerView)
-            recyclerView.layoutManager = LinearLayoutManager(this)
+            recyclerView.layoutManager = LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false)
             recyclerView.adapter = TrailerAdapter(trailers)
         }
     }
