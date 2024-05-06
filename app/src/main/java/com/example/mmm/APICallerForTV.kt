@@ -169,7 +169,7 @@ class APICallerForTV {
             val request = Request.Builder()
                 .url(url)
                 .get()
-                .addHeader("X-RapidAPI-Key", "be00bbfb80mshe1062e1bb48c567p157eb2jsn295597c27f86") //be00bbfb80mshe1062e1bb48c567p157eb2jsn295597c27f86
+                .addHeader("X-RapidAPI-Key", "be00bbfb80mshe1062e1bb48c567p157eb2jsn295597c27f86")
                 .addHeader("X-RapidAPI-Host", "streaming-availability.p.rapidapi.com")
                 .build()
 
@@ -223,6 +223,7 @@ class APICallerForTV {
                     for (i in 0 until usStreamingArray.length()) {
                         val usStreamingDetail = usStreamingArray.getJSONObject(i)
                         val service = usStreamingDetail.getString("service")
+                        val streamingType = usStreamingDetail.getString("streamingType")
                         val link = usStreamingDetail.getString("link")
                         streamingDetails[service] = link
                     }
@@ -268,7 +269,7 @@ class APICallerForTV {
                                 key = trailerObject.optString("key", "null")
                                 if(key != "null")
                                 {
-                                    YouTubeUrl = "https://www.youtube.com/watch?v=$key"
+                                    YouTubeUrl = "https://www.youtube.com/embed/$key"
 
                                 }
                                 //If no trailers are found (add code here)?
@@ -343,7 +344,7 @@ class APICallerForTV {
             override fun onResponse(call: Call, response: Response) {
                 response.body?.let {
                     val responseData = it.string()
-                    //Log.d("API Response TV", responseData) // Log the entire JSON response
+                    Log.d("API Response TV", responseData) // Log the entire JSON response
                     try {
                         val jsonObject = JSONObject(responseData)
                         val episodeArray = jsonObject.getJSONArray("episodes")
@@ -389,7 +390,7 @@ class APICallerForTV {
             override fun onResponse(call: Call, response: Response) {
                 response.body?.let {
                     val responseData = it.string()
-                    //Log.d("API Response TV", responseData) // Log the entire JSON response
+                    Log.d("API Response TV", responseData) // Log the entire JSON response
                     try {
                         val jsonObject = JSONObject(responseData)
                         val episodeArray = jsonObject.getJSONArray("guest_stars")

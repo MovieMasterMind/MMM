@@ -1,17 +1,15 @@
 package com.example.mmm
 
 
-import android.annotation.SuppressLint
 import android.content.Intent
+import android.annotation.SuppressLint
 import android.os.Bundle
 import android.util.Log
 import android.view.Menu
-import android.view.MenuItem
-import android.widget.CheckBox
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
-import androidx.core.view.GravityCompat
 import androidx.drawerlayout.widget.DrawerLayout
+import com.google.android.material.navigation.NavigationView
 import androidx.navigation.findNavController
 import androidx.navigation.ui.AppBarConfiguration
 import androidx.navigation.ui.navigateUp
@@ -20,7 +18,9 @@ import androidx.navigation.ui.setupWithNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.mmm.databinding.ActivityMainBinding
-import com.google.android.material.navigation.NavigationView
+import android.view.MenuItem
+import android.widget.CheckBox
+import androidx.core.view.GravityCompat
 
 
 class MainActivity : AppCompatActivity() {

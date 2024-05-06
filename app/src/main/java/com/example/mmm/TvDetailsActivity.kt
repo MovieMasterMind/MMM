@@ -6,6 +6,7 @@ import android.net.Uri
 import android.os.Bundle
 import android.util.Log
 import android.view.View
+import android.webkit.WebView
 import android.widget.Button
 import android.widget.ImageView
 import android.widget.LinearLayout
@@ -20,6 +21,7 @@ import com.android.volley.toolbox.Volley
 import com.bumptech.glide.Glide
 import org.json.JSONObject
 import java.util.Locale
+
 
 
 class TvDetailsActivity : AppCompatActivity() {
@@ -52,6 +54,21 @@ class TvDetailsActivity : AppCompatActivity() {
             finish() // Close the activity if tv ID wasn't passed correctly
         }
     }
+
+    private fun fetchAndDisplayTrailers(tvId: Int) {
+        apiCallerForTV.getTVTrailers(tvId) { trailers ->
+            val recyclerView: RecyclerView = findViewById(R.id.trailerRecyclerView)
+            recyclerView.layoutManager = LinearLayoutManager(this)
+            recyclerView.adapter = TrailerAdapter(trailers)
+        }
+    }
+
+
+    private fun getYouTubeHTML(embedURL: String): String {
+        Log.d("got embed", embedURL)
+        return "<iframe width=\"100%\" height=\"100%\" src=\"$embedURL\" frameborder=\"0\" allow=\"accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture\" allowfullscreen></iframe>"
+    }
+
 
     private fun fetchTVDetails(tvId: Int) {
         val url =
