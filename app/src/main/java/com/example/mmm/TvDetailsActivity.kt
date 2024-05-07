@@ -102,6 +102,7 @@ class TvDetailsActivity : AppCompatActivity() {
                     findViewById<TextView>(R.id.titleBeforeStreamingServices).apply {
                         text = ""
                         visibility = View.GONE  // Hide the TextView
+                        displayStreamingLayout(streamingDetails)
                     }
                 }
             } else {
@@ -113,18 +114,6 @@ class TvDetailsActivity : AppCompatActivity() {
                     }
                 }
             }
-
-            val jsonObjectRequest = JsonObjectRequest(Request.Method.GET, url, null,
-                { response ->
-                    // Existing code to display movie details
-                    displayStreamingLayout(streamingDetails)
-                },
-                { error ->
-                    Log.e("TVDetailsActivity", "Error fetching movie details: $error")
-                }
-            )
-
-            Volley.newRequestQueue(this).add(jsonObjectRequest)
         }
     }
     private fun displayTVDetails(tvDetails: JSONObject) {
@@ -214,7 +203,7 @@ class TvDetailsActivity : AppCompatActivity() {
 
         private fun displayStreamingLayout(streamingDetails: Map<String, String>) {
 
-        Log.e("WHY", streamingDetails.toString())
+        Log.e("STREAMING", streamingDetails.toString())
 
         val streamingLayout: LinearLayout = findViewById(R.id.streamingLayout)
 
