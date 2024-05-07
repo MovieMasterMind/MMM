@@ -19,12 +19,22 @@
             android:theme="@style/Theme.MMM.NoActionBar">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
-
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
         <activity
             android:name=".MovieDetailsActivity"
+            android:exported="true"
+            android:label="@string/app_name"
+            android:theme="@style/Theme.MMM.NoActionBar" />
+        <activity
+            android:name=".TvDetailsActivity"
+            android:exported="true"
+            android:hardwareAccelerated="true"
+            android:label="@string/app_name"
+            android:theme="@style/Theme.MMM.NoActionBar" />
+        <activity
+            android:name=".EpisodeDetailActivity"
             android:exported="true"
             android:label="@string/app_name"
             android:theme="@style/Theme.MMM.NoActionBar" />
@@ -37,5 +47,10 @@
             android:exported="true"
             android:label="@string/app_name"
             android:theme="@style/Theme.MMM.NoActionBar" />
+
+        <activity android:name=".TrailerActivity"
+            android:exported="true"
+            android:label="@string/app_name"
+            android:theme="@style/Theme.MMM.NoActionBar"/>
     </application>
 </manifest>

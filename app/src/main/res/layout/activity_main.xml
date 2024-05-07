@@ -27,6 +27,40 @@
 
 
 
+
+            <!-- Title For Comedy TVShows -->
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/trending_comedy_tv_shows"
+                android:textSize="20sp"
+                android:textStyle="bold"
+                android:layout_marginBottom="8dp"
+                android:paddingTop="16dp"
+                android:paddingBottom="8dp"
+                android:paddingStart="8dp"
+                android:paddingEnd="8dp"/>
+            <!-- Detail text For Comedy TVShows -->
+            <TextView
+                android:id="@+id/movieDetailsTextViewComedyTV"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/movie_details"
+                android:textSize="16sp"
+                android:gravity="center"
+                android:paddingTop="16dp"
+                android:paddingBottom="8dp"
+                android:paddingStart="8dp"
+                android:paddingEnd="8dp"
+                android:visibility="gone"/>
+            <!-- Horizontal ScrollView For Images -->
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/recyclerViewComedyTV"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent" />
+
+
+
             <!-- Title For Horror Movies -->
             <TextView
                 android:layout_width="wrap_content"
@@ -137,7 +171,7 @@
                 android:paddingBottom="8dp"
                 android:paddingStart="8dp"
                 android:paddingEnd="8dp"/>
-            <!-- Detail text For Action Movies -->
+            <!-- Detail text For Comedy Movies -->
             <TextView
                 android:id="@+id/movieDetailsTextViewComedy"
                 android:layout_width="wrap_content"
