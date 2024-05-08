@@ -45,6 +45,10 @@ class APICallerForTV {
         })
     }
 
+    fun cleanup() {
+        client.dispatcher.executorService.shutdown() // Shutdown OkHttpClient to free resources
+    }
+
     fun getTVDataFromAPI(apiUrl: String, textView: TextView, recyclerView: RecyclerView, callback: (List<String>, List<Int>) -> Unit) {
         fetchTVDataFromAPI(
             apiUrl,

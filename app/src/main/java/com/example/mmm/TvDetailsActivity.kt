@@ -395,6 +395,7 @@ import java.util.Locale
 
         override fun onDestroy() {
             super.onDestroy()
+            apiCallerForTV.cleanup()
             requestQueue.cancelAll { true }
             Glide.with(applicationContext).clear(findViewById<ImageView>(R.id.TvPoster))
         }

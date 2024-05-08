@@ -313,4 +313,9 @@ class MovieDetailsActivity : AppCompatActivity() {
         return true
     }
 
+    override fun onDestroy() {
+        super.onDestroy()
+        apiCallerForMovie.cleanup() // Assuming apiCaller is an instance of APICallerForMovie
+    }
+
 }
