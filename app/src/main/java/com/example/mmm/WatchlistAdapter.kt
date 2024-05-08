@@ -11,6 +11,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.example.mmm.MovieDetailsActivity
 import com.example.mmm.R
+import com.example.mmm.TvDetailsActivity
 import com.example.mmm.WatchlistActivity
 import com.example.mmm.WatchlistItem
 import com.google.gson.Gson
@@ -40,13 +41,22 @@ class WatchlistAdapter(private val items: MutableList<WatchlistItem>) : Recycler
             Glide.with(itemView.context)
                 .load(watchlistItem.posterUrl)
                 .into(posterImageView)
-
-            itemView.setOnClickListener {
-                val context = itemView.context
-                val intent = Intent(context, MovieDetailsActivity::class.java).apply {
-                    putExtra("MOVIE_ID", watchlistItem.movieId)
+            if (watchlistItem.isMovie == true) {
+                itemView.setOnClickListener {
+                    val context = itemView.context
+                    val intent = Intent(context, MovieDetailsActivity::class.java).apply {
+                        putExtra("MOVIE_ID", watchlistItem.itemId)
+                    }
+                    context.startActivity(intent)
                 }
-                context.startActivity(intent)
+            } else {
+                itemView.setOnClickListener {
+                    val context = itemView.context
+                    val intent = Intent(context, TvDetailsActivity::class.java).apply {
+                        putExtra("TV_ID", watchlistItem.itemId)
+                    }
+                    context.startActivity(intent)
+                }
             }
 
             removeButton.apply {
@@ -64,7 +74,7 @@ class WatchlistAdapter(private val items: MutableList<WatchlistItem>) : Recycler
         }
 
     private fun removeFromWatchlist(position: Int, context: Context) {
-        val movieId = items[position].movieId
+        val itemToRemove = items[position]
         items.removeAt(position)
         notifyItemRemoved(position)
         notifyItemRangeChanged(position, itemCount) // Ensure that item positions update correctly
@@ -75,7 +85,8 @@ class WatchlistAdapter(private val items: MutableList<WatchlistItem>) : Recycler
         val type = object : TypeToken<List<WatchlistItem>>() {}.type
         var watchlist = gson.fromJson<List<WatchlistItem>>(sharedPrefs.getString("watchlistJson", "[]"), type).toMutableList()
 
-        watchlist.removeAll { it.movieId == movieId }
+        // Remove all items with the same itemId and isMovie flag
+        watchlist.removeAll { it.itemId == itemToRemove.itemId && it.isMovie == itemToRemove.isMovie }
         sharedPrefs.edit().putString("watchlistJson", gson.toJson(watchlist, type)).apply()
 
         // Call to check if the list is empty and update UI accordingly

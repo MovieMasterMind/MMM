@@ -16,9 +16,9 @@ import okhttp3.Response
 import org.json.JSONException
 import org.json.JSONObject
 import java.io.IOException
+import java.lang.ref.WeakReference
 
 class APICallerForMovie {
-
     private val client = OkHttpClient()
 
     // Generic fetchData function
@@ -42,9 +42,16 @@ class APICallerForMovie {
         })
     }
 
+    fun cleanup() {
+        client.dispatcher.executorService.shutdown()
+    }
+
     // Adapted existing getData method to use fetchData
     fun getMovieDataFromAPI(apiUrl: String, textView: TextView, recyclerView: RecyclerView, callback: (List<String>, List<Int>) -> Unit) {
-        fetchMovieDataFromAPI(apiUrl, { response -> parseAndDisplayMovieData(response, textView) }) { posterUrls, movieTitles, _ ->
+        val textViewRef = WeakReference(textView)
+        fetchMovieDataFromAPI(apiUrl, { response ->
+            parseAndDisplayMovieData(response, textViewRef.get()!!)
+        }) { posterUrls, movieTitles, _ ->
             val movieIds = movieTitles.map { it.toIntOrNull() ?: 0 } // Convert titles to IDs
             callback(posterUrls, movieIds)
         }
@@ -119,27 +126,33 @@ class APICallerForMovie {
     }
     fun getMovieStreamingLocationJSON(tmdbId: Int, callback: (Map<String, String>) -> Unit) {
         GlobalScope.launch(Dispatchers.IO) {
-            val url = "https://streaming-availability.p.rapidapi.com/get?output_language=en&tmdb_id=movie%2F$tmdbId"
-            val request = Request.Builder()
-                .url(url)
-                .get()
-                .addHeader("X-RapidAPI-Key", "24562cc0e2msh9d6623953b461fdp18b00ejsna654dc783352")
-                .addHeader("X-RapidAPI-Host", "streaming-availability.p.rapidapi.com")
-                .build()
-
             try {
+                val url = "https://streaming-availability.p.rapidapi.com/get?output_language=en&tmdb_id=movie%2F$tmdbId"
+                val request = Request.Builder()
+                    .url(url)
+                    .get()
+                    .addHeader("X-RapidAPI-Key", "24562cc0e2msh9d6623953b461fdp18b00ejsna654dc783352")
+                    .addHeader("X-RapidAPI-Host", "streaming-availability.p.rapidapi.com")
+                    .build()
+
                 val response = client.newCall(request).execute()
                 if (response.isSuccessful) {
                     val responseBody = response.body?.string()
                     val streamingDetails = parseMovieStreamingInfo(responseBody)
-                    callback(streamingDetails)
+                    GlobalScope.launch(Dispatchers.Main) {
+                        callback(streamingDetails)
+                    }
                 } else {
                     Log.e("APICaller", "Request failed with code: ${response.code}")
-                    callback(emptyMap())
+                    GlobalScope.launch(Dispatchers.Main) {
+                        callback(emptyMap())
+                    }
                 }
             } catch (e: IOException) {
                 Log.e("APICaller", "Exception: ${e.message}")
-                callback(emptyMap())
+                GlobalScope.launch(Dispatchers.Main) {
+                    callback(emptyMap())
+                }
             }
         }
     }
