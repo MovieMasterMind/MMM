@@ -61,7 +61,7 @@ class MovieDetailsActivity : AppCompatActivity() {
         val type = object : TypeToken<List<WatchlistItem>>() {}.type
         val watchlist: List<WatchlistItem> = gson.fromJson(sharedPrefs.getString("watchlistJson", "[]"), type)
 
-        val isMovieInWatchlist = watchlist.any { it.movieId == movieId }
+        val isMovieInWatchlist = watchlist.any { it.itemId == movieId && it.isMovie == true}
 
         val addToWatchlistButton: Button = findViewById(R.id.addToWatchlistButton)
         updateButtonAppearanceAndAction(isMovieInWatchlist, addToWatchlistButton, movieId)
@@ -96,14 +96,14 @@ class MovieDetailsActivity : AppCompatActivity() {
         val type = object : TypeToken<MutableList<WatchlistItem>>() {}.type
         var watchlist: MutableList<WatchlistItem> = gson.fromJson(sharedPrefs.getString("watchlistJson", "[]"), type)
 
-        val itemIndex = watchlist.indexOfFirst { it.movieId == movieId }
+        val itemIndex = watchlist.indexOfFirst { it.itemId == movieId && it.isMovie == true }
         if (itemIndex != -1) {
             // Movie is already in the watchlist, remove it
             watchlist.removeAt(itemIndex)
             Toast.makeText(this, "Removed from watchlist", Toast.LENGTH_SHORT).show()
         } else {
             // Movie is not in the watchlist, add it
-            watchlist.add(WatchlistItem(movieId, movieTitle, moviePosterUrl))
+            watchlist.add(WatchlistItem(movieId, movieTitle, moviePosterUrl, true))
             Toast.makeText(this, "Added to watchlist", Toast.LENGTH_SHORT).show()
         }
 

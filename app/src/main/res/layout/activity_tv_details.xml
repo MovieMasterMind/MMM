@@ -87,12 +87,13 @@
                 android:id="@+id/TvVoteAverage"
                 style="@style/TextAppearance.MaterialComponents.Body1"
                 android:textColor="@android:color/white"
-                android:layout_marginTop="8dp"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:drawableStart="@drawable/ic_star_vector"
+                android:layout_marginTop="8dp"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/TvGenre" />
+                app:layout_constraintTop_toBottomOf="@id/TvGenre"
+                app:layout_constraintEnd_toStartOf="@id/addToWatchlistButton" />
 
             <TextView
                 android:id="@+id/TvContentRating"
@@ -105,6 +106,19 @@
                 app:layout_constraintTop_toBottomOf="@id/TvVoteAverage"
                 android:layout_marginBottom="8dp"
                 android:text="Unrated" />
+
+            <Button
+                android:id="@+id/addToWatchlistButton"
+                android:layout_width="180dp"
+                android:layout_height="60dp"
+                android:layout_marginRight="30dp"
+                android:text="@string/add_to_watchlist"
+                android:maxLines="2"
+                app:layout_constraintTop_toBottomOf="@id/TvGenre"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintBottom_toTopOf="@id/TvOverview"
+                app:layout_constraintHorizontal_bias="0.5"
+                app:layout_constraintVertical_bias="0.5" />
 
             <TextView
                 android:id="@+id/TvOverview"

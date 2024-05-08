@@ -1,60 +1,118 @@
 package com.example.mmm
 
+import android.content.Context
 import android.content.Intent
 import android.graphics.Color
 import android.net.Uri
 import android.os.Bundle
 import android.util.Log
 import android.view.View
-import android.webkit.WebView
 import android.widget.Button
 import android.widget.ImageView
 import android.widget.LinearLayout
 import android.widget.TextView
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.android.volley.Request
+import com.android.volley.RequestQueue
 import com.android.volley.toolbox.JsonObjectRequest
 import com.android.volley.toolbox.Volley
 import com.bumptech.glide.Glide
+import com.google.gson.Gson
+import com.google.gson.reflect.TypeToken
 import org.json.JSONObject
 import java.util.Locale
 
+    class TvDetailsActivity : AppCompatActivity() {
+        private lateinit var tvDetailsObj: JSONObject
+        private lateinit var requestQueue: RequestQueue
+        private val apiCallerForTV = APICallerForTV()
+        private lateinit var adapter: TVPosterAdapter
+        private var tvShowId = 2
+        private var selectedSeasonButton: Button? = null
 
+        override fun onCreate(savedInstanceState: Bundle?) {
+            super.onCreate(savedInstanceState)
+            setContentView(R.layout.activity_tv_details)
 
-class TvDetailsActivity : AppCompatActivity() {
-    private lateinit var tvDetailsObj: JSONObject
-    private val apiCallerForTV = APICallerForTV()
-    private lateinit var adapter: TVPosterAdapter
-    private var tvShowId = 2
-    private var selectedSeasonButton: Button? = null
+            val toolbar: androidx.appcompat.widget.Toolbar = findViewById(R.id.toolbar_tv_details)
+            setSupportActionBar(toolbar)
+            supportActionBar?.setDisplayHomeAsUpEnabled(true)
+            supportActionBar?.setDisplayShowHomeEnabled(true)
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        Log.d("CREATING TV DETAILS", "CREATING TV DETAILS")
-        super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_tv_details)
+            requestQueue = Volley.newRequestQueue(this)
 
-        val toolbar: androidx.appcompat.widget.Toolbar = findViewById(R.id.toolbar_tv_details)
-        setSupportActionBar(toolbar)
-        supportActionBar?.setDisplayHomeAsUpEnabled(true)
-        supportActionBar?.setDisplayShowHomeEnabled(true)
-
-        Log.d("GETTING TV ID", "GETTING TV ID")
-
-        val tvId = intent.getIntExtra("TV_ID", -1)
-        if (tvId != -1) {
-            Log.d("fetchStreamingDetails CALLED", "fetchStreamingDetails CALLED")
-            fetchStreamingDetails(tvId)
-            fetchTVDetails(tvId)
-            displaySeasonsList(tvId)
-            fetchAndDisplayTrailers(tvId)
-            tvShowId = tvId
-        } else {
-            finish() // Close the activity if tv ID wasn't passed correctly
+            val tvId = intent.getIntExtra("TV_ID", -1)
+            if (tvId != -1) {
+                tvShowId = tvId
+                fetchStreamingDetails(tvId)
+                fetchTVDetails(tvId)
+                initializeWatchlistButton(tvId)
+                displaySeasonsList(tvId)
+                fetchAndDisplayTrailers(tvId)
+            } else {
+                finish() // Close the activity if tv ID wasn't passed correctly
+            }
         }
-    }
+
+        private fun initializeWatchlistButton(tvId: Int) {
+            val sharedPrefs = getSharedPreferences("watchlist", Context.MODE_PRIVATE)
+            val gson = Gson()
+            val type = object : TypeToken<List<WatchlistItem>>() {}.type
+            val watchlist: List<WatchlistItem> = gson.fromJson(sharedPrefs.getString("watchlistJson", "[]"), type)
+
+            val isMovieInWatchlist = watchlist.any { it.itemId == tvId && it.isMovie == false}
+
+            val addToWatchlistButton: Button = findViewById(R.id.addToWatchlistButton)
+            updateButtonAppearanceAndAction(isMovieInWatchlist, addToWatchlistButton, tvId)
+        }
+
+        private fun updateButtonAppearanceAndAction(isInWatchlist: Boolean, button: Button, tvId: Int) {
+            button.text = if (isInWatchlist) {
+                getString(R.string.remove_from_watchlist)
+            } else {
+                getString(R.string.add_to_watchlist)
+            }
+
+            // Update button appearance based on whether the movie is in the watchlist
+            button.setBackgroundColor(ContextCompat.getColor(this, if (isInWatchlist) R.color.remove_from_watchlist_background else R.color.add_to_watchlist_background))
+
+            button.setOnClickListener {
+                if (this::tvDetailsObj.isInitialized) {
+                    val tvTitle = tvDetailsObj.getString("name")
+                    val tvPosterPath = tvDetailsObj.getString("poster_path")
+                    val tvPosterUrl = "https://image.tmdb.org/t/p/w500$tvPosterPath"
+                    checkAddOrRemoveFromWatchlist(tvId, tvTitle, tvPosterUrl)
+                    updateButtonAppearanceAndAction(!isInWatchlist, button, tvId)
+                } else {
+                    Toast.makeText(this, "TV details not loaded yet", Toast.LENGTH_SHORT).show()
+                }
+            }
+        }
+
+        private fun checkAddOrRemoveFromWatchlist(tvId: Int, tvTitle: String, tvPosterUrl: String) {
+            val sharedPrefs = getSharedPreferences("watchlist", Context.MODE_PRIVATE)
+            val gson = Gson()
+            val type = object : TypeToken<MutableList<WatchlistItem>>() {}.type
+            var watchlist: MutableList<WatchlistItem> = gson.fromJson(sharedPrefs.getString("watchlistJson", "[]"), type)
+
+            val itemIndex = watchlist.indexOfFirst { it.itemId == tvId && it.isMovie == false }
+            if (itemIndex != -1) {
+                // Movie is already in the watchlist, remove it
+                watchlist.removeAt(itemIndex)
+                Toast.makeText(this, "Removed from watchlist", Toast.LENGTH_SHORT).show()
+            } else {
+                // Movie is not in the watchlist, add it
+                watchlist.add(WatchlistItem(tvId, tvTitle, tvPosterUrl, false))
+                Toast.makeText(this, "Added to watchlist", Toast.LENGTH_SHORT).show()
+            }
+
+            // Save the updated watchlist back to SharedPreferences
+            sharedPrefs.edit().putString("watchlistJson", gson.toJson(watchlist, type)).apply()
+        }
 
     private fun fetchAndDisplayTrailers(tvId: Int) {
         apiCallerForTV.getTVTrailers(tvId) { trailers ->
@@ -71,23 +129,17 @@ class TvDetailsActivity : AppCompatActivity() {
     }
 
 
-    private fun fetchTVDetails(tvId: Int) {
-        val url =
-            "https://api.themoviedb.org/3/tv/$tvId?api_key=1f443a53a6aabe4de284f9c46a17f64c&language=en-US"
+        private fun fetchTVDetails(tvId: Int) {
+            val url = "https://api.themoviedb.org/3/tv/$tvId?api_key=1f443a53a6aabe4de284f9c46a17f64c&language=en-US"
+            val jsonObjectRequest = JsonObjectRequest(Request.Method.GET, url, null, { response ->
+                tvDetailsObj = response
+                displayTVDetails(response)
+            }, { error ->
+                Log.e("TVDetailsActivity", "Error fetching TV details: $error")
+            })
 
-
-            val jsonObjectRequest = JsonObjectRequest(Request.Method.GET, url, null,
-                { response ->
-                    // Existing code to display movie details
-                    displayTVDetails(response)
-                },
-                { error ->
-                    Log.e("TVDetailsActivity", "Error fetching movie details: $error")
-                }
-            )
-
-            Volley.newRequestQueue(this).add(jsonObjectRequest)
-    }
+            requestQueue.add(jsonObjectRequest)
+        }
 
     private fun fetchStreamingDetails(tvId: Int) {
         val url =
@@ -341,9 +393,15 @@ class TvDetailsActivity : AppCompatActivity() {
         return serviceColorsMap[service.lowercase(Locale.ROOT)]
     }
 
-    override fun onSupportNavigateUp(): Boolean {
-        finish() // Close this activity and return to the previous one
-        return true
-    }
+        override fun onDestroy() {
+            super.onDestroy()
+            requestQueue.cancelAll { true }
+            Glide.with(applicationContext).clear(findViewById<ImageView>(R.id.TvPoster))
+        }
+
+        override fun onSupportNavigateUp(): Boolean {
+            finish()
+            return true
+        }
 
 }

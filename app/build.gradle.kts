@@ -69,6 +69,7 @@ dependencies {
 
     implementation("com.github.bumptech.glide:glide:4.12.0")
     annotationProcessor("com.github.bumptech.glide:compiler:4.12.0")
+    debugImplementation("com.squareup.leakcanary:leakcanary-android:2.9")
 
     val composeBom = platform("androidx.compose:compose-bom:2024.02.02")
     implementation(composeBom)
