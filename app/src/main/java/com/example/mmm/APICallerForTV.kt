@@ -203,6 +203,8 @@ class APICallerForTV {
 
         val startTime = System.currentTimeMillis()
 
+        Log.d("STREAMING", "SLOW")
+
         responseBody?.let {
             val jsonParsingStartTime = System.currentTimeMillis()
 

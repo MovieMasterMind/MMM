@@ -58,6 +58,7 @@
     <string name="no_history_found">You don\'t currently have a search history, movies will be added here as you browse.</string>
     <string name="search_history_title">Recently viewed</string>
     <string name="suggested">Similar films</string>
+    <string name="trailer">Trailer(s)</string>
     <string name="TvOverviewPlaceholder">Overview Placeholder</string>
 
 
