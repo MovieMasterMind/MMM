@@ -360,11 +360,16 @@ class APICallerForTV {
 
                             val episodeID = seasonObject.getString("id")
                             val episodeNames = seasonObject.getString("name")
-                            val episodeOverview = seasonObject.getString("overview")
+                            val overview = seasonObject.getString("overview")
+                            val episodeOverview = if (overview == "null") {
+                                "This show currently does not have an overview!"
+                            } else { overview}
                             val episodeNumber = seasonObject.getString("episode_number")
                             val episodeType = seasonObject.getString("episode_type")
                             val episodeRuntime = seasonObject.getString("runtime")
-                            val episodeStillPath = seasonObject.getString("still_path")
+                            val stillPath = seasonObject.getString("still_path")
+                            val episodeStillPath = if (stillPath != "null") "https://image.tmdb.org/t/p/w500$stillPath"
+                            else "https://external-content.duckduckgo.com/iu/?u=https%3A%2F%2Ftse4.mm.bing.net%2Fth%3Fid%3DOIP.IkbcciGb75wX7U5WeANuDQHaLE%26pid%3DApi&f=1&ipt=a36f8b1fdf094f9245bbbfbf6e0d0908dd49b8c2ae8557f5632a06cce2c36cf2&ipo=images"
                             val seasonVoteAverage = seasonObject.getDouble("vote_average")
 
                             episodeDataList.add(EpisodeMember(episodeID, episodeNames, episodeOverview, episodeNumber, episodeType, episodeRuntime, episodeStillPath, seasonVoteAverage))
