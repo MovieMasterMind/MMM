@@ -363,7 +363,7 @@ import java.util.Locale
                     episodeNumber = "${episode.episode_number}. ${episode.name}",
                     episodeName = episode.name,
                     episodeOverview = episode.overview,
-                    imageUrl = "https://image.tmdb.org/t/p/w500${episode.still_path}",
+                    imageUrl = "${episode.still_path}",
                     voteAverage = episode.vote_average,
                     IdForTVShow = tvId,
                     SeasonNum = seasonNumber,
@@ -397,7 +397,7 @@ import java.util.Locale
             super.onDestroy()
             apiCallerForTV.cleanup()
             requestQueue.cancelAll { true }
-            Glide.with(applicationContext).clear(findViewById<ImageView>(R.id.TvPoster))
+            Glide.with(applicationContext).clear(findViewById<ImageView>(R.id.TvPoster))  // Clear Glide resources
         }
 
         override fun onSupportNavigateUp(): Boolean {

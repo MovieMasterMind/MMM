@@ -5,9 +5,11 @@ import android.os.Looper
 import android.util.Log
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
+import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import okhttp3.Call
 import okhttp3.Callback
 import okhttp3.OkHttpClient
@@ -17,9 +19,9 @@ import org.json.JSONException
 import org.json.JSONObject
 import java.io.IOException
 
-class APICallerForTV {
-
-    private val client = OkHttpClient()
+class APICallerForTV(private val client: OkHttpClient = OkHttpClient()) {
+    private val job = SupervisorJob()
+    private val scope = CoroutineScope(Dispatchers.IO + job)
 
     fun fetchTVDataFromAPI(
         apiUrl: String,
@@ -168,34 +170,27 @@ class APICallerForTV {
     }
 
     fun getTVStreamingLocationJSON(tmdbId: Int, callback: (Map<String, String>) -> Unit) {
-        GlobalScope.launch(Dispatchers.IO) {
-            val url = "https://streaming-availability.p.rapidapi.com/get?output_language=en&tmdb_id=tv%2F$tmdbId"
-            val request = Request.Builder()
-                .url(url)
-                .get()
-                .addHeader("X-RapidAPI-Key", "be00bbfb80mshe1062e1bb48c567p157eb2jsn295597c27f86")
-                .addHeader("X-RapidAPI-Host", "streaming-availability.p.rapidapi.com")
-                .build()
-
+        scope.launch {
             try {
-                Log.i("SEARHCING FOR TV STREAMING LOCATIONS", "SEARHCING FOR TV STREAMING LOCATIONS")
+                val url = "https://streaming-availability.p.rapidapi.com/get?output_language=en&tmdb_id=tv%2F$tmdbId"
+                val request = Request.Builder()
+                    .url(url)
+                    .get()
+                    .addHeader("X-RapidAPI-Key", "be00bbfb80mshe1062e1bb48c567p157eb2jsn295597c27f86")
+                    .addHeader("X-RapidAPI-Host", "streaming-availability.p.rapidapi.com")
+                    .build()
+
                 val response = client.newCall(request).execute()
-
                 if (response.isSuccessful) {
-                    Log.i("STREAMING LOCATIONS FOUND", "STREAMING LOCATIONS FOUND")
-
-                    val responseBody = response.body?.string()
-
-                    val streamingDetails = parseTVStreamingInfo(responseBody)
-                    Log.i("STREAMING LOCATIONS parsesed", "STREAMING LOCATIONS parsesed")
-                    callback(streamingDetails)
+                    val streamingDetails = parseTVStreamingInfo(response.body?.string())
+                    withContext(Dispatchers.Main) { callback(streamingDetails) }
                 } else {
-                    Log.e("APICallerFORTV", "Request failed with code: ${response.code}")
-                    callback(emptyMap())
+                    Log.e("APICallerForTV", "Request failed with code: ${response.code}")
+                    withContext(Dispatchers.Main) { callback(emptyMap()) }
                 }
             } catch (e: IOException) {
-                Log.e("APICallerFORTV", "Exception: ${e.message}")
-                callback(emptyMap())
+                Log.e("APICallerForTV", "Exception: ${e.message}")
+                withContext(Dispatchers.Main) { callback(emptyMap()) }
             }
         }
     }
@@ -360,11 +355,16 @@ class APICallerForTV {
 
                             val episodeID = seasonObject.getString("id")
                             val episodeNames = seasonObject.getString("name")
-                            val episodeOverview = seasonObject.getString("overview")
+                            val overview = seasonObject.getString("overview")
+                            val episodeOverview = if (overview == "") {
+                                "This show currently does not have an overview!"
+                            } else { overview}
                             val episodeNumber = seasonObject.getString("episode_number")
                             val episodeType = seasonObject.getString("episode_type")
                             val episodeRuntime = seasonObject.getString("runtime")
-                            val episodeStillPath = seasonObject.getString("still_path")
+                            val stillPath = seasonObject.getString("still_path")
+                            val episodeStillPath = if (stillPath != "null") "https://image.tmdb.org/t/p/w500$stillPath"
+                            else "https://external-content.duckduckgo.com/iu/?u=https%3A%2F%2Ftse4.mm.bing.net%2Fth%3Fid%3DOIP.IkbcciGb75wX7U5WeANuDQHaLE%26pid%3DApi&f=1&ipt=a36f8b1fdf094f9245bbbfbf6e0d0908dd49b8c2ae8557f5632a06cce2c36cf2&ipo=images"
                             val seasonVoteAverage = seasonObject.getDouble("vote_average")
 
                             episodeDataList.add(EpisodeMember(episodeID, episodeNames, episodeOverview, episodeNumber, episodeType, episodeRuntime, episodeStillPath, seasonVoteAverage))
