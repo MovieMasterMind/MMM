@@ -1,15 +1,17 @@
+package com.example.mmm
 
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
+import androidx.recyclerview.widget.DiffUtil
+import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
-import com.example.mmm.R
 
-class CastAdapter(private var castList: List<CastMember>) :
-    RecyclerView.Adapter<CastAdapter.CastViewHolder>() {
+class CastAdapter :
+    ListAdapter<CastMember, CastAdapter.CastViewHolder>(DIFF_CALLBACK) {
 
     class CastViewHolder(view: View) : RecyclerView.ViewHolder(view) {
         val imageView: ImageView = view.findViewById(R.id.cast_member_image)
@@ -24,19 +26,25 @@ class CastAdapter(private var castList: List<CastMember>) :
     }
 
     override fun onBindViewHolder(holder: CastViewHolder, position: Int) {
-        val castMember = castList[position]
+        val castMember = getItem(position) // Changed to use getItem provided by ListAdapter
         Glide.with(holder.imageView.context)
             .load(castMember.imageUrl)
+            .placeholder(R.drawable.placeholder_image) // Add a placeholder
             .into(holder.imageView)
         holder.nameTextView.text = castMember.name
-        holder.characterTextView.text = castMember.character // Set the character text here
+        holder.characterTextView.text = castMember.character
     }
 
-    override fun getItemCount() = castList.size
+    companion object {
+        private val DIFF_CALLBACK = object : DiffUtil.ItemCallback<CastMember>() {
+            override fun areItemsTheSame(oldItem: CastMember, newItem: CastMember): Boolean {
+                // TODO: Replace `id` with the appropriate field in your CastMember class.
+                return oldItem.id == newItem.id
+            }
 
-    fun updateCastList(newCastList: List<CastMember>) {
-        castList = newCastList
-        notifyDataSetChanged()
+            override fun areContentsTheSame(oldItem: CastMember, newItem: CastMember): Boolean {
+                return oldItem == newItem
+            }
+        }
     }
 }
-

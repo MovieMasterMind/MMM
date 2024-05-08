@@ -1,7 +1,5 @@
 package com.example.mmm
 
-import APICaller
-import CastAdapter
 import android.content.Context
 import android.content.Intent
 import android.graphics.Color
@@ -31,7 +29,7 @@ import java.util.Locale
 class MovieDetailsActivity : AppCompatActivity() {
     private var streamingDetails: Map<String, String> = emptyMap()
     private lateinit var movieDetailsObj: JSONObject
-    private val apiCaller = APICaller()
+    private val apiCallerForMovie = APICallerForMovie()
     private lateinit var adapter: MoviePosterAdapter
 //    private lateinit var progressDialog: ProgressDialog
 
@@ -50,7 +48,8 @@ class MovieDetailsActivity : AppCompatActivity() {
 //            progressDialog.show()
             fetchMovieDetails(movieId)
             initializeWatchlistButton(movieId)
-//            displaySuggested(movieId)
+            displaySuggested(movieId)
+            fetchAndDisplayTrailers(movieId)
         } else {
             finish() // Close the activity if movie ID wasn't passed correctly
         }
@@ -62,7 +61,7 @@ class MovieDetailsActivity : AppCompatActivity() {
         val type = object : TypeToken<List<WatchlistItem>>() {}.type
         val watchlist: List<WatchlistItem> = gson.fromJson(sharedPrefs.getString("watchlistJson", "[]"), type)
 
-        val isMovieInWatchlist = watchlist.any { it.movieId == movieId }
+        val isMovieInWatchlist = watchlist.any { it.itemId == movieId && it.isMovie == true}
 
         val addToWatchlistButton: Button = findViewById(R.id.addToWatchlistButton)
         updateButtonAppearanceAndAction(isMovieInWatchlist, addToWatchlistButton, movieId)
@@ -97,19 +96,27 @@ class MovieDetailsActivity : AppCompatActivity() {
         val type = object : TypeToken<MutableList<WatchlistItem>>() {}.type
         var watchlist: MutableList<WatchlistItem> = gson.fromJson(sharedPrefs.getString("watchlistJson", "[]"), type)
 
-        val itemIndex = watchlist.indexOfFirst { it.movieId == movieId }
+        val itemIndex = watchlist.indexOfFirst { it.itemId == movieId && it.isMovie == true }
         if (itemIndex != -1) {
             // Movie is already in the watchlist, remove it
             watchlist.removeAt(itemIndex)
             Toast.makeText(this, "Removed from watchlist", Toast.LENGTH_SHORT).show()
         } else {
             // Movie is not in the watchlist, add it
-            watchlist.add(WatchlistItem(movieId, movieTitle, moviePosterUrl))
+            watchlist.add(WatchlistItem(movieId, movieTitle, moviePosterUrl, true))
             Toast.makeText(this, "Added to watchlist", Toast.LENGTH_SHORT).show()
         }
 
         // Save the updated watchlist back to SharedPreferences
         sharedPrefs.edit().putString("watchlistJson", gson.toJson(watchlist, type)).apply()
+    }
+
+    private fun fetchAndDisplayTrailers(tvId: Int) {
+        apiCallerForMovie.getMovieTrailers(tvId) { trailers ->
+            val recyclerView: RecyclerView = findViewById(R.id.trailerRecyclerView)
+            recyclerView.layoutManager = LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false)
+            recyclerView.adapter = TrailerAdapter(trailers)
+        }
     }
 
 //    private fun initProgressDialog() {
@@ -122,8 +129,7 @@ class MovieDetailsActivity : AppCompatActivity() {
         val url =
             "https://api.themoviedb.org/3/movie/$movieId?api_key=1f443a53a6aabe4de284f9c46a17f64c&language=en-US"
 
-        apiCaller.getMovieStreamingLocationJSON(movieId) { streamingDetails ->
-            Log.e("StreamingDetails", streamingDetails.toString())
+        apiCallerForMovie.getMovieStreamingLocationJSON(movieId) { streamingDetails ->
 
             //streamingDetails hold links of locations of the streaming service
             val streamingDetailsFound = streamingDetails.isNotEmpty()
@@ -156,36 +162,37 @@ class MovieDetailsActivity : AppCompatActivity() {
             )
 
             Volley.newRequestQueue(this).add(jsonObjectRequest)
+            Log.e("StreamingDetailsBBBBBBBB", streamingDetails.toString())
         }
     }
 
-//    private fun displaySuggested(movieId: Int) {
-//        val apiUrlsSuggested = "https://api.themoviedb.org/3/movie/$movieId/recommendations?api_key=1f443a53a6aabe4de284f9c46a17f64c&language=en-US"
-//        val recyclerViewSuggested: RecyclerView = findViewById(R.id.recyclerViewSuggested)
-//        val textViewSuggested = findViewById<TextView>(R.id.movieDetailsTextViewSuggested)
-//        setUpRecyclerView(apiUrlsSuggested, textViewSuggested, recyclerViewSuggested)
-//    }
+    private fun displaySuggested(movieId: Int) {
+        val apiUrlsSuggested = "https://api.themoviedb.org/3/movie/$movieId/recommendations?api_key=1f443a53a6aabe4de284f9c46a17f64c&language=en-US"
+        val recyclerViewSuggested: RecyclerView = findViewById(R.id.recyclerViewSuggested)
+        val textViewSuggested = findViewById<TextView>(R.id.movieDetailsTextViewSuggested)
+        setUpRecyclerView(apiUrlsSuggested, textViewSuggested, recyclerViewSuggested)
+    }
 
-//    private fun setUpRecyclerView(apiUrl: String, textView: TextView, recyclerView: RecyclerView) {
-//        val layoutManager = LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false)
-//        recyclerView.layoutManager = layoutManager
-//
-//        // Placeholder adapter initialization
-//        adapter = MoviePosterAdapter(emptyList(), emptyList())
-//        recyclerView.adapter = adapter
-//
-//        val apiCaller = APICaller()
-//
-//        // Get data from API and update the adapter
-//        apiCaller.getData(apiUrl, textView, recyclerView) { posterUrls, movieIds ->
-//            // Run on UI thread since response callback is on a background thread
-//            runOnUiThread {
-//                // Create a new adapter with the data
-//                adapter = MoviePosterAdapter(posterUrls, movieIds)
-//                recyclerView.adapter = adapter
-//            }
-//        }
-//    }
+    private fun setUpRecyclerView(apiUrl: String, textView: TextView, recyclerView: RecyclerView) {
+        val layoutManager = LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false)
+        recyclerView.layoutManager = layoutManager
+
+        // Placeholder adapter initialization
+        adapter = MoviePosterAdapter(emptyList(), emptyList())
+        recyclerView.adapter = adapter
+
+        val apiCaller = APICallerForMovie()
+
+        // Get data from API and update the adapter
+        apiCaller.getMovieDataFromAPI(apiUrl, textView, recyclerView) { posterUrls, movieIds ->
+            // Run on UI thread since response callback is on a background thread
+            runOnUiThread {
+                // Create a new adapter with the data
+                adapter = MoviePosterAdapter(posterUrls, movieIds)
+                recyclerView.adapter = adapter
+            }
+        }
+    }
 
     private fun displayMovieDetails(movieDetails: JSONObject, streamingDetails: Map<String, String>) {
 //        progressDialog.dismiss()
@@ -237,14 +244,14 @@ class MovieDetailsActivity : AppCompatActivity() {
 
         // Initialize RecyclerView and its adapter for cast members
         val castRecyclerView: RecyclerView = findViewById(R.id.castRecyclerView)
-        val castAdapter = CastAdapter(emptyList()) // Initialize with an empty list
+        val castAdapter = CastAdapter() // No arguments here
         castRecyclerView.layoutManager = LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false)
         castRecyclerView.adapter = castAdapter
 
-        // Fetch and display cast details
-        apiCaller.getCastDetails(movieDetails.getInt("id")) { castList ->
+        // Later, when you have the cast list
+        apiCallerForMovie.getMovieCastDetails(movieDetails.getInt("id")) { castList ->
             runOnUiThread {
-                castAdapter.updateCastList(castList)
+                castAdapter.submitList(castList) // Use submitList to update the adapter's data
             }
         }
 
@@ -304,6 +311,11 @@ class MovieDetailsActivity : AppCompatActivity() {
     override fun onSupportNavigateUp(): Boolean {
         finish() // Close this activity and return to the previous one
         return true
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        apiCallerForMovie.cleanup() // Assuming apiCaller is an instance of APICallerForMovie
     }
 
 }

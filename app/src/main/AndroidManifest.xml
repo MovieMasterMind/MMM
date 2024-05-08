@@ -7,6 +7,7 @@
         android:dataExtractionRules="@xml/data_extraction_rules"
         android:fullBackupContent="@xml/backup_rules"
         android:icon="@mipmap/ic_launcher"
+        android:largeHeap="true"
         android:label="@string/app_name"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
@@ -27,6 +28,17 @@
             android:exported="true"
             android:label="@string/app_name"
             android:theme="@style/Theme.MMM.NoActionBar" />
+        <activity
+            android:name=".TvDetailsActivity"
+            android:exported="true"
+            android:hardwareAccelerated="true"
+            android:label="@string/app_name"
+            android:theme="@style/Theme.MMM.NoActionBar" />
+        <activity
+            android:name=".EpisodeDetailActivity"
+            android:exported="true"
+            android:label="@string/app_name"
+            android:theme="@style/Theme.MMM.NoActionBar" />
         <activity android:name=".SearchableActivity"
             android:exported="true"
             android:label="@string/app_name"
@@ -36,5 +48,10 @@
             android:exported="true"
             android:label="@string/app_name"
             android:theme="@style/Theme.MMM.NoActionBar" />
+
+        <activity android:name=".TrailerActivity"
+            android:exported="true"
+            android:label="@string/app_name"
+            android:theme="@style/Theme.MMM.NoActionBar"/>
     </application>
 </manifest>

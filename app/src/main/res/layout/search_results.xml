@@ -1,6 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
+
+
+
+
+
 <androidx.coordinatorlayout.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
@@ -11,6 +18,7 @@
         app:theme="@style/ToolbarTheme"
         app:titleTextColor="@android:color/white"
         android:elevation="4dp" />
+
 
     <ListView
         android:id="@+id/search_history_list_view"
@@ -27,6 +35,28 @@
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
+
+            <Switch
+                android:id="@+id/slider"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textOff="Searching For TV Shows"
+                android:textOn="Searching For Movies"
+                android:checked="true"
+                android:textColor="@android:color/white"
+                android:textSize="18sp"
+                android:switchMinWidth="64dp"
+                android:switchPadding="16dp"
+                android:thumbTint="@color/purple_200"
+                android:trackTint="@color/white"
+                app:layout_constraintTop_toBottomOf="@id/query_search_results"
+                app:layout_constraintEnd_toEndOf="parent"
+                android:padding="16dp"
+                android:gravity="end"
+                tools:ignore="UseSwitchCompatOrMaterialXml" />
+
+
+
 
             <TextView
                 android:id="@+id/noSearchHistoryTextView"
@@ -53,7 +83,7 @@
             android:textSize="24sp"
             android:textStyle="bold"
             android:gravity="start"
-            app:layout_constraintTop_toBottomOf="@id/query_search_results"
+            app:layout_constraintTop_toBottomOf="@id/slider"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent"/>
 

@@ -58,6 +58,8 @@
     <string name="no_history_found">You don\'t currently have a search history, movies will be added here as you browse.</string>
     <string name="search_history_title">Recently viewed</string>
     <string name="suggested">Similar films</string>
+    <string name="trailer">Trailer(s)</string>
+    <string name="TvOverviewPlaceholder">Overview Placeholder</string>
 
 
     <string name="filter">Filter</string>
@@ -71,4 +73,6 @@
     <string name="musical">Musical</string>
     <string name="documentary">Documentary</string>
     <string name="romance">Romance</string>
+    <string name="trending_comedy_tv_shows">Trending Comedy TV Shows</string>
+    <string name="no_overview_string">There is no overview for this series currently!</string>
 </resources>

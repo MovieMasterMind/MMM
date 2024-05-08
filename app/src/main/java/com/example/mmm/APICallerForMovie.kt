@@ -1,3 +1,4 @@
+package com.example.mmm
 
 import android.os.Handler
 import android.os.Looper
@@ -15,13 +16,13 @@ import okhttp3.Response
 import org.json.JSONException
 import org.json.JSONObject
 import java.io.IOException
+import java.lang.ref.WeakReference
 
-class APICaller {
-
+class APICallerForMovie {
     private val client = OkHttpClient()
 
     // Generic fetchData function
-    fun fetchData(apiUrl: String, processJson: (String) -> Triple<List<String>, List<String>, List<String>>, callback: (List<String>, List<String>, List<String>) -> Unit) {
+    fun fetchMovieDataFromAPI(apiUrl: String, processJson: (String) -> Triple<List<String>, List<String>, List<String>>, callback: (List<String>, List<String>, List<String>) -> Unit) {
         val request = Request.Builder().url(apiUrl).build()
 
         client.newCall(request).enqueue(object : Callback {
@@ -41,15 +42,22 @@ class APICaller {
         })
     }
 
+    fun cleanup() {
+        client.dispatcher.executorService.shutdown()
+    }
+
     // Adapted existing getData method to use fetchData
-    fun getData(apiUrl: String, textView: TextView, recyclerView: RecyclerView, callback: (List<String>, List<Int>) -> Unit) {
-        fetchData(apiUrl, { response -> parseAndDisplayData(response, textView) }) { posterUrls, movieTitles, _ ->
+    fun getMovieDataFromAPI(apiUrl: String, textView: TextView, recyclerView: RecyclerView, callback: (List<String>, List<Int>) -> Unit) {
+        val textViewRef = WeakReference(textView)
+        fetchMovieDataFromAPI(apiUrl, { response ->
+            parseAndDisplayMovieData(response, textViewRef.get()!!)
+        }) { posterUrls, movieTitles, _ ->
             val movieIds = movieTitles.map { it.toIntOrNull() ?: 0 } // Convert titles to IDs
             callback(posterUrls, movieIds)
         }
     }
 
-    private fun parseAndDisplayData(response: String, textView: TextView): Triple<List<String>, List<String>, List<String>> {
+    private fun parseAndDisplayMovieData(response: String, textView: TextView): Triple<List<String>, List<String>, List<String>> {
         val posterUrls = mutableListOf<String>()
         val movieTitles = mutableListOf<String>() // Used as placeholders for IDs
         val movieYears = mutableListOf<String>() // Not used in this context
@@ -80,7 +88,7 @@ class APICaller {
     }
 
     // Reused the existing specialized methods for other functionality
-    fun getCastDetails(movieId: Int, callback: (List<CastMember>) -> Unit) {
+    fun getMovieCastDetails(movieId: Int, callback: (List<CastMember>) -> Unit) {
         val url = "https://api.themoviedb.org/3/movie/$movieId/credits?api_key=1f443a53a6aabe4de284f9c46a17f64c"
         val request = Request.Builder().url(url).get().build()
 
@@ -98,12 +106,13 @@ class APICaller {
                         val castArray = jsonObject.getJSONArray("cast")
                         for (i in 0 until castArray.length()) {
                             val castObject = castArray.getJSONObject(i)
+                            val id = castObject.getInt("cast_id") // TMDb uses 'cast_id' for the cast's unique identifier
                             val name = castObject.getString("name")
                             val character = castObject.getString("character")
-                            val profilePath = castObject.optString("profile_path", "null")
+                            val profilePath = castObject.optString("profile_path", null)
                             val imageUrl = if (profilePath != "null") "https://image.tmdb.org/t/p/w500$profilePath"
                             else "https://www.nicepng.com/png/full/73-730154_open-default-profile-picture-png.png"
-                            castList.add(CastMember(name, character, imageUrl))
+                            castList.add(CastMember(id, name, character, imageUrl))
                         }
                         Handler(Looper.getMainLooper()).post {
                             callback(castList)
@@ -115,35 +124,40 @@ class APICaller {
             }
         })
     }
-
     fun getMovieStreamingLocationJSON(tmdbId: Int, callback: (Map<String, String>) -> Unit) {
         GlobalScope.launch(Dispatchers.IO) {
-            val url = "https://streaming-availability.p.rapidapi.com/get?output_language=en&tmdb_id=movie%2F$tmdbId"
-            val request = Request.Builder()
-                .url(url)
-                .get()
-                .addHeader("X-RapidAPI-Key", "24562cc0e2msh9d6623953b461fdp18b00ejsna654dc783352")
-                .addHeader("X-RapidAPI-Host", "streaming-availability.p.rapidapi.com")
-                .build()
-
             try {
+                val url = "https://streaming-availability.p.rapidapi.com/get?output_language=en&tmdb_id=movie%2F$tmdbId"
+                val request = Request.Builder()
+                    .url(url)
+                    .get()
+                    .addHeader("X-RapidAPI-Key", "24562cc0e2msh9d6623953b461fdp18b00ejsna654dc783352")
+                    .addHeader("X-RapidAPI-Host", "streaming-availability.p.rapidapi.com")
+                    .build()
+
                 val response = client.newCall(request).execute()
                 if (response.isSuccessful) {
                     val responseBody = response.body?.string()
-                    val streamingDetails = parseStreamingInfo(responseBody)
-                    callback(streamingDetails)
+                    val streamingDetails = parseMovieStreamingInfo(responseBody)
+                    GlobalScope.launch(Dispatchers.Main) {
+                        callback(streamingDetails)
+                    }
                 } else {
                     Log.e("APICaller", "Request failed with code: ${response.code}")
-                    callback(emptyMap())
+                    GlobalScope.launch(Dispatchers.Main) {
+                        callback(emptyMap())
+                    }
                 }
             } catch (e: IOException) {
                 Log.e("APICaller", "Exception: ${e.message}")
-                callback(emptyMap())
+                GlobalScope.launch(Dispatchers.Main) {
+                    callback(emptyMap())
+                }
             }
         }
     }
 
-    private fun parseStreamingInfo(responseBody: String?): Map<String, String> {
+    private fun parseMovieStreamingInfo(responseBody: String?): Map<String, String> {
         val streamingDetails = mutableMapOf<String, String>()
         responseBody?.let {
             val jsonObject = JSONObject(it)
@@ -163,5 +177,53 @@ class APICaller {
             }
         }
         return streamingDetails
+    }
+
+    fun getMovieTrailers(movieId: Int, callback: (List<TrailerMember>) -> Unit) {
+        val url = "https://api.themoviedb.org/3/movie/$movieId/videos?api_key=1f443a53a6aabe4de284f9c46a17f64c"
+        val request = Request.Builder().url(url).get().build()
+
+        client.newCall(request).enqueue(object : Callback {
+            override fun onFailure(call: Call, e: IOException) {
+                Log.e("API Error", "Error fetching cast details: $e")
+            }
+
+            override fun onResponse(call: Call, response: Response) {
+                response.body?.let {
+                    val responseData = it.string()
+                    val trailerList = mutableListOf<TrailerMember>()
+                    try {
+                        val jsonObject = JSONObject(responseData)
+                        val trailerArray = jsonObject.getJSONArray("results")
+
+                        var key = "null"
+                        var YouTubeUrl = "null"
+
+
+                        for (i in 0 until trailerArray.length()) {
+                            val trailerObject = trailerArray.getJSONObject(i)
+                            if(trailerObject.getString("type") == ("Trailer") && trailerObject.getString("site") == ("YouTube"))
+                            {
+                                key = trailerObject.optString("key", "null")
+                                if(key != "null")
+                                {
+                                    YouTubeUrl = "https://www.youtube.com/embed/$key"
+
+                                }
+                                //If no trailers are found (add code here)?
+
+
+                                trailerList.add(TrailerMember(key, YouTubeUrl))
+                            }
+                        }
+                        Handler(Looper.getMainLooper()).post {
+                            callback(trailerList)
+                        }
+                    } catch (e: JSONException) {
+                        Log.e("JSON Error", "Error parsing JSON: $e")
+                    }
+                }
+            }
+        })
     }
 }
