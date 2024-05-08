@@ -397,7 +397,7 @@ import java.util.Locale
             super.onDestroy()
             apiCallerForTV.cleanup()
             requestQueue.cancelAll { true }
-            Glide.with(applicationContext).clear(findViewById<ImageView>(R.id.TvPoster))
+            Glide.with(applicationContext).clear(findViewById<ImageView>(R.id.TvPoster))  // Clear Glide resources
         }
 
         override fun onSupportNavigateUp(): Boolean {
